@@ -41,7 +41,7 @@
 | Giai đoạn | Tên | Ngày dự kiến | Gate | Trạng thái | Bằng chứng (file/hình) |
 |---|---|---|---|---|---|
 | 0 | Môi trường & công cụ | D1 sáng | G0 | ☑ | `outputs/results/env.json`, commit `62c7dbd` |
-| 1 | Dữ liệu: tải, xác minh, EDA | D1 chiều | G1 | ☐ | |
+| 1 | Dữ liệu: tải, xác minh, EDA | D1 chiều | G1 | ☑ | `outputs/results/data_report.json`, `outputs/results/train_meta.csv`, `outputs/figures/01..03`, `src/data.py` |
 | 2 | Tiền xử lý & chia tập | D2 sáng | G1 | ☐ | |
 | 3 | Hạ tầng huấn luyện & logging | D2 chiều | G1 | ☐ | |
 | 4 | Baseline | D3 | G2 | ☐ | |
@@ -296,17 +296,19 @@ Bao gồm: nguồn, ngày tải, cách tải, số ảnh train/test, số lớp,
 
 ### 1.5. Checklist test
 
-- [ ] `len(train_ds) == 39209` (hoặc số thật đã giải thích).
-- [ ] `len(test_ds) == 12630`.
-- [ ] `sum(counts_per_class) == len(train_ds)`.
-- [ ] `len(counts_per_class) == 43`.
-- [ ] `min(counts_per_class) > 0`.
-- [ ] Tỷ lệ max/min ≥ 8 (xác nhận mất cân bằng thật sự).
-- [ ] Ảnh lỗi = 0, hoặc danh sách lỗi được log.
-- [ ] Đã chạy hash và có số cặp trùng (kể cả 0).
-- [ ] `train_meta.csv` có đúng `len(train_ds)` dòng, có cột `track_id`.
-- [ ] Mở 3 hình EDA bằng mắt: đọc được nhãn trục, thấy rõ lớp ít mẫu.
-- [ ] `data_report.json` có `license_note` (câu điều kiện sử dụng chép từ trang chính thức kèm ngày).
+- [x] `len(train_ds) == 39209` (hoặc số thật đã giải thích). → **39.209**
+- [x] `len(test_ds) == 12630`. → **12.630**
+- [x] `sum(counts_per_class) == len(train_ds)`. → 39.209 = 39.209 (sai số 0)
+- [x] `len(counts_per_class) == 43`. → **43**
+- [x] `min(counts_per_class) > 0`. → **210** (lớp 0)
+- [x] Tỷ lệ max/min ≥ 8 (xác nhận mất cân bằng thật sự). → **10,71** (2.250 / 210)
+- [x] Ảnh lỗi = 0, hoặc danh sách lỗi được log. → **0/51.839**
+- [x] Đã chạy hash và có số cặp trùng (kể cả 0). → train **0**, test **0**, train↔test **8 cặp**
+- [x] `train_meta.csv` có đúng `len(train_ds)` dòng, có cột `track_id`. → **39.209 dòng**, cột `track_id` + `track_key`
+- [x] Mở 3 hình EDA bằng mắt: đọc được nhãn trục, thấy rõ lớp ít mẫu. → đã xem cả 3 hình; hình 03 đã sửa (ẩn ô trống, tiêu đề không chồng)
+- [x] `data_report.json` có `license_note` (câu điều kiện sử dụng chép từ trang chính thức kèm ngày). → có, kèm ngày truy cập 2026-10-22 và nguồn Wayback
+
+**Kết quả:** 11/11 mục PASS (script kiểm tra `phase1_check.py`: 18/18 PASS, gồm cả ROI ≥ 99%, track ≥ 95%, 3 hình > 10 KB, JSON đọc được).
 
 ### 1.6. Kết quả thực hiện
 
@@ -314,20 +316,40 @@ Bao gồm: nguồn, ngày tải, cách tải, số ảnh train/test, số lớp,
 >
 > | Hạng mục | Giá trị thực tế |
 > |---|---|
-> | Ngày / người thực hiện | |
-> | Cách tải (torchvision / thủ công / mirror) | |
-> | Ngày truy cập | |
-> | Số ảnh train / test | |
-> | Số lớp | |
-> | Lớp ít nhất (ID, số ảnh) | |
-> | Lớp nhiều nhất (ID, số ảnh) | |
-> | Tỷ lệ mất cân bằng | |
-> | Số ảnh lỗi | |
-> | Số cặp trùng trong train / train-test | |
-> | Số track (nếu trích được) | |
-> | License note (tóm tắt) | |
-> | Trạng thái | ☐ Đạt ☐ Đạt có điều kiện ☐ Chưa đạt |
-> | Ghi chú | |
+> | Ngày / người thực hiện | 22/10/2026 — Nguyễn (repo `Nguyen15idhue/GTSRB-CNN`), chạy trên RTX 5070 / i9-14900KF / Windows 11 |
+> | Cách tải (torchvision / thủ công / mirror) | Test: `torchvision.datasets.GTSRB(root="data", download=True)` (2 archive gốc). Train: tải `GTSRB_Final_Training_Images.zip` (MD5 `f33fd80ac59bff73c82d25ab499e03a3`) từ mirror `sid.erda.dk`, giải nén vào `data/gtsrb/GTSRB/Training` |
+> | Ngày truy cập | 2026-10-22 (trang chính thức `benchmark.ini.rub.de` không phân giải DNS từ máy này) |
+> | Số ảnh train / test | **39.209 / 12.630** (khớp công bố, lệch 0) |
+> | Số lớp | **43/43** ở cả hai tập, không lớp rỗng |
+> | Lớp ít nhất (ID, số ảnh) | Lớp **0** (Giới hạn tốc độ 20 km/h) — **210** ảnh train |
+> | Lớp nhiều nhất (ID, số ảnh) | Lớp **2** (Giới hạn tốc độ 50 km/h) — **2.250** ảnh train |
+> | Tỷ lệ mất cân bằng | **10,71** lần (max/min); trung vị 600, trung bình 911,8 ảnh/lớp; **9 lớp < 300 ảnh** |
+> | Số ảnh lỗi | **0** — mở thành công 51.839/51.839 ảnh, 100% mode RGB |
+> | Số cặp trùng trong train / train-test | Trong train **0** cặp; trong test **0** cặp; train↔test **8 cặp** (cùng nhãn 14, cùng track `00023`) |
+> | Số track (nếu trích được) | **1.307** track, trích được **100%** ảnh train (1.306 track đủ 30 frame, 1 track 29 frame); test không có track trong tên file |
+> | License note (tóm tắt) | Nguyên văn: *"The data is free to use. However, we cordially ask you to cite the following publication if you do: ..."* (Stallkamp et al., IJCNN 2011) — không suy diễn thành giấy phép cụ thể |
+> | Trạng thái | ☑ Đạt ☐ Đạt có điều kiện ☐ Chưa đạt |
+> | Ghi chú | `torchvision` chỉ tải bản train rút gọn 26.640 ảnh → đã chuyển sang archive chính thức 39.209 ảnh. Có 8 ảnh trùng MD5 giữa train và test: **giữ nguyên split chính thức** (để so sánh được với công bố) và sẽ báo cáo thêm accuracy trên 12.622 ảnh không trùng ở Giai đoạn 6 như kiểm tra độ nhạy. Track chỉ duy nhất trong một lớp → Giai đoạn 2 dùng `track_key = "<label>_<track>"` làm khóa nhóm. |
+
+### 1.6.1. Nhật ký thực hiện (todos)
+
+> **Cập nhật 22/10/2026 — hoàn tất.** Bảng ghi trong lúc chạy; số liệu cuối đã đối chiếu với `outputs/results/data_report.json`.
+
+| # | Todo | Trạng thái | Bằng chứng / ghi chú |
+|---|---|---|---|
+| 1.1 | Viết `src/data.py`: tải, quét ảnh, hash, ROI, track, EDA, report + CLI `--download/--report` | ☑ | `src/data.py` (~790 dòng); smoke test `--limit 400` chạy hết |
+| 1.2 | Tải dữ liệu: test qua `torchvision` (12.630), train từ archive chính thức (39.209) | ☑ | `data/gtsrb/GTSRB/Training` (39.209 ảnh), `Final_Test/Images` (12.630), `GT-final_test.csv` |
+| 1.3 | Đếm & xác minh số ảnh, 43 lớp, tổng theo lớp, tỷ lệ mất cân bằng | ☑ | 39.209 / 12.630 ảnh; 43/43 lớp; min 210 (lớp 0), max 2.250 (lớp 2); max/min = **10,71**; 9 lớp train < 300 ảnh |
+| 1.4 | Quét ảnh: PIL, ảnh lỗi, mode, histogram kích thước gốc | ☑ | 51.839 ảnh mở được, **0 lỗi**, 100% mode RGB; cạnh ngắn 25–266 px, median 43 px; aspect ratio 0,368–1,438 |
+| 1.5 | Hash MD5: trùng trong train, trong test, train↔test | ☑ | Trong train: 0; trong test: 0; **8 cặp train↔test** (cùng nhãn 14, cùng track `00023` của lớp 14) — chi tiết trong `data_report.json` |
+| 1.6 | ROI từ `GT-*.csv` + `GT-final_test.csv`, đối chiếu ClassId, trích `track_id` → `train_meta.csv` | ☑ | ROI hợp lệ 39.209/39.209 và 12.630/12.630 (**100%**); ClassId lệch **0**; track trích được **100%**, 1.307 track (1.306 track đủ 30 frame, 1 track 29 frame); `train_meta.csv` 39.209 dòng |
+| 1.7 | Vẽ 3 hình EDA | ☑ | `outputs/figures/01_class_distribution.png` (50 KB), `02_image_sizes.png` (45 KB), `03_sample_grid.png` (308 KB); đã mở cả 3 bằng mắt, đọc được nhãn trục, lớp < 300 tô đỏ, lưới 43 ảnh crop theo ROI |
+| 1.8 | Sinh `data_report.json` đầy đủ trường + `license_note` | ☑ | `outputs/results/data_report.json` (6,7 KB): nguồn, cách tải, MD5 archive, per-class train/test, thống kê kích thước, trùng lặp + danh sách 8 cặp, ROI, track, `license_note` |
+| 1.9 | Chạy checklist 1.5, điền 1.6, cập nhật bảng tiến độ + commit | ☑ | Checklist 11/11 mục (script phụ: 18/18 PASS); đã điền 1.5 + 1.6 + bảng tiến độ; commit local |
+
+**Tổng kết: 9/9 todo hoàn thành.** Bằng chứng: `src/data.py`, `outputs/results/data_report.json`, `outputs/results/train_meta.csv`, `outputs/figures/01..03`. Lệnh tái tạo: `python -m src.data --download --report` (khoảng 25 giây khi cache đĩa nóng, ~4,5 phút khi nguội).
+
+**Phát hiện quan trọng (đã xử lý):** `torchvision.datasets.GTSRB` tải train từ `GTSRB-Training_fixed.zip`, bản này chỉ có **26.640 ảnh** (888 track × 30 frame), không khớp con số công bố 39.209. Vì vậy train được lấy từ archive chính thức `GTSRB_Final_Training_Images.zip` (MD5 `f33fd80ac59bff73c82d25ab499e03a3`, 39.209 ảnh, có `GT-*.csv`), giải nén vào `data/gtsrb/GTSRB/Training` để `torchvision.datasets.GTSRB(root="data")` vẫn đọc được; test vẫn dùng torchvision (12.630 ảnh). `src/config.py` đã sửa `TRAIN_IMAGES_DIR` từ `Final_Training/Images` sang `Training` cho khớp thực tế trên đĩa.
 
 ### 1.7. Ghi chú / lưu ý
 
@@ -337,6 +359,7 @@ Bao gồm: nguồn, ngày tải, cách tải, số ảnh train/test, số lớp,
 - Nếu track ID không trích được theo giả định, **đừng bịa**; ghi rõ "không trích được" và dùng split random + phân tích val–test.
 - Khi hiển thị ảnh trong báo cáo: crop quanh ROI để tránh lộ người/xe ở nền.
 - License: chép nguyên văn câu điều kiện sử dụng tại ngày truy cập; không suy diễn thành "CC-BY" hay bất kỳ giấy phép cụ thể nào.
+- **8 cặp trùng train↔test đã biết** (đều nhãn 14, track `00023`): Giai đoạn 2 **giữ nguyên** 8 ảnh này trong train để split vẫn là 39.209 (khớp công bố); Giai đoạn 6 báo cáo thêm accuracy trên 12.622 ảnh test không trùng như kiểm tra độ nhạy, và ghi vào phần hạn chế của báo cáo.
 
 ---
 

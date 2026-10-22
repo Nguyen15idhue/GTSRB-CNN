@@ -1,0 +1,271 @@
+{
+  "stage": 1,
+  "generated_at": "2026-10-22",
+  "source": {
+    "name": "German Traffic Sign Recognition Benchmark (GTSRB)",
+    "paper": "Stallkamp et al., Neural Networks 32 (2012) 323-332",
+    "official_page": null,
+    "mirror_used": null,
+    "dataset_dir": "data/gtsrb"
+  },
+  "download": {
+    "method": "dữ liệu đã có sẵn trên đĩa (không tải lại)",
+    "accessed_at": "2026-10-22"
+  },
+  "counts": {
+    "train": 39209,
+    "test": 12630,
+    "published_train": 39209,
+    "published_test": 12630,
+    "difference_train": 0,
+    "difference_test": 0
+  },
+  "num_classes": 43,
+  "classes_train_present": 43,
+  "classes_test_present": 43,
+  "per_class_train": {
+    "0": 210,
+    "1": 2220,
+    "2": 2250,
+    "3": 1410,
+    "4": 1980,
+    "5": 1860,
+    "6": 420,
+    "7": 1440,
+    "8": 1410,
+    "9": 1470,
+    "10": 2010,
+    "11": 1320,
+    "12": 2100,
+    "13": 2160,
+    "14": 780,
+    "15": 630,
+    "16": 420,
+    "17": 1110,
+    "18": 1200,
+    "19": 210,
+    "20": 360,
+    "21": 330,
+    "22": 390,
+    "23": 510,
+    "24": 270,
+    "25": 1500,
+    "26": 600,
+    "27": 240,
+    "28": 540,
+    "29": 270,
+    "30": 450,
+    "31": 780,
+    "32": 240,
+    "33": 689,
+    "34": 420,
+    "35": 1200,
+    "36": 390,
+    "37": 210,
+    "38": 2070,
+    "39": 300,
+    "40": 360,
+    "41": 240,
+    "42": 240
+  },
+  "per_class_test": {
+    "0": 60,
+    "1": 720,
+    "2": 750,
+    "3": 450,
+    "4": 660,
+    "5": 630,
+    "6": 150,
+    "7": 450,
+    "8": 450,
+    "9": 480,
+    "10": 660,
+    "11": 420,
+    "12": 690,
+    "13": 720,
+    "14": 270,
+    "15": 210,
+    "16": 150,
+    "17": 360,
+    "18": 390,
+    "19": 60,
+    "20": 90,
+    "21": 90,
+    "22": 120,
+    "23": 150,
+    "24": 90,
+    "25": 480,
+    "26": 180,
+    "27": 60,
+    "28": 150,
+    "29": 90,
+    "30": 150,
+    "31": 270,
+    "32": 60,
+    "33": 210,
+    "34": 120,
+    "35": 390,
+    "36": 120,
+    "37": 60,
+    "38": 690,
+    "39": 90,
+    "40": 90,
+    "41": 60,
+    "42": 90
+  },
+  "per_class_train_stats": {
+    "min": 210.0,
+    "median": 600.0,
+    "mean": 911.837,
+    "max": 2250.0
+  },
+  "per_class_test_stats": {
+    "min": 60.0,
+    "median": 180.0,
+    "mean": 293.721,
+    "max": 750.0
+  },
+  "least_populated_train_class": {
+    "class_id": 0,
+    "count": 210
+  },
+  "most_populated_train_class": {
+    "class_id": 2,
+    "count": 2250
+  },
+  "imbalance_ratio_max_over_min": 10.714,
+  "images_below_300_train": 9,
+  "class_names_file": "configs/class_names.json",
+  "image_scan": {
+    "images_scanned": 51839,
+    "unreadable": [],
+    "unreadable_count": 0,
+    "modes": {
+      "RGB": 51839
+    },
+    "width": {
+      "min": 25.0,
+      "median": 43.0,
+      "mean": 50.756,
+      "max": 266.0
+    },
+    "height": {
+      "min": 25.0,
+      "median": 43.0,
+      "mean": 50.338,
+      "max": 232.0
+    },
+    "aspect_ratio": {
+      "min": 0.368,
+      "median": 1.0,
+      "mean": 1.006,
+      "max": 1.438
+    },
+    "size_min": 25,
+    "size_max": 266
+  },
+  "duplicates": {
+    "hash": "md5",
+    "train_duplicate_groups": 0,
+    "train_extra_copies": 0,
+    "train_duplicate_pairs": 0,
+    "test_duplicate_groups": 0,
+    "test_duplicate_pairs": 0,
+    "cross_split_groups": 8,
+    "cross_split_pairs": 8,
+    "train_images_matching_test": 8,
+    "test_images_matching_train": 8,
+    "cross_split_pairs_detail": [
+      {
+        "md5": "0692d8d974cf3c460da510f14e6c5c8d",
+        "train_path": "data/gtsrb/GTSRB/Training/00014/00023_00000.ppm",
+        "train_label": 14,
+        "test_path": "data/gtsrb/GTSRB/Final_Test/Images/02291.ppm",
+        "test_label": 14
+      },
+      {
+        "md5": "5d72e523ae7d606d3062517fd89d2f7e",
+        "train_path": "data/gtsrb/GTSRB/Training/00014/00023_00003.ppm",
+        "train_label": 14,
+        "test_path": "data/gtsrb/GTSRB/Final_Test/Images/11906.ppm",
+        "test_label": 14
+      },
+      {
+        "md5": "efc7646ac6986b703578f435e4c4b5a7",
+        "train_path": "data/gtsrb/GTSRB/Training/00014/00023_00006.ppm",
+        "train_label": 14,
+        "test_path": "data/gtsrb/GTSRB/Final_Test/Images/04548.ppm",
+        "test_label": 14
+      },
+      {
+        "md5": "1284c99f6918b250b23a71c6fd8d1645",
+        "train_path": "data/gtsrb/GTSRB/Training/00014/00023_00007.ppm",
+        "train_label": 14,
+        "test_path": "data/gtsrb/GTSRB/Final_Test/Images/09384.ppm",
+        "test_label": 14
+      },
+      {
+        "md5": "11a3b9ee22b1571ab6ddebe6691b398a",
+        "train_path": "data/gtsrb/GTSRB/Training/00014/00023_00010.ppm",
+        "train_label": 14,
+        "test_path": "data/gtsrb/GTSRB/Final_Test/Images/03594.ppm",
+        "test_label": 14
+      },
+      {
+        "md5": "e1bad47303093b51c54beee3558936ab",
+        "train_path": "data/gtsrb/GTSRB/Training/00014/00023_00013.ppm",
+        "train_label": 14,
+        "test_path": "data/gtsrb/GTSRB/Final_Test/Images/03546.ppm",
+        "test_label": 14
+      },
+      {
+        "md5": "2127a461095c7c9a266eabddea0c2f21",
+        "train_path": "data/gtsrb/GTSRB/Training/00014/00023_00016.ppm",
+        "train_label": 14,
+        "test_path": "data/gtsrb/GTSRB/Final_Test/Images/09575.ppm",
+        "test_label": 14
+      },
+      {
+        "md5": "7e9b929edc8c93b928f5fd8cc5a7ae86",
+        "train_path": "data/gtsrb/GTSRB/Training/00014/00023_00019.ppm",
+        "train_label": 14,
+        "test_path": "data/gtsrb/GTSRB/Final_Test/Images/00666.ppm",
+        "test_label": 14
+      }
+    ],
+    "decision": "Có 8 cặp ảnh trùng MD5 giữa train và test (đều cùng nhãn). Quyết định: giữ nguyên split chính thức 39.209/12.630 để so sánh được với công bố; 8 ảnh chiếm 0,063% test nên Giai đoạn 6 sẽ báo cáo thêm accuracy trên 12.622 ảnh không trùng như kiểm tra độ nhạy, và ảnh hưởng được ghi ở Chương 5."
+  },
+  "roi": {
+    "train_annotation_rows": 39209,
+    "test_annotation_rows": 12630,
+    "train_images_with_roi": 39209,
+    "test_images_with_roi": 12630,
+    "train_valid_ratio": 1.0,
+    "test_valid_ratio": 1.0,
+    "classid_mismatch_vs_torchvision_label": 0
+  },
+  "tracks": {
+    "train_images": 39209,
+    "train_images_with_track_id": 39209,
+    "extracted_ratio": 1.0,
+    "num_tracks": 1307,
+    "tracks_with_30_frames": 1306,
+    "frames_per_track_min": 29,
+    "frames_per_track_median": 30.0,
+    "frames_per_track_max": 30,
+    "note": "Tên file train là <track>_<frame>.ppm và track chỉ duy nhất trong một lớp; vì vậy khóa nhóm khi chia split phải là (label, track) — cột track_key trong train_meta.csv. Ảnh test đặt tên <index>.ppm nên không có track."
+  },
+  "figures": [
+    "outputs/figures/01_class_distribution.png",
+    "outputs/figures/02_image_sizes.png",
+    "outputs/figures/03_sample_grid.png"
+  ],
+  "train_meta_csv": "outputs/results/train_meta.csv",
+  "license_note": "Nguyên văn từ trang chính thức GTSRB: \"The data is free to use. However, we cordially ask you to cite the following publication if you do: ...\" (Stallkamp et al., IJCNN 2011). Trang benchmark.ini.rub.de không phân giải được DNS từ máy này ngày 22/10/2026, nên câu trên được chép từ bản lưu Wayback Machine capture 30/12/2025 (https://web.archive.org/web/20251230072343/https://benchmark.ini.rub.de/gtsrb_dataset.html). Không suy diễn thành giấy phép CC-BY hay bất kỳ giấy phép cụ thể nào.",
+  "notes": [
+    "Số liệu trong file này là số đếm thật trên đĩa, không dùng số công bố.",
+    "torchvision.datasets.GTSRB tải train từ GTSRB-Training_fixed.zip — bản rút gọn chỉ có 26.640 ảnh (888 track x 30 frame), không khớp 39.209 công bố. Vì vậy train lấy từ archive chính thức GTSRB_Final_Training_Images.zip (39.209 ảnh, có GT-*.csv) và đặt tại data/gtsrb/GTSRB/Training để torchvision vẫn đọc được; test vẫn dùng torchvision (12.630 ảnh).",
+    "Ảnh test chỉ có tên <index>.ppm nên không trích được track; phân tích rò rỉ theo track chỉ áp dụng cho train.",
+    "File zip gốc vẫn giữ trong data/ (đã bị .gitignore chặn) để có thể kiểm tra lại MD5."
+  ]
+}
