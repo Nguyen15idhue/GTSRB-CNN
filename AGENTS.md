@@ -8,8 +8,8 @@ Hướng dẫn cho AI agent (và người) khi làm việc trong repo này.
 | Dự án | Bài tập lớn Học sâu 12INF028 — Phân loại biển báo GTSRB bằng CNN |
 | Ngôn ngữ tài liệu | Tiếng Việt |
 | Ngôn ngữ code | Tên biến/hàm bằng tiếng Anh; comment/docstring tiếng Việt được phép |
-| Cập nhật lần cuối | 22/10/2026 |
-| Trạng thái repo | **Giai đoạn 0 hoàn tất**: môi trường `.venv` + khung `src/`; chưa có logic |
+| Cập nhật lần cuối | 23/10/2026 |
+| Trạng thái repo | **Giai đoạn 5 hoàn tất**: dữ liệu + EDA (GĐ1), cache/split/preprocess (GĐ2), hạ tầng train (GĐ3), baseline (GĐ4), 7 run CNN E1–E4/E5a/E5b/E7 (GĐ5). Chưa chạm test — Giai đoạn 6 mới đánh giá test 1 lần. |
 
 ---
 

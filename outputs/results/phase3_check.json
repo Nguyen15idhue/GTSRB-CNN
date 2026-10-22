@@ -1,6 +1,6 @@
 {
   "phase": 3,
-  "generated_at": "2026-10-22",
+  "generated_at": "2026-10-23",
   "passed": 12,
   "total": 12,
   "checks": [
@@ -52,7 +52,7 @@
     {
       "check": "summary_csv",
       "passed": true,
-      "detail": "1 dòng trong summary.csv, có run smoke_cnnb_s42: True"
+      "detail": "10 dòng trong summary.csv, có run smoke_cnnb_s42: True"
     },
     {
       "check": "aug_chi_train",
