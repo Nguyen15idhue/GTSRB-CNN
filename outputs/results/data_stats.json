@@ -1,0 +1,18 @@
+{
+  "mean": [
+    0.340408,
+    0.312365,
+    0.321632
+  ],
+  "std": [
+    0.275148,
+    0.264242,
+    0.270747
+  ],
+  "num_images": 31360,
+  "num_pixels": 128450560,
+  "split": "random",
+  "seed": 42,
+  "image_size": 64,
+  "note": "mean/std tính trên train split (không dùng val/test) theo đơn vị [0,1]; dùng chung cho train, eval và demo qua src.data.preprocess."
+}

@@ -42,7 +42,7 @@
 |---|---|---|---|---|---|
 | 0 | Môi trường & công cụ | D1 sáng | G0 | ☑ | `outputs/results/env.json`, commit `62c7dbd` |
 | 1 | Dữ liệu: tải, xác minh, EDA | D1 chiều | G1 | ☑ | `outputs/results/data_report.json`, `outputs/results/train_meta.csv`, `outputs/figures/01..03`, `src/data.py` |
-| 2 | Tiền xử lý & chia tập | D2 sáng | G1 | ☐ | |
+| 2 | Tiền xử lý & chia tập | D2 sáng | G1 | ☑ | `outputs/results/split_random.json`, `split_group.json`, `data_stats.json`, `phase2_check.json`, `data/cache/cache_meta.json`, `outputs/figures/04_augmentation.png`, `src/data.py` |
 | 3 | Hạ tầng huấn luyện & logging | D2 chiều | G1 | ☐ | |
 | 4 | Baseline | D3 | G2 | ☐ | |
 | 5 | CNN & thí nghiệm chính | D4–D6 | G2 | ☐ | |
@@ -418,15 +418,17 @@ Các hàm tối thiểu:
 
 ### 2.5. Checklist test
 
-- [ ] `len(train_idx) + len(val_idx) == 39201` (39.209 trừ 8 ảnh trùng test đã loại).
-- [ ] `len(set(train_idx) & set(val_idx)) == 0`.
-- [ ] `len(np.unique(y[train_idx])) == 43` và `len(np.unique(y[val_idx])) == 43`.
-- [ ] Với split group: `set(track[train_idx]) & set(track[val_idx]) == ∅`.
-- [ ] `X_train.npy` có shape `(39201, 64, 64, 3)`, `dtype == uint8`.
-- [ ] `preprocess(PIL.open(any))` trả tensor shape `(3, 64, 64)`, giá trị xấp xỉ [-2, 2].
-- [ ] Lưới augmentation: không có ảnh bị lật; biển "rẽ trái" không thành "rẽ phải".
-- [ ] Import `preprocess` từ `src.data` trong notebook/app hoạt động.
-- [ ] `split_random.json` và `split_group.json` tồn tại, đọc lại cho cùng index.
+- [x] `len(train_idx) + len(val_idx) == 39201` (39.209 trừ 8 ảnh trùng test đã loại). → **31.360 + 7.841 = 39.201**
+- [x] `len(set(train_idx) & set(val_idx)) == 0`. → **0**
+- [x] `len(np.unique(y[train_idx])) == 43` và `len(np.unique(y[val_idx])) == 43`. → **43/43** cả hai
+- [x] Với split group: `set(track[train_idx]) & set(track[val_idx]) == ∅`. → **∅** (1.045 track train / 262 track val); **4 lớp vắng ở val: 0, 19, 34, 39** (đã ghi rõ, đúng cảnh báo 2.7)
+- [x] `X_train.npy` có shape `(39201, 64, 64, 3)`, `dtype == uint8`. → đúng shape, `uint8`; `X_test.npy` = `(12630, 64, 64, 3)`
+- [x] `preprocess(PIL.open(any))` trả tensor shape `(3, 64, 64)`, giá trị xấp xỉ [-2, 2]. → `(3, 64, 64)`, min −0,667 / max **2,558**; biên lý thuyết ±2,60 do std ≈ 0,27 (tài liệu ghi "xấp xỉ" — đã kiểm tra theo biên lý thuyết, không phải bug)
+- [x] Lưới augmentation: không có ảnh bị lật; biển "rẽ trái" không thành "rẽ phải". → đã mở `04_augmentation.png`: chỉ dịch/scale/shear + jitter màu nhẹ, số trên biển 20/30/50/60/70/100 giữ nguyên chiều
+- [x] Import `preprocess` từ `src.data` trong notebook/app hoạt động. → subprocess `from src.data import preprocess` → `(3, 64, 64)`
+- [x] `split_random.json` và `split_group.json` tồn tại, đọc lại cho cùng index. → cả hai tồn tại; đọc lại cho index giống hệt
+
+**Kết quả:** 12/12 mục PASS (script `python -m src.data --verify` → `outputs/results/phase2_check.json`).
 
 ### 2.6. Kết quả thực hiện
 
@@ -434,16 +436,30 @@ Các hàm tối thiểu:
 >
 > | Hạng mục | Giá trị thực tế |
 > |---|---|
-> | Ngày / người thực hiện | |
-> | Số train / val (random) | |
-> | Số train / val (group) | |
-> | Số track train / val (group) | |
-> | Lớp ít mẫu nhất ở val (ID, số ảnh) | |
-> | mean / std | |
-> | Dung lượng cache | |
-> | Thời gian tạo cache | |
-> | Trạng thái | ☐ Đạt ☐ Đạt có điều kiện ☐ Chưa đạt |
-> | Ghi chú | |
+> | Ngày / người thực hiện | 22/10/2026 — AI agent (theo yêu cầu), RTX 5070 / i9-14900KF / Windows 11 |
+> | Số train / val (random) | **31.360 / 7.841** (stratified, seed 42) |
+> | Số train / val (group) | **31.341 / 7.860** (GroupShuffleSplit theo `track_key`, seed 42) |
+> | Số track train / val (group) | **1.045 / 262** (tổng 1.307; giao = 0) |
+> | Lớp ít mẫu nhất ở val (ID, số ảnh) | Random: lớp **0** — **42** ảnh. Group: 4 lớp **vắng mặt** ở val (0, 19, 34, 39) → chỉ dùng group để đo Δ rò rỉ, không dùng để chọn mô hình |
+> | mean / std | mean **[0,340408, 0,312365, 0,321632]** / std **[0,275148, 0,264242, 0,270747]** (tính trên train split random, đơn vị [0,1]) |
+> | Dung lượng cache | **610,7 MB** (`X_train.npy` 481,7 MB · `X_test.npy` 155,2 MB · nhãn/ROI/paths 8,3 MB), tại `data/cache/` |
+> | Thời gian tạo cache | **13,6 s** (39.201 + 12.630 ảnh, resize 64×64 bilinear, ổ đĩa nóng) |
+> | Trạng thái | ☑ Đạt ☐ Đạt có điều kiện ☐ Chưa đạt |
+> | Ghi chú | `preprocess()` là **hàm duy nhất** trong `src/data.py`, không viết lại ở nơi khác; augmentation chỉ gắn vào `train_loader`; có kiểm tra tự động chặn `Flip`/`RandomRotation`; ảnh đã chuẩn hóa có max 2,558 (biên lý thuyết 2,60) nên "xấp xỉ [-2,2]" trong tài liệu chỉ là ước lượng. Group split không stratify nên 4 lớp hiếm vắng ở val — đã ghi rõ theo 2.7. |
+
+### 2.6.1. Nhật ký thực hiện (todos)
+
+| # | Todo | Trạng thái | Bằng chứng |
+|---|---|---|---|
+| 2.1 | Dựng cache `.npy` uint8 64×64 (train pool 39.201 + test 12.630), kèm nhãn, ROI, paths, `cache_meta.json` | ☑ | `data/cache/` 610,7 MB; 13,6 s |
+| 2.2 | `make_splits` random (stratified) + group (theo track), lưu JSON, không sinh lại mỗi run | ☑ | `outputs/results/split_random.json`, `split_group.json` |
+| 2.3 | `compute_stats` trên **train split** → `data_stats.json`, nạp tự động vào config | ☑ | `outputs/results/data_stats.json`; `src/config.py::_fill_stats` |
+| 2.4 | `preprocess()` dùng chung + `make_loaders` (aug chỉ train, seed cả generator/worker) | ☑ | `src/data.py`; smoke batch `(128,3,64,64)` |
+| 2.5 | Hình lưới augmentation, kiểm tra không lật/xoay 90–180 | ☑ | `outputs/figures/04_augmentation.png` (đã mở bằng mắt) |
+| 2.6 | CLI `--prepare`, `--verify`; chạy checklist 2.5 | ☑ | `python -m src.data --prepare|--verify` → 12/12 PASS |
+| 2.7 | Điền 2.5/2.6 + bảng tiến độ, commit local | ☑ | commit local (không push) |
+
+**Tổng kết: 7/7 todo đạt.** Lệnh tái tạo: `python -m src.data --prepare --verify` (khoảng 20 s khi cache nóng, ~1 phút khi nguội).
 
 ### 2.7. Ghi chú / lưu ý
 

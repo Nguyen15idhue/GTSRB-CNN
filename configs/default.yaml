@@ -1,0 +1,61 @@
+# Cấu hình nền cho toàn bộ pipeline GTSRB + CNN.
+# File thí nghiệm (configs/e*.yaml) chỉ cần khai báo phần KHÁC so với file này;
+# src/config.py sẽ deep-merge lên nền, sau đó validate.
+#
+# mean/std để null nghĩa là lấy từ outputs/results/data_stats.json
+# (sinh bởi `python -m src.data --prepare`, tính trên train split) — không hard-code.
+
+experiment:
+  id: default
+  seed: 42
+  notes: "cấu hình nền"
+
+data:
+  root: data
+  image_size: 64
+  num_classes: 43
+  val_ratio: 0.2
+  split: random          # random | group  (group = chia theo track để val sạch hơn)
+  mean: null             # điền từ outputs/results/data_stats.json
+  std: null
+  cache: true            # dùng cache .npy trong data/cache
+  num_workers: 4
+  pin_memory: true
+
+augmentation:
+  enabled: false
+  rotation: 10
+  translate: 0.1
+  scale_min: 0.9
+  scale_max: 1.1
+  shear: 5
+  brightness: 0.2
+  contrast: 0.2
+  saturation: 0.2
+  hue: 0.02
+  perspective: 0.1
+  perspective_p: 0.3
+
+model:
+  name: cnn_b
+  widths: [32, 64, 128]
+  use_bn: true
+  dropout: 0.3
+  gap: false
+  fc_hidden: 256
+
+train:
+  optimizer: adamw
+  lr: 0.001
+  weight_decay: 0.0001
+  batch_size: 128
+  max_epochs: 40
+  patience: 7
+  scheduler: cosine
+  amp: true
+  monitor: val_macro_f1
+  class_weight: none      # none | inv_sqrt_freq
+  label_smoothing: 0.0
+
+output:
+  dir: outputs/runs

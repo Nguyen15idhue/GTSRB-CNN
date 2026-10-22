@@ -1,0 +1,68 @@
+{
+  "phase": 2,
+  "generated_at": "2026-10-22",
+  "passed": 12,
+  "total": 12,
+  "checks": [
+    {
+      "check": "split_random_tong",
+      "passed": true,
+      "detail": "31360 + 7841 = 39201 (kỳ vọng 39201)"
+    },
+    {
+      "check": "split_random_giao",
+      "passed": true,
+      "detail": "giao train/val = 0"
+    },
+    {
+      "check": "du_lop_train",
+      "passed": true,
+      "detail": "43/43 lớp"
+    },
+    {
+      "check": "du_lop_val",
+      "passed": true,
+      "detail": "43/43 lớp"
+    },
+    {
+      "check": "lech_ty_le_lop",
+      "passed": true,
+      "detail": "lệch tỷ lệ lớn nhất = 0.000093 (ngưỡng ≤ 0,01)"
+    },
+    {
+      "check": "split_group_track_roi",
+      "passed": true,
+      "detail": "giao track = 0; track train/val = 1045/262; lớp vắng ở val = [0, 19, 34, 39]"
+    },
+    {
+      "check": "split_group_kich_thuoc",
+      "passed": true,
+      "detail": "31341 + 7860 = 39201"
+    },
+    {
+      "check": "cache_shape_dtype",
+      "passed": true,
+      "detail": "X_train (39201, 64, 64, 3) uint8; X_test (12630, 64, 64, 3) uint8"
+    },
+    {
+      "check": "preprocess_shape_range",
+      "passed": true,
+      "detail": "shape=(3, 64, 64) min=-0.667 max=2.558 (biên lý thuyết ±2.60 ứng với mean/std đã tính; tài liệu ghi 'xấp xỉ [-2,2]')"
+    },
+    {
+      "check": "aug_khong_lat",
+      "passed": true,
+      "detail": "không có Flip/RandomRotation trong transform; hình 04_augmentation.png tồn tại"
+    },
+    {
+      "check": "split_doc_lai",
+      "passed": true,
+      "detail": "đọc lại split_random.json cho cùng index"
+    },
+    {
+      "check": "import_preprocess_tu_ngoai",
+      "passed": true,
+      "detail": "subprocess: (3, 64, 64)"
+    }
+  ]
+}

@@ -1,12 +1,17 @@
-"""Tải GTSRB, xác minh dữ liệu và sinh báo cáo EDA (Giai đoạn 1).
+"""Tải GTSRB, xác minh dữ liệu, sinh báo cáo EDA, cache, chia tập và tiền xử lý.
 
-Phạm vi giai đoạn 1: tải, đếm, kiểm tra ảnh/trùng lặp/ROI/track, vẽ hình EDA và
-ghi ``outputs/results/data_report.json``. Cache, split và ``preprocess`` thuộc
-Giai đoạn 2 nên **không** được triển khai ở đây.
+Giai đoạn 1: tải, đếm, kiểm tra ảnh/trùng lặp/ROI/track, vẽ hình EDA, ghi
+``outputs/results/data_report.json``.
+
+Giai đoạn 2: cache ``.npy`` (uint8, 64×64), chia ``split_random``/``split_group``,
+tính mean/std trên train, hàm :func:`preprocess` **duy nhất** dùng chung cho
+train/eval/demo, dataloader có augmentation chỉ ở train.
 
 Cách dùng::
 
     python -m src.data --download --report
+    python -m src.data --prepare        # cache + split + mean/std + hình augmentation
+    python -m src.data --verify         # chạy checklist Giai đoạn 2
     python -m src.data --report --limit 200   # smoke test, chỉ quét 200 ảnh/tập
 """
 
@@ -22,11 +27,12 @@ import re
 import shutil
 import sys
 import textwrap
+import time
 from collections import Counter, defaultdict
 from dataclasses import dataclass
 from datetime import date
 from pathlib import Path
-from typing import Any, Collection, Iterable, Sequence
+from typing import Any, Collection, Iterable, Mapping, Sequence
 
 import matplotlib
 
@@ -37,18 +43,26 @@ import numpy as np
 from PIL import Image, UnidentifiedImageError
 
 from .config import (
+    CACHE_DIR,
     CLASS_NAMES_PATH,
     DATA_ROOT,
+    DEFAULT_SEED,
     FIGURES_DIR,
     GTSRB_ROOT,
+    IMG_SIZE,
     NUM_CLASSES,
     PROJECT_ROOT,
     PUBLISHED_TEST_COUNT,
     PUBLISHED_TRAIN_COUNT,
     RESULTS_DIR,
+    SPLIT_FILES,
+    STATS_PATH,
     TEST_GT_CSV,
     TEST_IMAGES_DIR,
     TRAIN_IMAGES_DIR,
+    load_config,
+    load_yaml,
+    seed_worker,
 )
 
 LOG = logging.getLogger(__name__)
@@ -762,6 +776,754 @@ def _classid_mismatches(
 
 
 # ---------------------------------------------------------------------------
+# Giai đoạn 2 — cache, chia tập, tiền xử lý, dataloader
+# ---------------------------------------------------------------------------
+
+CACHE_META_PATH = CACHE_DIR / "cache_meta.json"
+FIG_AUGMENTATION = FIGURES_DIR / "04_augmentation.png"
+PHASE2_CHECK_PATH = RESULTS_DIR / "phase2_check.json"
+
+# 39.209 ảnh train trên đĩa trừ 8 ảnh trùng MD5 với test (Giai đoạn 1).
+TRAIN_POOL_COUNT = PUBLISHED_TRAIN_COUNT - 8
+
+CACHE_KEYS = {
+    "train": ("X_train.npy", "y_train.npy", "roi_train.npy", "paths_train.txt"),
+    "test": ("X_test.npy", "y_test.npy", "roi_test.npy", "paths_test.txt"),
+}
+
+
+@dataclass
+class PoolMeta:
+    """Mô tả một tập ảnh đã index: đường dẫn tương đối, nhãn, ROI, khóa track."""
+
+    split: str
+    paths: list[str]
+    labels: np.ndarray
+    rois: np.ndarray
+    track_keys: list[str]
+
+
+def _read_train_meta(path: Path = TRAIN_META_PATH) -> list[dict[str, str]]:
+    """Đọc ``train_meta.csv`` do Giai đoạn 1 sinh ra."""
+    if not path.is_file():
+        raise FileNotFoundError(
+            f"Không thấy {path}. Chạy trước: python -m src.data --report"
+        )
+    with path.open(newline="", encoding="utf-8") as fh:
+        return list(csv.DictReader(fh))
+
+
+def _track_key(path: str, label: int) -> str:
+    """Khóa nhóm track: ``<label>_<track>``; ảnh không khớp mẫu thì dùng path riêng."""
+    stem = Path(path).stem
+    track = parse_track_id(stem)
+    return f"{label:05d}_{track}" if track else f"{label:05d}_path_{stem}"
+
+
+def load_train_pool(meta_path: Path = TRAIN_META_PATH) -> PoolMeta:
+    """Tập train dùng để chia split: chỉ các ảnh ``usable_for_train=1`` (39.201)."""
+    rows = [r for r in _read_train_meta(meta_path) if int(r["usable_for_train"]) == 1]
+    if not rows:
+        raise RuntimeError(f"{meta_path}: không có dòng nào usable_for_train=1")
+    labels = np.array([int(r["label"]) for r in rows], dtype=np.int64)
+    rois = np.array(
+        [[int(r["roi_x1"]), int(r["roi_y1"]), int(r["roi_x2"]), int(r["roi_y2"])]
+         if int(r["roi_valid"]) == 1 else [-1, -1, -1, -1] for r in rows],
+        dtype=np.int32,
+    )
+    paths = [r["path"] for r in rows]
+    return PoolMeta(
+        split="train",
+        paths=paths,
+        labels=labels,
+        rois=rois,
+        track_keys=[_track_key(r["path"], int(r["label"])) for r in rows],
+    )
+
+
+def load_test_pool(images_dir: Path = TEST_IMAGES_DIR, gt_csv: Path = TEST_GT_CSV) -> PoolMeta:
+    """Tập test chính thức (12.630 ảnh) + ROI từ ``GT-final_test.csv``."""
+    annotations = {Path(r["Filename"]).stem: r for r in read_test_annotations(gt_csv)}
+    samples = index_test_images(images_dir, gt_csv)
+    paths = [_relative(p) for p, _ in samples]
+    labels = np.array([label for _, label in samples], dtype=np.int64)
+    rois = []
+    for path, _ in samples:
+        roi, valid = parse_roi(annotations.get(path.stem))
+        rois.append(list(roi) if valid and roi is not None else [-1, -1, -1, -1])
+    return PoolMeta(
+        split="test",
+        paths=paths,
+        labels=labels,
+        rois=np.array(rois, dtype=np.int32),
+        track_keys=[],
+    )
+
+
+def _load_resized(path: Path, size: int) -> np.ndarray:
+    """Đọc ảnh, chuyển RGB, resize bilinear về ``size×size``, trả ``uint8`` HWC."""
+    with Image.open(path) as img:
+        rgb = img.convert("RGB").resize((size, size), Image.BILINEAR)
+        return np.asarray(rgb, dtype=np.uint8)
+
+
+def build_cache(size: int = IMG_SIZE, force: bool = False) -> dict[str, Any]:
+    """Resize toàn bộ ảnh một lần và lưu ``.npy`` (uint8) để epoch chạy nhanh."""
+    CACHE_DIR.mkdir(parents=True, exist_ok=True)
+    meta_file = CACHE_META_PATH
+    if meta_file.is_file() and not force:
+        meta = json.loads(meta_file.read_text(encoding="utf-8"))
+        if meta.get("image_size") == size and all(
+            (CACHE_DIR / name).is_file() for names in CACHE_KEYS.values() for name in names
+        ):
+            LOG.info("Dùng lại cache sẵn có tại %s (image_size=%d)", CACHE_DIR, size)
+            return meta
+
+    started = time.perf_counter()
+    pools = {"train": load_train_pool(), "test": load_test_pool()}
+    meta: dict[str, Any] = {"image_size": size, "created_at": date.today().isoformat(), "splits": {}}
+
+    for split, pool in pools.items():
+        n = len(pool.paths)
+        x = np.empty((n, size, size, 3), dtype=np.uint8)
+        LOG.info("Dựng cache %s: %d ảnh...", split, n)
+        for i, rel in enumerate(pool.paths):
+            x[i] = _load_resized(PROJECT_ROOT / rel, size)
+            if (i + 1) % 5000 == 0:
+                LOG.info("  %s: %d/%d", split, i + 1, n)
+
+        x_name, y_name, roi_name, path_name = CACHE_KEYS[split]
+        np.save(CACHE_DIR / x_name, x)
+        np.save(CACHE_DIR / y_name, pool.labels.astype(np.int16))
+        np.save(CACHE_DIR / roi_name, pool.rois)
+        (CACHE_DIR / path_name).write_text("\n".join(pool.paths), encoding="utf-8")
+        meta["splits"][split] = {
+            "count": n,
+            "shape": list(x.shape),
+            "dtype": str(x.dtype),
+            "files": {
+                name: {
+                    "size_mb": round((CACHE_DIR / name).stat().st_size / 1024**2, 2),
+                }
+                for name in (x_name, y_name, roi_name, path_name)
+            },
+        }
+
+    meta["elapsed_s"] = round(time.perf_counter() - started, 2)
+    meta["total_size_mb"] = round(
+        sum(f.stat().st_size for names in CACHE_KEYS.values()
+            for name in names for f in [CACHE_DIR / name]) / 1024**2,
+        2,
+    )
+    meta_file.write_text(json.dumps(meta, ensure_ascii=False, indent=2), encoding="utf-8")
+    LOG.info(
+        "Xong cache trong %.1f s, tổng %.1f MB → %s",
+        meta["elapsed_s"],
+        meta["total_size_mb"],
+        CACHE_DIR,
+    )
+    return meta
+
+
+def load_cache(size: int = IMG_SIZE) -> dict[str, Any]:
+    """Đọc cache đã dựng; raise nếu thiếu hoặc sai shape/dtype."""
+    cache: dict[str, Any] = {}
+    for split, (x_name, y_name, roi_name, path_name) in CACHE_KEYS.items():
+        for name in (x_name, y_name, roi_name, path_name):
+            if not (CACHE_DIR / name).is_file():
+                raise FileNotFoundError(
+                    f"Thiếu {CACHE_DIR / name}. Chạy trước: python -m src.data --prepare"
+                )
+        x = np.load(CACHE_DIR / x_name)
+        y = np.load(CACHE_DIR / y_name)
+        if x.ndim != 4 or x.shape[1:] != (size, size, 3) or x.dtype != np.uint8:
+            raise ValueError(
+                f"{x_name} có shape {x.shape}, dtype {x.dtype}; cần (N, {size}, {size}, 3) uint8"
+            )
+        if len(y) != len(x):
+            raise ValueError(f"{y_name} có {len(y)} nhãn nhưng {x_name} có {len(x)} ảnh")
+        cache[split] = {
+            "x": x,
+            "y": y.astype(np.int64),
+            "roi": np.load(CACHE_DIR / roi_name),
+            "paths": (CACHE_DIR / path_name).read_text(encoding="utf-8").splitlines(),
+        }
+    return cache
+
+
+def make_splits(
+    labels: np.ndarray,
+    tracks: Sequence[str],
+    val_ratio: float = 0.2,
+    seed: int = DEFAULT_SEED,
+    mode: str = "random",
+) -> dict[str, list[int]]:
+    """Chia index train/val.
+
+    ``mode='random'``: stratified theo nhãn (train_test_split).
+    ``mode='group'``: GroupShuffleSplit theo ``track`` để val không chứa frame
+    cùng track với train (đo mức lạc quan do rò rỉ frame).
+    """
+    from sklearn.model_selection import GroupShuffleSplit, train_test_split
+
+    labels = np.asarray(labels)
+    indices = np.arange(len(labels))
+    if mode == "random":
+        train_idx, val_idx = train_test_split(
+            indices, test_size=val_ratio, random_state=seed, stratify=labels
+        )
+    elif mode == "group":
+        splitter = GroupShuffleSplit(n_splits=1, test_size=val_ratio, random_state=seed)
+        train_idx, val_idx = next(splitter.split(indices, groups=np.asarray(tracks)))
+    else:
+        raise ValueError(f"mode phải là 'random' hoặc 'group', nhận được {mode!r}")
+    return {
+        "train": sorted(int(i) for i in train_idx),
+        "val": sorted(int(i) for i in val_idx),
+    }
+
+
+def _split_summary(labels: np.ndarray, tracks: Sequence[str], split: dict[str, list[int]]) -> dict[str, Any]:
+    """Số liệu kiểm chứng một bộ split: số ảnh, đủ lớp, lệch tỷ lệ, track rời nhau."""
+    train_idx = np.asarray(split["train"])
+    val_idx = np.asarray(split["val"])
+    train_counts = per_class_counts(labels[train_idx])
+    val_counts = per_class_counts(labels[val_idx])
+    ratios = {
+        class_id: {
+            "train_ratio": round(train_counts[class_id] / max(len(train_idx), 1), 6),
+            "val_ratio": round(val_counts[class_id] / max(len(val_idx), 1), 6),
+        }
+        for class_id in range(NUM_CLASSES)
+    }
+    max_ratio_gap = max(
+        abs(v["train_ratio"] - v["val_ratio"]) for v in ratios.values()
+    )
+    track_array = np.asarray(tracks)
+    train_tracks = set(track_array[train_idx]) if len(track_array) else set()
+    val_tracks = set(track_array[val_idx]) if len(track_array) else set()
+    return {
+        "n_train": int(len(train_idx)),
+        "n_val": int(len(val_idx)),
+        "classes_train": len([c for c in train_counts.values() if c > 0]),
+        "classes_val": len([c for c in val_counts.values() if c > 0]),
+        "classes_missing_val": [c for c, v in val_counts.items() if v == 0],
+        "min_class_val": {
+            "class_id": int(min(val_counts, key=lambda k: val_counts[k])),
+            "count": int(min(val_counts.values())),
+        },
+        "max_class_ratio_gap": round(float(max_ratio_gap), 6),
+        "overlap_index": int(len(set(train_idx.tolist()) & set(val_idx.tolist()))),
+        "n_tracks_train": len(train_tracks),
+        "n_tracks_val": len(val_tracks),
+        "overlap_track": len(train_tracks & val_tracks),
+        "per_class": {
+            str(c): {"train": train_counts[c], "val": val_counts[c]} for c in range(NUM_CLASSES)
+        },
+    }
+
+
+def build_splits(
+    labels: np.ndarray,
+    tracks: Sequence[str],
+    val_ratio: float = 0.2,
+    seed: int = DEFAULT_SEED,
+    force: bool = False,
+) -> dict[str, Any]:
+    """Sinh và lưu cả hai bộ split (random, group) ra JSON để tái sử dụng."""
+    RESULTS_DIR.mkdir(parents=True, exist_ok=True)
+    result: dict[str, Any] = {"seed": seed, "val_ratio": val_ratio, "num_images": int(len(labels)), "splits": {}}
+    for mode, out_path in SPLIT_FILES.items():
+        if out_path.is_file() and not force:
+            payload = json.loads(out_path.read_text(encoding="utf-8"))
+            LOG.info("Dùng lại %s (%d train / %d val)", out_path.name, len(payload["train"]), len(payload["val"]))
+        else:
+            indices = make_splits(labels, tracks, val_ratio=val_ratio, seed=seed, mode=mode)
+            payload = {
+                "mode": mode,
+                "seed": seed,
+                "val_ratio": val_ratio,
+                "num_images": int(len(labels)),
+                "train": indices["train"],
+                "val": indices["val"],
+                "summary": _split_summary(labels, tracks, indices),
+            }
+            out_path.write_text(json.dumps(payload, ensure_ascii=False), encoding="utf-8")
+            LOG.info(
+                "Đã ghi %s: %d train / %d val", out_path.name, len(payload["train"]), len(payload["val"])
+            )
+        result["splits"][mode] = {
+            "file": _relative(out_path),
+            "n_train": len(payload["train"]),
+            "n_val": len(payload["val"]),
+            "summary": payload["summary"],
+        }
+    return result
+
+
+def load_split(mode: str = "random") -> dict[str, Any]:
+    """Đọc lại bộ split đã lưu (không sinh lại để mọi run so sánh được)."""
+    if mode not in SPLIT_FILES:
+        raise ValueError(f"split phải thuộc {list(SPLIT_FILES)}, nhận được {mode!r}")
+    path = SPLIT_FILES[mode]
+    if not path.is_file():
+        raise FileNotFoundError(f"Thiếu {path}. Chạy trước: python -m src.data --prepare")
+    return json.loads(path.read_text(encoding="utf-8"))
+
+
+def compute_stats(
+    images: np.ndarray, indices: Sequence[int] | None = None
+) -> dict[str, Any]:
+    """mean/std từng kênh (thang [0,1]) tính **chỉ trên train split**."""
+    idx = np.arange(len(images)) if indices is None else np.asarray(indices)
+    total = 0
+    channel_sum = np.zeros(3, dtype=np.float64)
+    channel_sq = np.zeros(3, dtype=np.float64)
+    for chunk in np.array_split(idx, max(1, len(idx) // 5000 or 1)):
+        block = images[chunk].astype(np.float32) / 255.0
+        flat = block.reshape(-1, 3).astype(np.float64)
+        channel_sum += flat.sum(axis=0)
+        channel_sq += (flat * flat).sum(axis=0)
+        total += flat.shape[0]
+    mean = channel_sum / total
+    var = channel_sq / total - mean * mean
+    std = np.sqrt(np.clip(var, 1e-12, None))
+    return {
+        "mean": [round(float(v), 6) for v in mean],
+        "std": [round(float(v), 6) for v in std],
+        "num_images": int(len(idx)),
+        "num_pixels": int(total),
+    }
+
+
+def load_stats(path: Path = STATS_PATH) -> dict[str, Any]:
+    """Đọc mean/std đã lưu; raise nếu chưa chạy ``--prepare``."""
+    if not path.is_file():
+        raise FileNotFoundError(f"Thiếu {path}. Chạy trước: python -m src.data --prepare")
+    return json.loads(path.read_text(encoding="utf-8"))
+
+
+def _to_rgb_array(image: Image.Image | np.ndarray | str | Path, size: int) -> np.ndarray:
+    """Chuẩn hóa đầu vào về mảng RGB uint8 kích thước ``size×size``."""
+    if isinstance(image, (str, Path)):
+        with Image.open(image) as img:
+            return np.asarray(img.convert("RGB").resize((size, size), Image.BILINEAR), dtype=np.uint8)
+    if isinstance(image, np.ndarray):
+        array = image
+        if array.dtype != np.uint8:
+            array = np.clip(array, 0, 255).astype(np.uint8)
+        if array.ndim == 2:
+            array = np.stack([array] * 3, axis=-1)
+        if array.shape[:2] != (size, size):
+            pil = Image.fromarray(array).convert("RGB").resize((size, size), Image.BILINEAR)
+            return np.asarray(pil, dtype=np.uint8)
+        return array
+    if isinstance(image, Image.Image):
+        return np.asarray(image.convert("RGB").resize((size, size), Image.BILINEAR), dtype=np.uint8)
+    raise TypeError(f"Không hỗ trợ kiểu ảnh {type(image)!r}")
+
+
+def _array_to_tensor(array: np.ndarray, mean: Sequence[float], std: Sequence[float]):
+    """uint8 HWC → tensor (3,H,W) đã chuẩn hóa; dùng chung cho train/eval/demo."""
+    import torch
+
+    # astype tạo bản sao writable (mảng do PIL trả về là read-only) và đổi sang float32.
+    tensor = torch.from_numpy(array.astype(np.float32)).div_(255.0).permute(2, 0, 1)
+    mean_t = torch.tensor(list(mean), dtype=torch.float32).view(3, 1, 1)
+    std_t = torch.tensor(list(std), dtype=torch.float32).view(3, 1, 1)
+    return (tensor - mean_t) / std_t
+
+
+def preprocess(
+    image: Image.Image | np.ndarray | str | Path,
+    size: int = IMG_SIZE,
+    mean: Sequence[float] | None = None,
+    std: Sequence[float] | None = None,
+):
+    """Hàm tiền xử lý **duy nhất** dùng cho train, eval và demo.
+
+    Args:
+        image: PIL image, ndarray HWC, hoặc đường dẫn file.
+        size: cạnh ảnh đầu ra (mặc định 64).
+        mean/std: nếu None thì lấy từ ``outputs/results/data_stats.json``.
+
+    Returns:
+        Float tensor shape ``(3, size, size)``, chuẩn hóa theo mean/std của train.
+    """
+    if mean is None or std is None:
+        stats = load_stats()
+        mean = mean or stats["mean"]
+        std = std or stats["std"]
+    return _array_to_tensor(_to_rgb_array(image, size), mean, std)
+
+
+def build_train_transform(cfg: Mapping[str, Any]):
+    """Augmentation **chỉ cho train**; cấm lật ảnh (đổi nghĩa biển báo)."""
+    from torchvision import transforms
+
+    aug = cfg["augmentation"]
+    data = cfg["data"]
+    operations: list[Any] = []
+    if aug.get("enabled"):
+        operations.append(
+            transforms.RandomAffine(
+                degrees=float(aug["rotation"]),
+                translate=(float(aug["translate"]), float(aug["translate"])),
+                scale=(float(aug["scale_min"]), float(aug["scale_max"])),
+                shear=float(aug["shear"]),
+                interpolation=transforms.InterpolationMode.BILINEAR,
+            )
+        )
+        operations.append(
+            transforms.ColorJitter(
+                brightness=float(aug["brightness"]),
+                contrast=float(aug["contrast"]),
+                saturation=float(aug["saturation"]),
+                hue=float(aug["hue"]),
+            )
+        )
+        operations.append(
+            transforms.RandomPerspective(
+                distortion_scale=float(aug["perspective"]),
+                p=float(aug["perspective_p"]),
+                interpolation=transforms.InterpolationMode.BILINEAR,
+            )
+        )
+    operations.extend(
+        [
+            transforms.ToTensor(),
+            transforms.Normalize(mean=list(data["mean"]), std=list(data["std"])),
+        ]
+    )
+    transform = transforms.Compose(operations)
+    _assert_no_flip(transform)
+    return transform
+
+
+def _assert_no_flip(transform: Any) -> None:
+    """Chặn cấu hình augmentation có lật ảnh hoặc xoay 90/180 độ."""
+    text = repr(transform)
+    forbidden = [name for name in ("Flip", "RandomRotation") if name in text]
+    if forbidden:
+        raise ValueError(
+            f"Augmentation chứa phép biến đổi bị cấm {forbidden}: làm đổi nghĩa biển báo. "
+            f"Transform hiện tại: {text}"
+        )
+
+
+class GTSRBTensorDataset:
+    """Dataset đọc từ cache uint8, trả tensor đã chuẩn hóa (và augmentation nếu có)."""
+
+    def __init__(
+        self,
+        images: np.ndarray,
+        labels: np.ndarray,
+        indices: Sequence[int],
+        transform: Any = None,
+        mean: Sequence[float] | None = None,
+        std: Sequence[float] | None = None,
+    ) -> None:
+        self.images = images
+        self.labels = labels
+        self.indices = np.asarray(indices, dtype=np.int64)
+        self.transform = transform
+        self.mean = mean
+        self.std = std
+
+    def __len__(self) -> int:
+        return len(self.indices)
+
+    def __getitem__(self, position: int):
+        import torch
+
+        idx = int(self.indices[position])
+        array = self.images[idx]
+        if self.transform is not None:
+            from PIL import Image as PILImage
+
+            tensor = self.transform(PILImage.fromarray(array))
+        else:
+            if self.mean is None or self.std is None:
+                raise ValueError("Dataset eval cần mean/std để chuẩn hóa")
+            tensor = _array_to_tensor(array, self.mean, self.std)
+        return tensor, int(self.labels[idx])
+
+
+def make_loaders(
+    cfg: Mapping[str, Any],
+    split: str | None = None,
+    seed: int | None = None,
+    batch_size: int | None = None,
+    num_workers: int | None = None,
+) -> dict[str, Any]:
+    """Tạo ``train_loader``/``val_loader`` từ cache + split đã lưu."""
+    import torch
+    from torch.utils.data import DataLoader
+
+    data_cfg = cfg["data"]
+    split_mode = split or data_cfg["split"]
+    seed = int(cfg["experiment"].get("seed", DEFAULT_SEED) if seed is None else seed)
+    batch_size = int(cfg["train"]["batch_size"]) if batch_size is None else int(batch_size)
+    workers = int(data_cfg.get("num_workers", 0) if num_workers is None else num_workers)
+    pin_memory = bool(data_cfg.get("pin_memory", True)) and torch.cuda.is_available()
+
+    cache = load_cache(int(data_cfg["image_size"]))
+    split_payload = load_split(split_mode)
+    mean = list(data_cfg["mean"])
+    std = list(data_cfg["std"])
+
+    train_ds = GTSRBTensorDataset(
+        cache["train"]["x"],
+        cache["train"]["y"],
+        split_payload["train"],
+        transform=build_train_transform(cfg),
+    )
+    val_ds = GTSRBTensorDataset(
+        cache["train"]["x"],
+        cache["train"]["y"],
+        split_payload["val"],
+        transform=None,
+        mean=mean,
+        std=std,
+    )
+
+    generator = torch.Generator()
+    generator.manual_seed(seed)
+    common = {
+        "num_workers": workers,
+        "pin_memory": pin_memory,
+        "worker_init_fn": seed_worker,
+        "persistent_workers": workers > 0,
+    }
+    train_loader = DataLoader(
+        train_ds, batch_size=batch_size, shuffle=True, generator=generator, drop_last=False, **common
+    )
+    val_loader = DataLoader(val_ds, batch_size=batch_size, shuffle=False, generator=generator, **common)
+    return {
+        "train": train_loader,
+        "val": val_loader,
+        "meta": {
+            "split": split_mode,
+            "seed": seed,
+            "n_train": len(train_ds),
+            "n_val": len(val_ds),
+            "batch_size": batch_size,
+            "num_workers": workers,
+            "train_transform": repr(train_ds.transform),
+            "augmentation_enabled": bool(cfg["augmentation"].get("enabled")),
+            "mean": mean,
+            "std": std,
+        },
+    }
+
+
+def plot_augmentation_grid(cfg: Mapping[str, Any], columns: int = 8, seed: int = DEFAULT_SEED) -> Path:
+    """Vẽ lưới 8 ảnh gốc / 8 ảnh sau augmentation để kiểm tra bằng mắt."""
+    import torch
+
+    cache = load_cache(int(cfg["data"]["image_size"]))
+    labels = cache["train"]["y"]
+    rng = np.random.default_rng(seed)
+    chosen: list[int] = []
+    for class_id in range(NUM_CLASSES):
+        candidates = np.flatnonzero(labels == class_id)
+        if len(candidates):
+            chosen.append(int(rng.choice(candidates)))
+        if len(chosen) == columns:
+            break
+    while len(chosen) < columns:
+        chosen.append(int(rng.integers(0, len(labels))))
+
+    transform = build_train_transform(cfg)
+    from PIL import Image as PILImage
+
+    mean = np.array(cfg["data"]["mean"])
+    std = np.array(cfg["data"]["std"])
+    fig, axes = plt.subplots(2, columns, figsize=(columns * 1.7, 4.2))
+    for col, idx in enumerate(chosen):
+        array = cache["train"]["x"][idx]
+        axes[0, col].imshow(array)
+        axes[0, col].set_title(f"gốc · lớp {labels[idx]}", fontsize=8)
+        axes[0, col].axis("off")
+        tensor = transform(PILImage.fromarray(array))
+        shown = tensor.permute(1, 2, 0).numpy() * std + mean
+        axes[1, col].imshow(np.clip(shown, 0, 1))
+        axes[1, col].set_title("sau aug", fontsize=8)
+        axes[1, col].axis("off")
+    fig.suptitle(
+        "Kiểm tra augmentation: KHÔNG lật ngang/dọc, KHÔNG xoay 90/180 (giữ nghĩa biển báo)",
+        fontsize=10,
+    )
+    fig.tight_layout()
+    FIGURES_DIR.mkdir(parents=True, exist_ok=True)
+    fig.savefig(FIG_AUGMENTATION, dpi=130)
+    plt.close(fig)
+    LOG.info("Đã ghi %s", FIG_AUGMENTATION)
+    return FIG_AUGMENTATION
+
+
+def prepare(force: bool = False, size: int = IMG_SIZE) -> dict[str, Any]:
+    """Chạy trọn Giai đoạn 2: cache → split → mean/std → hình augmentation."""
+    cache_meta = build_cache(size=size, force=force)
+    pool = load_train_pool()
+    splits = build_splits(
+        pool.labels, pool.track_keys, val_ratio=0.2, seed=DEFAULT_SEED, force=force
+    )
+    cache = load_cache(size)
+    stats = compute_stats(cache["train"]["x"], load_split("random")["train"])
+    stats.update(
+        {
+            "split": "random",
+            "seed": DEFAULT_SEED,
+            "image_size": size,
+            "note": (
+                "mean/std tính trên train split (không dùng val/test) theo đơn vị [0,1]; "
+                "dùng chung cho train, eval và demo qua src.data.preprocess."
+            ),
+        }
+    )
+    STATS_PATH.write_text(json.dumps(stats, ensure_ascii=False, indent=2), encoding="utf-8")
+    LOG.info("mean=%s std=%s → %s", stats["mean"], stats["std"], STATS_PATH)
+
+    cfg = load_config(require_stats=False)
+    cfg["data"]["mean"] = stats["mean"]
+    cfg["data"]["std"] = stats["std"]
+    plot_augmentation_grid(cfg)
+
+    payload = {"cache": cache_meta, "splits": splits, "stats": stats}
+    RESULTS_DIR.mkdir(parents=True, exist_ok=True)
+    (RESULTS_DIR / "phase2_prepare.json").write_text(
+        json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8"
+    )
+    return payload
+
+
+def verify_phase2(size: int = IMG_SIZE) -> list[dict[str, Any]]:
+    """Chạy checklist Giai đoạn 2 bằng số liệu thật; ghi ``phase2_check.json``."""
+    checks: list[dict[str, Any]] = []
+
+    def add(name: str, passed: bool, detail: str) -> None:
+        checks.append({"check": name, "passed": bool(passed), "detail": detail})
+        LOG.info("%s %s — %s", "PASS" if passed else "FAIL", name, detail)
+
+    train_pool = load_train_pool()
+    random_split = load_split("random")
+    group_split = load_split("group")
+    cache = load_cache(size)
+    x_train, y_train = cache["train"]["x"], cache["train"]["y"]
+    x_test = cache["test"]["x"]
+
+    add(
+        "split_random_tong",
+        len(random_split["train"]) + len(random_split["val"]) == TRAIN_POOL_COUNT,
+        f"{len(random_split['train'])} + {len(random_split['val'])} = "
+        f"{len(random_split['train']) + len(random_split['val'])} (kỳ vọng {TRAIN_POOL_COUNT})",
+    )
+    overlap = len(set(random_split["train"]) & set(random_split["val"]))
+    add("split_random_giao", overlap == 0, f"giao train/val = {overlap}")
+
+    for name, idx in (("train", random_split["train"]), ("val", random_split["val"])):
+        unique = int(len(np.unique(y_train[idx])))
+        add(f"du_lop_{name}", unique == NUM_CLASSES, f"{unique}/{NUM_CLASSES} lớp")
+
+    ratios = random_split["summary"]
+    add(
+        "lech_ty_le_lop",
+        ratios["max_class_ratio_gap"] <= 0.01,
+        f"lệch tỷ lệ lớn nhất = {ratios['max_class_ratio_gap']:.6f} (ngưỡng ≤ 0,01)",
+    )
+
+    track_array = np.asarray(train_pool.track_keys)
+    group_overlap = len(
+        set(track_array[group_split["train"]]) & set(track_array[group_split["val"]])
+    )
+    add(
+        "split_group_track_roi",
+        group_overlap == 0,
+        f"giao track = {group_overlap}; track train/val = "
+        f"{len(set(track_array[group_split['train']]))}/{len(set(track_array[group_split['val']]))}; "
+        f"lớp vắng ở val = {group_split['summary']['classes_missing_val']}",
+    )
+    add(
+        "split_group_kich_thuoc",
+        len(group_split["train"]) + len(group_split["val"]) == TRAIN_POOL_COUNT,
+        f"{len(group_split['train'])} + {len(group_split['val'])} = {TRAIN_POOL_COUNT}",
+    )
+
+    add(
+        "cache_shape_dtype",
+        x_train.shape == (TRAIN_POOL_COUNT, size, size, 3) and x_train.dtype == np.uint8,
+        f"X_train {x_train.shape} {x_train.dtype}; X_test {x_test.shape} {x_test.dtype}",
+    )
+
+    sample_path = PROJECT_ROOT / train_pool.paths[0]
+    mean_std = load_stats()
+    tensor = preprocess(sample_path, size=size)
+    # Khoảng giá trị lý thuyết của ảnh đã chuẩn hóa: [(0-mean)/std, (1-mean)/std].
+    bound = max(
+        max(abs((0.0 - m) / s), abs((1.0 - m) / s))
+        for m, s in zip(mean_std["mean"], mean_std["std"])
+    )
+    add(
+        "preprocess_shape_range",
+        tuple(tensor.shape) == (3, size, size)
+        and bool(np.isfinite(tensor.numpy()).all())
+        and float(tensor.min()) >= -bound - 0.05
+        and float(tensor.max()) <= bound + 0.05,
+        f"shape={tuple(tensor.shape)} min={float(tensor.min()):.3f} max={float(tensor.max()):.3f} "
+        f"(biên lý thuyết ±{bound:.2f} ứng với mean/std đã tính; tài liệu ghi 'xấp xỉ [-2,2]')",
+    )
+
+    transform_text = repr(build_train_transform(load_config()))
+    add(
+        "aug_khong_lat",
+        all(name not in transform_text for name in ("Flip", "RandomRotation"))
+        and FIG_AUGMENTATION.is_file(),
+        f"không có Flip/RandomRotation trong transform; hình {FIG_AUGMENTATION.name} "
+        f"{'tồn tại' if FIG_AUGMENTATION.is_file() else 'THIẾU'}",
+    )
+
+    again = load_split("random")
+    add(
+        "split_doc_lai",
+        again["train"] == random_split["train"] and again["val"] == random_split["val"],
+        f"đọc lại {SPLIT_FILES['random'].name} cho cùng index",
+    )
+
+    import subprocess
+
+    probe = subprocess.run(
+        [
+            sys.executable,
+            "-c",
+            "from src.data import preprocess;"
+            "import torch;"
+            "print(tuple(preprocess('" + train_pool.paths[0] + "').shape))",
+        ],
+        cwd=str(PROJECT_ROOT),
+        capture_output=True,
+        text=True,
+    )
+    add(
+        "import_preprocess_tu_ngoai",
+        probe.returncode == 0 and "(3, 64, 64)" in probe.stdout,
+        f"subprocess: {probe.stdout.strip() or probe.stderr.strip()[:120]}",
+    )
+
+    summary = {
+        "phase": 2,
+        "generated_at": date.today().isoformat(),
+        "passed": sum(1 for c in checks if c["passed"]),
+        "total": len(checks),
+        "checks": checks,
+    }
+    RESULTS_DIR.mkdir(parents=True, exist_ok=True)
+    PHASE2_CHECK_PATH.write_text(json.dumps(summary, ensure_ascii=False, indent=2), encoding="utf-8")
+    LOG.info("Kết quả: %d/%d PASS → %s", summary["passed"], summary["total"], PHASE2_CHECK_PATH)
+    return checks
+
+
+# ---------------------------------------------------------------------------
 # Entry point
 # ---------------------------------------------------------------------------
 
@@ -833,29 +1595,48 @@ def _configure_logging() -> None:
 
 def parse_args(argv: Sequence[str] | None = None) -> argparse.Namespace:
     """Tham số CLI của ``python -m src.data``."""
-    parser = argparse.ArgumentParser(description="Tải và xác minh GTSRB (Giai đoạn 1)")
+    parser = argparse.ArgumentParser(description="Dữ liệu GTSRB: tải, xác minh, cache, chia tập (GĐ1–2)")
     parser.add_argument("--download", action="store_true", help="tải dữ liệu qua torchvision")
     parser.add_argument("--report", action="store_true", help="xác minh, vẽ EDA, ghi data_report.json")
+    parser.add_argument(
+        "--prepare",
+        action="store_true",
+        help="dựng cache .npy + split random/group + mean/std + hình augmentation",
+    )
+    parser.add_argument("--verify", action="store_true", help="chạy checklist Giai đoạn 2")
     parser.add_argument(
         "--limit",
         type=int,
         default=0,
         help="chỉ quét N ảnh mỗi tập (dùng cho smoke test; 0 = toàn bộ)",
     )
+    parser.add_argument(
+        "--image-size", type=int, default=IMG_SIZE, help="cạnh ảnh cache (mặc định 64)"
+    )
+    parser.add_argument("--force", action="store_true", help="dựng lại cache/split dù đã có")
     return parser.parse_args(argv)
 
 
 def main(argv: Sequence[str] | None = None) -> int:
-    """Entry point: ``python -m src.data --download --report``."""
+    """Entry point: ``python -m src.data --download --report | --prepare | --verify``."""
     _configure_logging()
     args = parse_args(argv)
-    if not (args.download or args.report):
-        LOG.error("Cần ít nhất một trong --download hoặc --report")
+    actions = (args.download, args.report, args.prepare, args.verify)
+    if not any(actions):
+        LOG.error("Cần ít nhất một trong --download, --report, --prepare, --verify")
         return 2
 
     download_info = download_gtsrb() if args.download else None
     if args.report:
         run_report(limit=args.limit, download_info=download_info)
+    if args.prepare:
+        prepare(force=args.force, size=args.image_size)
+    if args.verify:
+        checks = verify_phase2(size=args.image_size)
+        failed = [c["check"] for c in checks if not c["passed"]]
+        if failed:
+            LOG.error("Checklist Giai đoạn 2 FAIL: %s", failed)
+            return 1
     return 0
 
 

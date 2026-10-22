@@ -1,0 +1,478 @@
+{
+  "cache": {
+    "image_size": 64,
+    "created_at": "2026-10-22",
+    "splits": {
+      "train": {
+        "count": 39201,
+        "shape": [
+          39201,
+          64,
+          64,
+          3
+        ],
+        "dtype": "uint8",
+        "files": {
+          "X_train.npy": {
+            "size_mb": 459.39
+          },
+          "y_train.npy": {
+            "size_mb": 0.07
+          },
+          "roi_train.npy": {
+            "size_mb": 0.6
+          },
+          "paths_train.txt": {
+            "size_mb": 1.83
+          }
+        }
+      },
+      "test": {
+        "count": 12630,
+        "shape": [
+          12630,
+          64,
+          64,
+          3
+        ],
+        "dtype": "uint8",
+        "files": {
+          "X_test.npy": {
+            "size_mb": 148.01
+          },
+          "y_test.npy": {
+            "size_mb": 0.02
+          },
+          "roi_test.npy": {
+            "size_mb": 0.19
+          },
+          "paths_test.txt": {
+            "size_mb": 0.55
+          }
+        }
+      }
+    },
+    "elapsed_s": 13.62,
+    "total_size_mb": 610.67
+  },
+  "splits": {
+    "seed": 42,
+    "val_ratio": 0.2,
+    "num_images": 39201,
+    "splits": {
+      "random": {
+        "file": "outputs/results/split_random.json",
+        "n_train": 31360,
+        "n_val": 7841,
+        "summary": {
+          "n_train": 31360,
+          "n_val": 7841,
+          "classes_train": 43,
+          "classes_val": 43,
+          "classes_missing_val": [],
+          "min_class_val": {
+            "class_id": 0,
+            "count": 42
+          },
+          "max_class_ratio_gap": 9.3e-05,
+          "overlap_index": 0,
+          "n_tracks_train": 1307,
+          "n_tracks_val": 1306,
+          "overlap_track": 1306,
+          "per_class": {
+            "0": {
+              "train": 168,
+              "val": 42
+            },
+            "1": {
+              "train": 1776,
+              "val": 444
+            },
+            "2": {
+              "train": 1800,
+              "val": 450
+            },
+            "3": {
+              "train": 1128,
+              "val": 282
+            },
+            "4": {
+              "train": 1584,
+              "val": 396
+            },
+            "5": {
+              "train": 1488,
+              "val": 372
+            },
+            "6": {
+              "train": 336,
+              "val": 84
+            },
+            "7": {
+              "train": 1152,
+              "val": 288
+            },
+            "8": {
+              "train": 1128,
+              "val": 282
+            },
+            "9": {
+              "train": 1176,
+              "val": 294
+            },
+            "10": {
+              "train": 1608,
+              "val": 402
+            },
+            "11": {
+              "train": 1056,
+              "val": 264
+            },
+            "12": {
+              "train": 1680,
+              "val": 420
+            },
+            "13": {
+              "train": 1728,
+              "val": 432
+            },
+            "14": {
+              "train": 617,
+              "val": 155
+            },
+            "15": {
+              "train": 504,
+              "val": 126
+            },
+            "16": {
+              "train": 336,
+              "val": 84
+            },
+            "17": {
+              "train": 888,
+              "val": 222
+            },
+            "18": {
+              "train": 960,
+              "val": 240
+            },
+            "19": {
+              "train": 168,
+              "val": 42
+            },
+            "20": {
+              "train": 288,
+              "val": 72
+            },
+            "21": {
+              "train": 264,
+              "val": 66
+            },
+            "22": {
+              "train": 312,
+              "val": 78
+            },
+            "23": {
+              "train": 408,
+              "val": 102
+            },
+            "24": {
+              "train": 216,
+              "val": 54
+            },
+            "25": {
+              "train": 1200,
+              "val": 300
+            },
+            "26": {
+              "train": 480,
+              "val": 120
+            },
+            "27": {
+              "train": 192,
+              "val": 48
+            },
+            "28": {
+              "train": 432,
+              "val": 108
+            },
+            "29": {
+              "train": 216,
+              "val": 54
+            },
+            "30": {
+              "train": 360,
+              "val": 90
+            },
+            "31": {
+              "train": 624,
+              "val": 156
+            },
+            "32": {
+              "train": 192,
+              "val": 48
+            },
+            "33": {
+              "train": 551,
+              "val": 138
+            },
+            "34": {
+              "train": 336,
+              "val": 84
+            },
+            "35": {
+              "train": 960,
+              "val": 240
+            },
+            "36": {
+              "train": 312,
+              "val": 78
+            },
+            "37": {
+              "train": 168,
+              "val": 42
+            },
+            "38": {
+              "train": 1656,
+              "val": 414
+            },
+            "39": {
+              "train": 240,
+              "val": 60
+            },
+            "40": {
+              "train": 288,
+              "val": 72
+            },
+            "41": {
+              "train": 192,
+              "val": 48
+            },
+            "42": {
+              "train": 192,
+              "val": 48
+            }
+          }
+        }
+      },
+      "group": {
+        "file": "outputs/results/split_group.json",
+        "n_train": 31341,
+        "n_val": 7860,
+        "summary": {
+          "n_train": 31341,
+          "n_val": 7860,
+          "classes_train": 43,
+          "classes_val": 39,
+          "classes_missing_val": [
+            0,
+            19,
+            34,
+            39
+          ],
+          "min_class_val": {
+            "class_id": 0,
+            "count": 0
+          },
+          "max_class_ratio_gap": 0.026561,
+          "overlap_index": 0,
+          "n_tracks_train": 1045,
+          "n_tracks_val": 262,
+          "overlap_track": 0,
+          "per_class": {
+            "0": {
+              "train": 210,
+              "val": 0
+            },
+            "1": {
+              "train": 1710,
+              "val": 510
+            },
+            "2": {
+              "train": 1920,
+              "val": 330
+            },
+            "3": {
+              "train": 1140,
+              "val": 270
+            },
+            "4": {
+              "train": 1470,
+              "val": 510
+            },
+            "5": {
+              "train": 1500,
+              "val": 360
+            },
+            "6": {
+              "train": 330,
+              "val": 90
+            },
+            "7": {
+              "train": 1080,
+              "val": 360
+            },
+            "8": {
+              "train": 1080,
+              "val": 330
+            },
+            "9": {
+              "train": 1320,
+              "val": 150
+            },
+            "10": {
+              "train": 1620,
+              "val": 390
+            },
+            "11": {
+              "train": 990,
+              "val": 330
+            },
+            "12": {
+              "train": 1770,
+              "val": 330
+            },
+            "13": {
+              "train": 1560,
+              "val": 600
+            },
+            "14": {
+              "train": 562,
+              "val": 210
+            },
+            "15": {
+              "train": 570,
+              "val": 60
+            },
+            "16": {
+              "train": 300,
+              "val": 120
+            },
+            "17": {
+              "train": 1050,
+              "val": 60
+            },
+            "18": {
+              "train": 840,
+              "val": 360
+            },
+            "19": {
+              "train": 210,
+              "val": 0
+            },
+            "20": {
+              "train": 300,
+              "val": 60
+            },
+            "21": {
+              "train": 240,
+              "val": 90
+            },
+            "22": {
+              "train": 330,
+              "val": 60
+            },
+            "23": {
+              "train": 390,
+              "val": 120
+            },
+            "24": {
+              "train": 150,
+              "val": 120
+            },
+            "25": {
+              "train": 1200,
+              "val": 300
+            },
+            "26": {
+              "train": 540,
+              "val": 60
+            },
+            "27": {
+              "train": 210,
+              "val": 30
+            },
+            "28": {
+              "train": 390,
+              "val": 150
+            },
+            "29": {
+              "train": 210,
+              "val": 60
+            },
+            "30": {
+              "train": 330,
+              "val": 120
+            },
+            "31": {
+              "train": 600,
+              "val": 180
+            },
+            "32": {
+              "train": 210,
+              "val": 30
+            },
+            "33": {
+              "train": 509,
+              "val": 180
+            },
+            "34": {
+              "train": 420,
+              "val": 0
+            },
+            "35": {
+              "train": 900,
+              "val": 300
+            },
+            "36": {
+              "train": 330,
+              "val": 60
+            },
+            "37": {
+              "train": 180,
+              "val": 30
+            },
+            "38": {
+              "train": 1800,
+              "val": 270
+            },
+            "39": {
+              "train": 300,
+              "val": 0
+            },
+            "40": {
+              "train": 300,
+              "val": 60
+            },
+            "41": {
+              "train": 120,
+              "val": 120
+            },
+            "42": {
+              "train": 150,
+              "val": 90
+            }
+          }
+        }
+      }
+    }
+  },
+  "stats": {
+    "mean": [
+      0.340408,
+      0.312365,
+      0.321632
+    ],
+    "std": [
+      0.275148,
+      0.264242,
+      0.270747
+    ],
+    "num_images": 31360,
+    "num_pixels": 128450560,
+    "split": "random",
+    "seed": 42,
+    "image_size": 64,
+    "note": "mean/std tính trên train split (không dùng val/test) theo đơn vị [0,1]; dùng chung cho train, eval và demo qua src.data.preprocess."
+  }
+}
