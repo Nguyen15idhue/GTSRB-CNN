@@ -40,7 +40,7 @@
 
 | Giai đoạn | Tên | Ngày dự kiến | Gate | Trạng thái | Bằng chứng (file/hình) |
 |---|---|---|---|---|---|
-| 0 | Môi trường & công cụ | D1 sáng | G0 | ☐ | |
+| 0 | Môi trường & công cụ | D1 sáng | G0 | ☑ | `outputs/results/env.json`, commit `62c7dbd` |
 | 1 | Dữ liệu: tải, xác minh, EDA | D1 chiều | G1 | ☐ | |
 | 2 | Tiền xử lý & chia tập | D2 sáng | G1 | ☐ | |
 | 3 | Hạ tầng huấn luyện & logging | D2 chiều | G1 | ☐ | |
@@ -161,15 +161,15 @@ outputs/runs/
 
 ### 0.5. Checklist test
 
-- [ ] `python -c "import sys; print(sys.prefix)"` trỏ đúng `.venv`.
-- [ ] `torch.__version__` có hậu tố `+cu128` (hoặc bản CUDA ≥ 12.8).
-- [ ] `torch.cuda.is_available()` = `True`.
-- [ ] `torch.cuda.get_device_capability()` = `(12, 0)`.
-- [ ] Matmul 4096×4096 trên GPU chạy < 2 giây, không lỗi.
-- [ ] `nvidia-smi` thấy tiến trình Python dùng GPU khi chạy matmul (hoặc `torch.cuda.memory_allocated() > 0`).
-- [ ] `git status` sạch (không có file rác chưa ignore).
-- [ ] `data/`, `.venv/`, `*.pt` không bị Git theo dõi (`git check-ignore -v data`).
-- [ ] `outputs/results/env.json` đọc được bằng `json.load`.
+- [x] `python -c "import sys; print(sys.prefix)"` trỏ đúng `.venv`. → `C:\0\1.Laptrinh\BTLHocSau\.venv`
+- [x] `torch.__version__` có hậu tố `+cu128` (hoặc bản CUDA ≥ 12.8). → `2.11.0+cu128`
+- [x] `torch.cuda.is_available()` = `True`.
+- [x] `torch.cuda.get_device_capability()` = `(12, 0)`.
+- [x] Matmul 4096×4096 trên GPU chạy < 2 giây, không lỗi. → `0,0619 s`
+- [x] `nvidia-smi` thấy tiến trình Python dùng GPU khi chạy matmul (hoặc `torch.cuda.memory_allocated() > 0`). → `16,12 MB` sau matmul 1024×1024
+- [x] `git status` sạch (không có file rác chưa ignore).
+- [x] `data/`, `.venv/`, `*.pt` không bị Git theo dõi (`git check-ignore -v data`). → khớp `.gitignore` dòng 10, 2, 12
+- [x] `outputs/results/env.json` đọc được bằng `json.load`. → 18 khóa
 
 ### 0.6. Kết quả thực hiện
 
@@ -177,15 +177,24 @@ outputs/runs/
 >
 > | Hạng mục | Giá trị thực tế |
 > |---|---|
-> | Ngày / người thực hiện | |
-> | Python version | |
-> | torch / torchvision | |
-> | CUDA / driver | |
-> | GPU + capability | |
-> | Thời gian matmul smoke test | |
-> | Commit hash đầu tiên | |
-> | Trạng thái | ☐ Đạt ☐ Đạt có điều kiện ☐ Chưa đạt |
-> | Ghi chú | |
+> | Ngày / người thực hiện | 22/10/2026 — AI agent (theo yêu cầu) |
+> | Python version | 3.12.10 (CPython 64-bit), venv tại `.venv` |
+> | torch / torchvision | `2.11.0+cu128` / `0.26.0+cu128` |
+> | CUDA / driver | CUDA build 12.8, cuDNN 9.19.0 / driver 610.88 |
+> | GPU + capability | NVIDIA GeForce RTX 5070, 11,94 GB, `(12, 0)`, 48 SM |
+> | Thời gian matmul smoke test | **0,0619 s** (ma trận 4096×4096, fp32) |
+> | Commit hash đầu tiên | `62c7dbd75b649da2fa34d63614b4bf7393f2ab3e` |
+> | Trạng thái | ☑ Đạt |
+> | Ghi chú | `env.json` có 18 khóa; `src/` đủ 10 file; `git check-ignore` xác nhận `data/`, `.venv/`, `outputs/runs/`, `*.pt`, `*.npy` bị chặn; không push lên GitHub |
+
+**Bằng chứng kèm theo**
+
+| Bằng chứng | Vị trí |
+|---|---|
+| Thông số môi trường (Python, torch, CUDA, GPU, driver, OS, CPU, RAM, matmul) | `outputs/results/env.json` |
+| Danh sách thư viện và phiên bản | `requirements.txt` |
+| Cấu trúc mã nguồn | `src/` (10 file), `configs/`, `notebooks/`, `outputs/`, `external_test/`, `app.py` |
+| Quy tắc chặn file lớn | `.gitignore` |
 
 ### 0.7. Ghi chú / lưu ý
 

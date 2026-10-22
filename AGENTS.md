@@ -9,7 +9,7 @@ Hướng dẫn cho AI agent (và người) khi làm việc trong repo này.
 | Ngôn ngữ tài liệu | Tiếng Việt |
 | Ngôn ngữ code | Tên biến/hàm bằng tiếng Anh; comment/docstring tiếng Việt được phép |
 | Cập nhật lần cuối | 22/10/2026 |
-| Trạng thái repo | **Mới có tài liệu**, chưa có mã nguồn |
+| Trạng thái repo | **Giai đoạn 0 hoàn tất**: môi trường `.venv` + khung `src/`; chưa có logic |
 
 ---
 
