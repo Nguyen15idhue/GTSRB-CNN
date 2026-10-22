@@ -15,6 +15,8 @@
   "counts": {
     "train": 39209,
     "test": 12630,
+    "train_pool_after_exclusion": 39201,
+    "excluded_duplicates": 8,
     "published_train": 39209,
     "published_test": 12630,
     "difference_train": 0,
@@ -233,7 +235,20 @@
         "test_label": 14
       }
     ],
-    "decision": "Có 8 cặp ảnh trùng MD5 giữa train và test (đều cùng nhãn). Quyết định: giữ nguyên split chính thức 39.209/12.630 để so sánh được với công bố; 8 ảnh chiếm 0,063% test nên Giai đoạn 6 sẽ báo cáo thêm accuracy trên 12.622 ảnh không trùng như kiểm tra độ nhạy, và ảnh hưởng được ghi ở Chương 5."
+    "excluded_from_train": [
+      "data/gtsrb/GTSRB/Training/00014/00023_00000.ppm",
+      "data/gtsrb/GTSRB/Training/00014/00023_00003.ppm",
+      "data/gtsrb/GTSRB/Training/00014/00023_00006.ppm",
+      "data/gtsrb/GTSRB/Training/00014/00023_00007.ppm",
+      "data/gtsrb/GTSRB/Training/00014/00023_00010.ppm",
+      "data/gtsrb/GTSRB/Training/00014/00023_00013.ppm",
+      "data/gtsrb/GTSRB/Training/00014/00023_00016.ppm",
+      "data/gtsrb/GTSRB/Training/00014/00023_00019.ppm"
+    ],
+    "excluded_train_count": 8,
+    "excluded_list_file": "outputs/results/excluded_train_duplicates.csv",
+    "train_pool_after_exclusion": 39201,
+    "decision": "Có 8 cặp ảnh trùng MD5 giữa train và test (đều cùng nhãn). Quyết định: LOẠI 8 ảnh train này khỏi tập huấn luyện để test hoàn toàn độc lập. Không xóa file trên đĩa (giữ nguyên 39.209 ảnh để số đếm khớp công bố); danh sách lưu ở outputs/results/excluded_train_duplicates.csv và đánh dấu usable_for_train=0 trong train_meta.csv. Giai đoạn 2 chỉ chia split trên các ảnh usable_for_train=1."
   },
   "roi": {
     "train_annotation_rows": 39209,
@@ -266,6 +281,7 @@
     "Số liệu trong file này là số đếm thật trên đĩa, không dùng số công bố.",
     "torchvision.datasets.GTSRB tải train từ GTSRB-Training_fixed.zip — bản rút gọn chỉ có 26.640 ảnh (888 track x 30 frame), không khớp 39.209 công bố. Vì vậy train lấy từ archive chính thức GTSRB_Final_Training_Images.zip (39.209 ảnh, có GT-*.csv) và đặt tại data/gtsrb/GTSRB/Training để torchvision vẫn đọc được; test vẫn dùng torchvision (12.630 ảnh).",
     "Ảnh test chỉ có tên <index>.ppm nên không trích được track; phân tích rò rỉ theo track chỉ áp dụng cho train.",
-    "File zip gốc vẫn giữ trong data/ (đã bị .gitignore chặn) để có thể kiểm tra lại MD5."
+    "File zip gốc vẫn giữ trong data/ (đã bị .gitignore chặn) để có thể kiểm tra lại MD5.",
+    "Đã loại 8 ảnh train trùng MD5 với test khỏi tập huấn luyện; danh sách ở outputs/results/excluded_train_duplicates.csv, cột usable_for_train trong train_meta.csv đánh dấu 0. Số ảnh train dùng để chia split là 39201."
   ]
 }

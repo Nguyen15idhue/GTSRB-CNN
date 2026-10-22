@@ -1,0 +1,9 @@
+md5,train_path,train_label,test_path,test_label,reason
+0692d8d974cf3c460da510f14e6c5c8d,data/gtsrb/GTSRB/Training/00014/00023_00000.ppm,14,data/gtsrb/GTSRB/Final_Test/Images/02291.ppm,14,trùng MD5 với ảnh test
+5d72e523ae7d606d3062517fd89d2f7e,data/gtsrb/GTSRB/Training/00014/00023_00003.ppm,14,data/gtsrb/GTSRB/Final_Test/Images/11906.ppm,14,trùng MD5 với ảnh test
+efc7646ac6986b703578f435e4c4b5a7,data/gtsrb/GTSRB/Training/00014/00023_00006.ppm,14,data/gtsrb/GTSRB/Final_Test/Images/04548.ppm,14,trùng MD5 với ảnh test
+1284c99f6918b250b23a71c6fd8d1645,data/gtsrb/GTSRB/Training/00014/00023_00007.ppm,14,data/gtsrb/GTSRB/Final_Test/Images/09384.ppm,14,trùng MD5 với ảnh test
+11a3b9ee22b1571ab6ddebe6691b398a,data/gtsrb/GTSRB/Training/00014/00023_00010.ppm,14,data/gtsrb/GTSRB/Final_Test/Images/03594.ppm,14,trùng MD5 với ảnh test
+e1bad47303093b51c54beee3558936ab,data/gtsrb/GTSRB/Training/00014/00023_00013.ppm,14,data/gtsrb/GTSRB/Final_Test/Images/03546.ppm,14,trùng MD5 với ảnh test
+2127a461095c7c9a266eabddea0c2f21,data/gtsrb/GTSRB/Training/00014/00023_00016.ppm,14,data/gtsrb/GTSRB/Final_Test/Images/09575.ppm,14,trùng MD5 với ảnh test
+7e9b929edc8c93b928f5fd8cc5a7ae86,data/gtsrb/GTSRB/Training/00014/00023_00019.ppm,14,data/gtsrb/GTSRB/Final_Test/Images/00666.ppm,14,trùng MD5 với ảnh test

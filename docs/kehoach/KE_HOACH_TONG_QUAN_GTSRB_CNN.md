@@ -221,9 +221,11 @@ Bảng đầy đủ 43 lớp ở **Phụ lục A**. File này là nguồn duy nh
 
 | Tập | Số ảnh (dự kiến) | Tỷ lệ | Mục đích | Quy tắc |
 |---|---|---|---|---|
-| Train | 31.367 | 80% của 39.209 | Cập nhật trọng số | Augmentation chỉ áp dụng ở đây |
-| Validation | 7.842 | 20% của 39.209 | Chọn mô hình, early stopping, chọn ngưỡng unknown | Không cập nhật trọng số từ nhãn val |
+| Train | 31.360 | 80% của 39.201 | Cập nhật trọng số | Augmentation chỉ áp dụng ở đây |
+| Validation | 7.841 | 20% của 39.201 | Chọn mô hình, early stopping, chọn ngưỡng unknown | Không cập nhật trọng số từ nhãn val |
 | Test | 12.630 | Split chính thức | Đánh giá cuối cùng | Chỉ chạy **một lần** sau khi đóng băng config |
+
+> **Cập nhật 22/10/2026:** GTSRB có 8 ảnh train trùng MD5 với test (nhãn 14, track `00023`) nên 8 ảnh đó bị **loại khỏi tập huấn luyện**. File vẫn giữ đủ 39.209 trên đĩa để số đếm khớp công bố, nhưng chỉ chia split trên 39.201 ảnh (`usable_for_train=1` trong `outputs/results/train_meta.csv`); danh sách loại trừ ở `outputs/results/excluded_train_duplicates.csv`.
 
 Cách chia: `sklearn.model_selection.train_test_split(..., stratify=labels, test_size=0.2, random_state=42)`.
 
@@ -275,10 +277,10 @@ Hàm `preprocess()` nằm **duy nhất** trong `src/data.py`, được import b�
 
 ### 6.2. Cache dữ liệu (tăng tốc)
 
-- Decode + resize **một lần** toàn bộ 39.209 ảnh train và 12.630 ảnh test thành mảng `uint8`:
+- Decode + resize **một lần** toàn bộ 39.201 ảnh train (đã trừ 8 ảnh trùng test) và 12.630 ảnh test thành mảng `uint8`:
   - 64×64×3: train ≈ 480 MB, test ≈ 155 MB → giữ trong RAM (64 GB) hoặc lưu `.npy`.
 - Augmentation thực hiện trên tensor/PIL sau khi lấy từ cache.
-- Kỳ vọng: 1 epoch 31.367 ảnh, batch 128 (246 iteration) ≈ **10–20 giây** trên RTX 5070 với AMP (ước tính, đo thực tế ở epoch đầu).
+- Kỳ vọng: 1 epoch 31.360 ảnh, batch 128 (245 iteration) ≈ **10–20 giây** trên RTX 5070 với AMP (ước tính, đo thực tế ở epoch đầu).
 
 ### 6.3. Augmentation (chỉ train)
 

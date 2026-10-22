@@ -26,7 +26,7 @@ from collections import Counter, defaultdict
 from dataclasses import dataclass
 from datetime import date
 from pathlib import Path
-from typing import Any, Iterable, Sequence
+from typing import Any, Collection, Iterable, Sequence
 
 import matplotlib
 
@@ -54,6 +54,7 @@ from .config import (
 LOG = logging.getLogger(__name__)
 
 TRAIN_META_PATH = RESULTS_DIR / "train_meta.csv"
+EXCLUDED_TRAIN_PATH = RESULTS_DIR / "excluded_train_duplicates.csv"
 DATA_REPORT_PATH = RESULTS_DIR / "data_report.json"
 FIG_CLASS_DIST = FIGURES_DIR / "01_class_distribution.png"
 FIG_IMAGE_SIZES = FIGURES_DIR / "02_image_sizes.png"
@@ -351,6 +352,7 @@ def count_duplicates(infos: Iterable[ImageInfo]) -> dict[str, Any]:
         for test in group["test"]
     ]
     cross_pairs = len(cross_detail)
+    excluded_from_train = sorted({p["train_path"] for p in cross_detail})
 
     return {
         "hash": "md5",
@@ -361,18 +363,23 @@ def count_duplicates(infos: Iterable[ImageInfo]) -> dict[str, Any]:
         "test_duplicate_pairs": sum(math.comb(n, 2) for n in within_test),
         "cross_split_groups": len({p["md5"] for p in cross_detail}),
         "cross_split_pairs": cross_pairs,
-        "train_images_matching_test": len({p["train_path"] for p in cross_detail}),
+        "train_images_matching_test": len(excluded_from_train),
         "test_images_matching_train": len({p["test_path"] for p in cross_detail}),
         "cross_split_pairs_detail": cross_detail,
+        "excluded_from_train": excluded_from_train,
+        "excluded_train_count": len(excluded_from_train),
+        "excluded_list_file": _relative(EXCLUDED_TRAIN_PATH),
+        "train_pool_after_exclusion": None,  # điền trong build_report vì cần tổng số ảnh train
         "decision": (
-            "Không có ảnh trùng MD5 giữa train và test nên không phải xử lý."
+            "Không có ảnh trùng MD5 giữa train và test nên không phải loại ảnh nào."
             if not cross_detail
             else (
                 f"Có {cross_pairs} cặp ảnh trùng MD5 giữa train và test (đều cùng nhãn). "
-                "Quyết định: giữ nguyên split chính thức 39.209/12.630 để so sánh được với "
-                "công bố; 8 ảnh chiếm 0,063% test nên Giai đoạn 6 sẽ báo cáo thêm accuracy "
-                "trên 12.622 ảnh không trùng như kiểm tra độ nhạy, và ảnh hưởng được ghi ở "
-                "Chương 5."
+                f"Quyết định: LOẠI {len(excluded_from_train)} ảnh train này khỏi tập huấn luyện "
+                "để test hoàn toàn độc lập. Không xóa file trên đĩa (giữ nguyên 39.209 ảnh để "
+                "số đếm khớp công bố); danh sách lưu ở outputs/results/"
+                "excluded_train_duplicates.csv và đánh dấu usable_for_train=0 trong "
+                "train_meta.csv. Giai đoạn 2 chỉ chia split trên các ảnh usable_for_train=1."
             )
         ),
     }
@@ -552,9 +559,14 @@ def plot_sample_grid(
 # ---------------------------------------------------------------------------
 
 
-def write_train_meta(infos: Sequence[ImageInfo], out_path: Path = TRAIN_META_PATH) -> int:
-    """Ghi train_meta.csv (path, label, track_id, track_key, kích thước, ROI)."""
+def write_train_meta(
+    infos: Sequence[ImageInfo],
+    excluded: Collection[str] = (),
+    out_path: Path = TRAIN_META_PATH,
+) -> int:
+    """Ghi train_meta.csv (path, label, track, kích thước, ROI, usable_for_train)."""
     rows = [i for i in infos if i.split == "train"]
+    excluded_set = set(excluded)
     out_path.parent.mkdir(parents=True, exist_ok=True)
     with out_path.open("w", newline="", encoding="utf-8") as fh:
         writer = csv.writer(fh)
@@ -572,6 +584,7 @@ def write_train_meta(infos: Sequence[ImageInfo], out_path: Path = TRAIN_META_PAT
                 "roi_x2",
                 "roi_y2",
                 "roi_valid",
+                "usable_for_train",
             ]
         )
         for info in rows:
@@ -587,10 +600,34 @@ def write_train_meta(infos: Sequence[ImageInfo], out_path: Path = TRAIN_META_PAT
                     info.height,
                     *roi,
                     int(info.roi_valid),
+                    int(_relative(info.path) not in excluded_set),
                 ]
             )
     LOG.info("Đã ghi %d dòng vào %s", len(rows), out_path)
     return len(rows)
+
+
+def write_excluded_list(
+    pairs: Sequence[dict[str, Any]], out_path: Path = EXCLUDED_TRAIN_PATH
+) -> int:
+    """Ghi danh sách ảnh train bị loại vì trùng MD5 với test (bằng chứng để tái lập)."""
+    out_path.parent.mkdir(parents=True, exist_ok=True)
+    with out_path.open("w", newline="", encoding="utf-8") as fh:
+        writer = csv.writer(fh)
+        writer.writerow(["md5", "train_path", "train_label", "test_path", "test_label", "reason"])
+        for pair in pairs:
+            writer.writerow(
+                [
+                    pair["md5"],
+                    pair["train_path"],
+                    pair["train_label"],
+                    pair["test_path"],
+                    pair["test_label"],
+                    "trùng MD5 với ảnh test",
+                ]
+            )
+    LOG.info("Đã ghi %d cặp trùng bị loại khỏi train vào %s", len(pairs), out_path)
+    return len(pairs)
 
 
 def build_report(
@@ -617,6 +654,8 @@ def build_report(
     counts_array = np.array(list(train_counts.values()))
     train_roi_valid = sum(1 for i in train_infos if i.roi_valid)
     test_roi_valid = sum(1 for i in test_infos if i.roi_valid)
+    excluded_count = int(duplicates.get("excluded_train_count", 0))
+    duplicates["train_pool_after_exclusion"] = len(train_infos) - excluded_count
 
     return {
         "stage": 1,
@@ -632,6 +671,8 @@ def build_report(
         "counts": {
             "train": len(train_infos),
             "test": len(test_infos),
+            "train_pool_after_exclusion": len(train_infos) - excluded_count,
+            "excluded_duplicates": excluded_count,
             "published_train": PUBLISHED_TRAIN_COUNT,
             "published_test": PUBLISHED_TEST_COUNT,
             "difference_train": len(train_infos) - PUBLISHED_TRAIN_COUNT,
@@ -698,6 +739,10 @@ def build_report(
             "Ảnh test chỉ có tên <index>.ppm nên không trích được track; phân tích rò rỉ "
             "theo track chỉ áp dụng cho train.",
             "File zip gốc vẫn giữ trong data/ (đã bị .gitignore chặn) để có thể kiểm tra lại MD5.",
+            f"Đã loại {excluded_count} ảnh train trùng MD5 với test khỏi tập huấn luyện; "
+            "danh sách ở outputs/results/excluded_train_duplicates.csv, cột "
+            "usable_for_train trong train_meta.csv đánh dấu 0. Số ảnh train dùng để chia "
+            f"split là {len(train_infos) - excluded_count}.",
         ],
     }
 
@@ -745,7 +790,8 @@ def run_report(limit: int = 0, download_info: dict[str, str] | None = None) -> d
     duplicates = count_duplicates([*train_infos, *test_infos])
     tracks = summarize_tracks(train_infos)
 
-    write_train_meta(train_infos)
+    write_train_meta(train_infos, excluded=duplicates["excluded_from_train"])
+    write_excluded_list(duplicates["cross_split_pairs_detail"])
     plot_class_distribution(per_class_counts(i.label for i in train_infos))
     plot_image_sizes([*train_infos, *test_infos])
     plot_sample_grid(train_samples, train_ann, load_class_names())

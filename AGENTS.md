@@ -29,13 +29,15 @@ Xây dựng pipeline học sâu hoàn chỉnh cho bài toán phân loại **43 l
 | `IMG_SIZE` | **64** | `src/config.py` |
 | `SEED` mặc định | **42** | `configs/default.yaml` |
 | Multi-seed | 42, 123, 2024 | `configs/final.yaml` |
-| Train / Val / Test | 31.367 / 7.842 / **12.630** | `outputs/results/split_*.json` |
+| Train / Val / Test | 31.360 / 7.841 / **12.630** | `outputs/results/split_*.json` |
 | Split | stratified 80/20 + biến thể group theo track | `src/data.py` |
 | Checkpoint chọn | theo **val macro-F1** | `src/train.py` |
 | Metric chính | Accuracy, **Macro-F1**, Confusion matrix | `src/evaluate.py` |
 | Ngưỡng unknown | chọn trên **val**, không chọn trên test/demo | `src/predict.py` |
 
 Thay đổi bất kỳ hằng số nào ở trên phải: ghi lý do, cập nhật tài liệu trong `docs/kehoach/`, và chạy lại các thí nghiệm bị ảnh hưởng.
+
+> **Lý do Train/Val = 31.360 / 7.841 (cập nhật 22/10/2026).** GTSRB có **8 ảnh train trùng MD5** với 8 ảnh test (đều nhãn 14, track `00023`). Đã **loại 8 ảnh đó khỏi tập huấn luyện** để test độc lập hoàn toàn: `39.209 − 8 = 39.201` ảnh dùng chia split, 80/20 stratified (seed 42) → **31.360 / 7.841**. File dữ liệu vẫn giữ nguyên trên đĩa (39.209) để số đếm khớp công bố; danh sách loại trừ ở `outputs/results/excluded_train_duplicates.csv` và cột `usable_for_train` trong `train_meta.csv`.
 
 ---
 
