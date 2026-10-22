@@ -1,2 +1,4 @@
 ﻿run_id,model,params,aug,epochs_run,best_epoch,val_acc,val_macro_f1,test_acc,test_macro_f1,train_time_s,infer_ms_per_img,seed,notes,train_val_acc_gap,best_train_acc
+e0a_majority,majority,0,no,0,0,0.057391,0.002524,,,0.0064,0.00081,42,Majority class: dự đoán mọi ảnh là lớp nhiều nhất trong train,,
+e0b_hog_svc,hog_linear_svc,75895,no,0,0,0.965693,0.973994,,,1926.43,0.0069,42,"HOG trên ảnh xám 64x64, StandardScaler fit trên train, LinearSVC OvR; chọn C theo val macro-F1; KHÔNG augmentation",,
 smoke_cnnb_s42,cnn_b,2201931,no,5,5,0.994899,0.994629,,,30.62,,42,smoke test hạ tầng (không dùng trong báo cáo kết quả),-0.003445,0.991454

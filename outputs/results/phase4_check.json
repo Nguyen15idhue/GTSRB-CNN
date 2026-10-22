@@ -1,0 +1,53 @@
+{
+  "phase": 4,
+  "generated_at": "2026-10-23",
+  "passed": 9,
+  "total": 9,
+  "checks": [
+    {
+      "check": "majority_dung_lop",
+      "passed": true,
+      "detail": "lưu 2, np.bincount → 2 (lớp 2 có 1800 ảnh train)"
+    },
+    {
+      "check": "majority_acc_khop",
+      "passed": true,
+      "detail": "val acc 0.057391 ≈ tỷ lệ lớp nhiều nhất ở val 0.057391"
+    },
+    {
+      "check": "hog_shape",
+      "passed": true,
+      "detail": "HOG 3 ảnh → (3, 1764) (kỳ vọng (3, 1764), thực tế feature_dim=1764)"
+    },
+    {
+      "check": "hog_no_nan",
+      "passed": true,
+      "detail": "NaN trong feature: False"
+    },
+    {
+      "check": "c_grid_3_dong",
+      "passed": true,
+      "detail": "bảng thử C: C=0.1 f1=0.9740, C=1.0 f1=0.9673, C=10.0 f1=0.9656"
+    },
+    {
+      "check": "chon_c_theo_val_f1",
+      "passed": true,
+      "detail": "chọn C=0.1 (macro-F1 0.9740) = max bảng thử"
+    },
+    {
+      "check": "json_doc_lai",
+      "passed": true,
+      "detail": "metrics.json của cả hai baseline đọc lại được"
+    },
+    {
+      "check": "co_thoi_gian",
+      "passed": true,
+      "detail": "trích 51.33 s | fit 540.18 s | 0.007 ms/ảnh"
+    },
+    {
+      "check": "cung_split",
+      "passed": true,
+      "detail": "train/val = 31360/7841, cùng split_random, seed 42/42"
+    }
+  ]
+}

@@ -59,3 +59,15 @@ train:
 
 output:
   dir: outputs/runs
+
+baseline:
+  hog:
+    orientations: 9
+    pixels_per_cell: [8, 8]
+    cells_per_block: [2, 2]
+    block_norm: L2-Hys
+  svc_c_grid: [0.1, 1.0, 10.0]
+  max_iter: 5000
+  # dual=True (liblinear dual coordinate descent) nhanh hơn nhiều so với primal
+  # khi n_samples (31k) > n_features (1.764); vẫn là LinearSVC chuẩn.
+  dual: true

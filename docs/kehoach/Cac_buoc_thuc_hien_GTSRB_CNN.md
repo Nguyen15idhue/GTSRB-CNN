@@ -44,7 +44,7 @@
 | 1 | Dữ liệu: tải, xác minh, EDA | D1 chiều | G1 | ☑ | `outputs/results/data_report.json`, `outputs/results/train_meta.csv`, `outputs/figures/01..03`, `src/data.py` |
 | 2 | Tiền xử lý & chia tập | D2 sáng | G1 | ☑ | `outputs/results/split_random.json`, `split_group.json`, `data_stats.json`, `phase2_check.json`, `data/cache/cache_meta.json`, `outputs/figures/04_augmentation.png`, `src/data.py` |
 | 3 | Hạ tầng huấn luyện & logging | D2 chiều | G1 | ☑ | `outputs/runs/smoke_cnnb_s42/{metrics.csv,best.pt,curves.png,config.yaml,env.json,meta.json}`, `outputs/results/phase3_check.json`, `phase3_overfit.json`, `phase3_determinism.json`, `summary.csv` |
-| 4 | Baseline | D3 | G2 | ☐ | |
+| 4 | Baseline | D3 | G2 | ☑ | `outputs/runs/e0a_majority/metrics.json`, `outputs/runs/e0b_hog_svc/{metrics.json,model.joblib}`, `outputs/results/phase4_check.json` |
 | 5 | CNN & thí nghiệm chính | D4–D6 | G2 | ☐ | |
 | 6 | Chốt mô hình, multi-seed, test 1 lần | D7 | G3 | ☐ | |
 | 7 | Đánh giá sâu & phân tích lỗi | D8–D9 | G4 | ☐ | |
@@ -627,13 +627,15 @@ Nếu baseline HOG đạt 95% mà CNN chỉ 90%, vấn đề nằm ở pipeline 
 
 ### 4.5. Checklist test
 
-- [ ] Majority dự đoán đúng lớp có tần suất cao nhất (kiểm tra bằng `np.bincount`).
-- [ ] `accuracy_majority ≈ count_max / N_train`.
-- [ ] HOG feature shape đúng (khoảng 1.764 chiều).
-- [ ] Không có NaN trong feature (kiểm tra `np.isnan(X).any()`).
-- [ ] Bảng thử C có 3 dòng, chọn C theo val macro-F1.
-- [ ] Kết quả lưu JSON, đọc lại được.
-- [ ] Đã ghi thời gian trích đặc trưng và thời gian fit.
+- [x] Majority dự đoán đúng lớp có tần suất cao nhất (kiểm tra bằng `np.bincount`). → lớp **2**, 1.800 ảnh train
+- [x] `accuracy_majority ≈ count_max / N_train`. → val acc **0,057391** ≈ tỷ lệ lớp 2 ở val (0,057391)
+- [x] HOG feature shape đúng (khoảng 1.764 chiều). → **(3, 1764)**, `feature_dim = 1764`
+- [x] Không có NaN trong feature (kiểm tra `np.isnan(X).any()`). → **False**
+- [x] Bảng thử C có 3 dòng, chọn C theo val macro-F1. → C=0,1 → 0,9740 · C=1 → 0,9673 · C=10 → 0,9656 → **chọn C=0,1**
+- [x] Kết quả lưu JSON, đọc lại được. → `metrics.json` của cả hai baseline đọc lại OK
+- [x] Đã ghi thời gian trích đặc trưng và thời gian fit. → trích **51,33 s**; fit C=0,1 **540,18 s**; suy luận **0,0069 ms/ảnh**
+
+**Kết quả:** 9/9 mục PASS (`python -m src.baseline --verify` → `outputs/results/phase4_check.json`).
 
 ### 4.6. Kết quả thực hiện
 
@@ -641,16 +643,28 @@ Nếu baseline HOG đạt 95% mà CNN chỉ 90%, vấn đề nằm ở pipeline 
 >
 > | Hạng mục | Giá trị thực tế |
 > |---|---|
-> | Ngày / người thực hiện | |
-> | Lớp majority (ID, số ảnh train) | |
-> | Majority: val acc / macro-F1 | |
-> | HOG: số chiều | |
-> | HOG: thời gian trích đặc trưng | |
-> | HOG: C tốt nhất | |
-> | HOG: val acc / macro-F1 | |
-> | HOG: thời gian fit / inference | |
-> | Trạng thái | ☐ Đạt ☐ Đạt có điều kiện ☐ Chưa đạt |
-> | Ghi chú | |
+> | Ngày / người thực hiện | 22–23/10/2026 — AI agent, RTX 5070 / i9-14900KF / Windows 11 (baseline chạy CPU) |
+> | Lớp majority (ID, số ảnh train) | Lớp **2** (Giới hạn tốc độ 50 km/h) — **1.800** ảnh train |
+> | Majority: val acc / macro-F1 | **0,057391** / **0,002524** |
+> | HOG: số chiều | **1.764** (ảnh xám 64×64, 9 hướng, cell 8×8, block 2×2, L2-Hys) |
+> | HOG: thời gian trích đặc trưng | **51,33 s** cho 39.201 ảnh (train + val) |
+> | HOG: C tốt nhất | **C = 0,1** (val macro-F1 0,9740; C=1 → 0,9673; C=10 → 0,9656) |
+> | HOG: val acc / macro-F1 | **0,965693** / **0,973994** |
+> | HOG: thời gian fit / inference | fit **540,18 s** (C=0,1) · tổng 3 lần thử C + trích đặc trưng **1.926,43 s** · suy luận **0,0069 ms/ảnh** |
+> | Trạng thái | ☑ Đạt ☐ Đạt có điều kiện ☐ Chưa đạt |
+> | Ghi chú | Bảng thử C: 0,1 → **0,9657**/**0,9740** (540,2 s) · 1 → 0,9594/0,9673 (660,8 s) · 10 → 0,9573/0,9656 (674,1 s). Macro-F1 **cao hơn** accuracy là hợp lý vì 43 lớp được tính ngang nhau còn accuracy bị chi phối bởi lớp nhiều mẫu. Lần chạy đầu dùng `dual="auto"` (primal) mất **993,9 s/lần fit** và bị timeout → đổi sang `dual=true` (liblinear dual coordinate descent, vẫn là `LinearSVC` chuẩn, ghi trong `configs/default.yaml`) nhanh hơn ~1,8×; đã chạy lại **toàn bộ** baseline, không dùng số của lần chạy dở. Baseline dùng ảnh xám, **không augmentation**, cùng `split_random` với CNN. **Chưa chạm test.** |
+
+### 4.6.1. Nhật ký thực hiện (todos)
+
+| # | Todo | Trạng thái | Bằng chứng |
+|---|---|---|---|
+| 4.1 | `src/baseline.py`: majority class + đo thời gian | ☑ | `outputs/runs/e0a_majority/metrics.json` |
+| 4.2 | HOG (1764 chiều) + StandardScaler + LinearSVC, grid C trên val | ☑ | `outputs/runs/e0b_hog_svc/metrics.json` + `model.joblib` |
+| 4.3 | Đo thời gian trích đặc trưng / fit / inference | ☑ | 51,33 s / 540,18 s / 0,0069 ms/ảnh |
+| 4.4 | Lưu metrics.json, đưa baseline vào `summary.csv` | ☑ | `outputs/results/summary.csv` 3 dòng (2 baseline + smoke) |
+| 4.5 | Checklist 4.5 + điền 4.6 + bảng tiến độ, commit local | ☑ | `phase4_check.json` 9/9 PASS; commit local (không push) |
+
+**Tổng kết: 5/5 todo đạt.** Lệnh tái tạo: `python -m src.baseline --config configs/default.yaml [--force|--verify]` (~33 phút trên CPU).
 
 ### 4.7. Ghi chú / lưu ý
 
