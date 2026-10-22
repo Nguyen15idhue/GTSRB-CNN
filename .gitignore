@@ -1,0 +1,29 @@
+# Python
+.venv/
+.venv_test/
+__pycache__/
+*.py[cod]
+*.egg-info/
+.ipynb_checkpoints/
+
+# Dữ liệu và artifact lớn (không commit)
+data/
+outputs/runs/
+*.pt
+*.pth
+*.npy
+
+# Môi trường / bí mật
+.env
+.env.*
+
+# OS / editor
+.DS_Store
+Thumbs.db
+desktop.ini
+.vscode/
+.idea/
+
+# Tạm
+*.log
+tmp/
