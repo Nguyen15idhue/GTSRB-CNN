@@ -196,6 +196,26 @@ outputs/runs/
 | Cấu trúc mã nguồn | `src/` (10 file), `configs/`, `notebooks/`, `outputs/`, `external_test/`, `app.py` |
 | Quy tắc chặn file lớn | `.gitignore` |
 
+### 0.6.1. Nhật ký thực hiện (todos)
+
+> **Ghi chú:** Nhật ký này được bổ sung ngày 22/10/2026 sau khi Giai đoạn 0 đã hoàn tất, do lần thực hiện đầu chưa ghi danh sách todos vào tài liệu. Nội dung dưới đây đối chiếu lại đúng các bước đã chạy, không phải kế hoạch dự kiến.
+
+| # | Todo | Trạng thái | Bằng chứng |
+|---|---|---|---|
+| 0.1 | Kiểm tra Python 3.12 64-bit | ☑ | `python --version` → 3.12.10; `env.json` |
+| 0.2 | Tạo `.venv` và kích hoạt | ☑ | `.venv/Scripts/python.exe` tồn tại |
+| 0.3 | Cài PyTorch cu128 + torchvision | ☑ | `torch 2.11.0+cu128`, `torchvision 0.26.0+cu128` |
+| 0.4 | Cài thư viện còn lại từ `requirements.txt` | ☑ | `requirements.txt`; import smoke test |
+| 0.5 | Smoke test GPU RTX 5070 | ☑ | `torch.cuda.is_available()` = True; capability `(12, 0)`; matmul 4096² = 0,0619 s |
+| 0.6 | Tạo cấu trúc repo (`src/`, `configs/`, `docs/`, `outputs/`, ...) | ☑ | `src/` đủ 10 file; cây thư mục trong báo cáo |
+| 0.7 | Sinh `outputs/results/env.json` | ☑ | 18 khóa: Python, torch, CUDA, GPU, driver, OS, CPU, RAM, matmul |
+| 0.8 | Cấu hình `.gitignore` chặn dữ liệu/checkpoint | ☑ | `git check-ignore` xác nhận `data/`, `.venv/`, `outputs/runs/`, `*.pt`, `*.npy` |
+| 0.9 | Commit khung dự án | ☑ | `62c7dbd` — `chore: init project structure and environment` |
+| 0.10 | Chạy checklist 0.5 và ghi kết quả vào tài liệu | ☑ | Mục 0.5, 0.6; commit `f0d9b56` |
+| 0.11 | Bổ sung nhật ký todos còn thiếu | ☑ | Mục 0.6.1 này (commit bổ sung sau) |
+
+**Tổng kết Giai đoạn 0:** 11/11 todo đạt; không có todo nào bị bỏ dở. Bài học quy trình: từ Giai đoạn 1 trở đi, danh sách todo và kết quả được ghi vào tài liệu **ngay trong lúc thực hiện**, không để bù sau.
+
 ### 0.7. Ghi chú / lưu ý
 
 - **Không cài** `pip install torch` trần rồi mong có CUDA — bản PyPI mặc định thường là CPU.
