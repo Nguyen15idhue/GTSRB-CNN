@@ -1,0 +1,63 @@
+{
+  "phase": 5,
+  "generated_at": "2026-10-23",
+  "passed": 11,
+  "total": 11,
+  "checks": [
+    {
+      "check": "du_7_run",
+      "passed": true,
+      "detail": "đủ 7 run E1–E7"
+    },
+    {
+      "check": "metrics_epoch",
+      "passed": true,
+      "detail": "số epoch: {'E1': 29, 'E2': 40, 'E3': 40, 'E4': 39, 'E5a': 10, 'E5b': 10, 'E7': 28}"
+    },
+    {
+      "check": "best_pt_load",
+      "passed": true,
+      "detail": "{'E1': 'OK', 'E2': 'OK', 'E3': 'OK', 'E4': 'OK', 'E5a': 'OK', 'E5b': 'OK', 'E7': 'OK'}"
+    },
+    {
+      "check": "summary_khong_trong",
+      "passed": true,
+      "detail": "7 dòng CNN trong summary.csv, không ô trống ở val acc/macro-F1"
+    },
+    {
+      "check": "curves_e3",
+      "passed": true,
+      "detail": "e3_cnnb_aug_s42/curves.png tồn tại (đã mở kiểm tra bằng mắt)"
+    },
+    {
+      "check": "e1_khong_bn_dropout",
+      "passed": true,
+      "detail": "E1: use_bn=False, dropout=0.0"
+    },
+    {
+      "check": "e2_e3_aug",
+      "passed": true,
+      "detail": "E2 aug=False, E3 aug=True"
+    },
+    {
+      "check": "e4_gap_4khoi",
+      "passed": true,
+      "detail": "E4 gap=True, widths=[32, 64, 128, 256], features=4 khối: ['MaxPool2d', 'MaxPool2d', 'MaxPool2d', 'MaxPool2d']"
+    },
+    {
+      "check": "e4_it_params_hon_e3",
+      "passed": true,
+      "detail": "E4 399,947 < E3 2,201,931 (giảm 81.8 %)"
+    },
+    {
+      "check": "ghi_epoch_dung",
+      "passed": true,
+      "detail": "{'E1': 'early stop epoch 29/40, best 22', 'E2': 'hết epoch 40/40, best 33', 'E3': 'hết epoch 40/40, best 36', 'E4': 'early stop epoch 39/40, best 32', 'E5a': 'hết epoch 10/10, best 10', 'E5b': 'hết epoch 10/10, best 9', 'E7': 'early stop epoch 28/40, best 21'}"
+    },
+    {
+      "check": "ghi_gap_train_val",
+      "passed": true,
+      "detail": "E1: train 1.0000 − val 0.9963 = +0.0037; E2: train 0.9996 − val 0.9983 = +0.0012; E3: train 0.9871 − val 0.9994 = -0.0122; E4: train 0.9990 − val 0.9997 = -0.0007; E5a: train 0.9262 − val 0.9895 = -0.0633; E5b: train 0.5082 − val 0.7720 = -0.2638; E7: train 0.9632 − val 0.9985 = -0.0352"
+    }
+  ]
+}

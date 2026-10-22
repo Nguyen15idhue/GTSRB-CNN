@@ -1,4 +1,11 @@
 ﻿run_id,model,params,aug,epochs_run,best_epoch,val_acc,val_macro_f1,test_acc,test_macro_f1,train_time_s,infer_ms_per_img,seed,notes,train_val_acc_gap,best_train_acc
 e0a_majority,majority,0,no,0,0,0.057391,0.002524,,,0.0064,0.00081,42,Majority class: dự đoán mọi ảnh là lớp nhiều nhất trong train,,
 e0b_hog_svc,hog_linear_svc,75895,no,0,0,0.965693,0.973994,,,1926.43,0.0069,42,"HOG trên ảnh xám 64x64, StandardScaler fit trên train, LinearSVC OvR; chọn C theo val macro-F1; KHÔNG augmentation",,
+e1_cnna_s42,cnn_a,2201707,no,29,22,0.996301,0.995705,,,83.15,,42,"CNN-A: 3 khối conv, không BN/dropout/weight decay, không augmentation",0.003699,1.0
+e2_cnnb_s42,cnn_b,2201931,no,40,33,0.998342,0.998392,,,120.81,,42,"CNN-B: BN + dropout 0.3 + WD 1e-4, không augmentation (so với E1: thêm regularization)",0.001243,0.999585
+e3_cnnb_aug_s42,cnn_b,2201931,yes,40,36,0.999362,0.999471,,,378.12,,42,CNN-B + BN + dropout 0.3 + WD 1e-4 + augmentation nhẹ (so với E2: bật aug),-0.012245,0.987117
+e4_cnnc_gap_aug_s42,cnn_c,399947,yes,39,32,0.999745,0.999763,,,369.48,,42,CNN-C: 4 khối conv + GAP + dropout 0.4 + aug (so với E3: đổi kiến trúc),-0.000734,0.999011
+e5a_lr3e4_s42,cnn_b,2201931,yes,10,10,0.989542,0.993387,,,107.38,,42,"CNN-B + aug, lr 3e-4, 10 epoch (so sánh xu hướng lr, không hội tụ hoàn toàn)",-0.06333,0.926212
+e5b_lr3e3_s42,cnn_b,2201931,yes,10,9,0.771968,0.567247,,,107.77,,42,"CNN-B + aug, lr 3e-3, 10 epoch (so sánh xu hướng lr, không hội tụ hoàn toàn)",-0.263805,0.508163
+e7_classweight_s42,cnn_b,2201931,yes,28,21,0.99847,0.998914,,,270.39,,42,CNN-B + aug + class weight 1/sqrt(freq) (so với E3: xử lý mất cân bằng),-0.035237,0.963233
 smoke_cnnb_s42,cnn_b,2201931,no,5,5,0.994899,0.994629,,,30.62,,42,smoke test hạ tầng (không dùng trong báo cáo kết quả),-0.003445,0.991454

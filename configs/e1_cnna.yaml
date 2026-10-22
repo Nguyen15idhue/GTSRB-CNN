@@ -1,0 +1,19 @@
+# E1 — CNN-A: mốc so sánh "chưa tối ưu" (không BN, không dropout, không WD, không aug)
+experiment:
+  id: e1_cnna
+  seed: 42
+  notes: "CNN-A: 3 khối conv, không BN/dropout/weight decay, không augmentation"
+
+model:
+  name: cnn_a
+  widths: [32, 64, 128]
+  use_bn: false
+  dropout: 0.0
+  gap: false
+  fc_hidden: 256
+
+augmentation:
+  enabled: false
+
+train:
+  weight_decay: 0.0

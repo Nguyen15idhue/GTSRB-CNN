@@ -1,0 +1,19 @@
+# E4 — CNN-C: 4 khối conv + GlobalAvgPool + dropout 0,4 + aug.
+# So với E3 chỉ đổi kiến trúc: sâu hơn nhưng ít tham số hơn nhờ GAP.
+experiment:
+  id: e4_cnnc_gap_aug
+  seed: 42
+  notes: "CNN-C: 4 khối conv + GAP + dropout 0.4 + aug (so với E3: đổi kiến trúc)"
+
+model:
+  name: cnn_c
+  widths: [32, 64, 128, 256]
+  use_bn: true
+  dropout: 0.4
+  gap: true
+
+augmentation:
+  enabled: true
+
+train:
+  weight_decay: 0.0001

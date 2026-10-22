@@ -1,0 +1,20 @@
+# E2 — CNN-B: thêm gói regularization (BN + dropout 0,3 + weight decay 1e-4), CHƯA augmentation.
+# So với E1 chỉ đổi đúng một nhóm yếu tố: regularization.
+experiment:
+  id: e2_cnnb
+  seed: 42
+  notes: "CNN-B: BN + dropout 0.3 + WD 1e-4, không augmentation (so với E1: thêm regularization)"
+
+model:
+  name: cnn_b
+  widths: [32, 64, 128]
+  use_bn: true
+  dropout: 0.3
+  gap: false
+  fc_hidden: 256
+
+augmentation:
+  enabled: false
+
+train:
+  weight_decay: 0.0001

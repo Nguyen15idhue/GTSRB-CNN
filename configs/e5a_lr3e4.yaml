@@ -1,0 +1,23 @@
+# E5a — CNN-B + aug, lr = 3e-4, chỉ 10 epoch để so sánh XU HƯỚNG (không cần hội tụ).
+# Không dùng số của run này làm kết quả cuối; ghi rõ trong báo cáo.
+experiment:
+  id: e5a_lr3e4
+  seed: 42
+  notes: "CNN-B + aug, lr 3e-4, 10 epoch (so sánh xu hướng lr, không hội tụ hoàn toàn)"
+
+model:
+  name: cnn_b
+  widths: [32, 64, 128]
+  use_bn: true
+  dropout: 0.3
+  gap: false
+  fc_hidden: 256
+
+augmentation:
+  enabled: true
+
+train:
+  lr: 0.0003
+  weight_decay: 0.0001
+  max_epochs: 10
+  patience: 10

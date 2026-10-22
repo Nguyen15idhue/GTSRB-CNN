@@ -1,0 +1,21 @@
+# E7 — CNN-B + aug + class weight 1/sqrt(freq) để cải thiện macro-F1 ở lớp hiếm.
+# So với E3 chỉ đổi một nhóm yếu tố: cách xử lý mất cân bằng.
+experiment:
+  id: e7_classweight
+  seed: 42
+  notes: "CNN-B + aug + class weight 1/sqrt(freq) (so với E3: xử lý mất cân bằng)"
+
+model:
+  name: cnn_b
+  widths: [32, 64, 128]
+  use_bn: true
+  dropout: 0.3
+  gap: false
+  fc_hidden: 256
+
+augmentation:
+  enabled: true
+
+train:
+  weight_decay: 0.0001
+  class_weight: inv_sqrt_freq

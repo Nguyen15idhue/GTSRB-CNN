@@ -45,7 +45,7 @@
 | 2 | Tiền xử lý & chia tập | D2 sáng | G1 | ☑ | `outputs/results/split_random.json`, `split_group.json`, `data_stats.json`, `phase2_check.json`, `data/cache/cache_meta.json`, `outputs/figures/04_augmentation.png`, `src/data.py` |
 | 3 | Hạ tầng huấn luyện & logging | D2 chiều | G1 | ☑ | `outputs/runs/smoke_cnnb_s42/{metrics.csv,best.pt,curves.png,config.yaml,env.json,meta.json}`, `outputs/results/phase3_check.json`, `phase3_overfit.json`, `phase3_determinism.json`, `summary.csv` |
 | 4 | Baseline | D3 | G2 | ☑ | `outputs/runs/e0a_majority/metrics.json`, `outputs/runs/e0b_hog_svc/{metrics.json,model.joblib}`, `outputs/results/phase4_check.json` |
-| 5 | CNN & thí nghiệm chính | D4–D6 | G2 | ☐ | |
+| 5 | CNN & thí nghiệm chính | D4–D6 | G2 | ☑ | `outputs/runs/e1_cnna_s42` … `e7_classweight_s42`, `outputs/results/summary.csv`, `phase5_check.json`, `outputs/figures/05_experiment_comparison.png`, 7 config `configs/e*.yaml` |
 | 6 | Chốt mô hình, multi-seed, test 1 lần | D7 | G3 | ☐ | |
 | 7 | Đánh giá sâu & phân tích lỗi | D8–D9 | G4 | ☐ | |
 | 8 | Demo dữ liệu mới | D10 | G4 | ☐ | |
@@ -736,17 +736,19 @@ python -m src.summarize
 
 ### 5.5. Checklist test
 
-- [ ] Cả 4 run E1–E4 kết thúc, không run nào crash giữa chừng.
-- [ ] Mỗi run có `metrics.csv` với số epoch ≥ 5.
-- [ ] `best.pt` của mỗi run load lại được và cho output 43 lớp.
-- [ ] Trong `summary.csv`, không có ô trống ở val acc / val macro-F1.
-- [ ] Kiểm tra trực quan: curves của E3 mượt, không dao động bất thường.
-- [ ] E1 không có BN/dropout (đọc config xác nhận).
-- [ ] E3 có aug, E2 không aug (đọc config xác nhận).
-- [ ] E4 có GAP và 4 khối conv (in `model` ra kiểm tra).
-- [ ] Số params E4 < E3 (xác nhận lập luận GAP).
-- [ ] Đã ghi lại epoch dừng của từng run (early stopping hay hết epoch).
-- [ ] Chênh lệch val–train acc được ghi lại cho từng run (phát hiện overfit).
+- [x] Cả 4 run E1–E4 kết thúc, không run nào crash giữa chừng. → xong cả **7 run** (E1–E4, E5a, E5b, E7), exit code 0
+- [x] Mỗi run có `metrics.csv` với số epoch ≥ 5. → E1 29 · E2 40 · E3 40 · E4 39 · E5a 10 · E5b 10 · E7 28 epoch
+- [x] `best.pt` của mỗi run load lại được và cho output 43 lớp. → 7/7 load `weights_only=True`, forward `(2, 43)`
+- [x] Trong `summary.csv`, không có ô trống ở val acc / val macro-F1. → 7 dòng CNN, 0 ô trống
+- [x] Kiểm tra trực quan: curves của E3 mượt, không dao động bất thường. → đã mở `e3_cnnb_aug_s42/curves.png`: loss giảm đơn điệu, val acc tăng đều lên 0,9994, không nhảy bậc
+- [x] E1 không có BN/dropout (đọc config xác nhận). → `use_bn=False`, `dropout=0.0`
+- [x] E3 có aug, E2 không aug (đọc config xác nhận). → E2 `aug=False`, E3 `aug=True`
+- [x] E4 có GAP và 4 khối conv (in `model` ra kiểm tra). → `gap=True`, `widths=[32,64,128,256]`, `features` có 4 khối
+- [x] Số params E4 < E3 (xác nhận lập luận GAP). → **399.947 < 2.201.931** (giảm **81,8 %**)
+- [x] Đã ghi lại epoch dừng của từng run (early stopping hay hết epoch). → E1 early 29/40 · E2 hết 40/40 · E3 hết 40/40 · E4 early 39/40 · E5a hết 10/10 · E5b hết 10/10 · E7 early 28/40
+- [x] Chênh lệch val–train acc được ghi lại cho từng run (phát hiện overfit). → xem cột `Train–Val gap` ở 5.6 (E1 +0,37 pp … E5b −26,4 pp)
+
+**Kết quả:** 11/11 mục PASS (`python -m src.summarize --verify` → `outputs/results/phase5_check.json`).
 
 ### 5.6. Kết quả thực hiện
 
@@ -754,21 +756,46 @@ python -m src.summarize
 >
 > | Run | Params | Epoch dừng | Val Acc | Val Macro-F1 | Train–Val gap | Thời gian |
 > |---|---|---|---|---|---|---|
-> | E1 CNN-A | | | | | | |
-> | E2 CNN-B | | | | | | |
-> | E3 CNN-B + aug | | | | | | |
-> | E4 CNN-C + GAP | | | | | | |
-> | E5a lr 3e-4 | | | | | | |
-> | E5b lr 3e-3 | | | | | | |
-> | E7 class weight | | | | | | |
+> | E1 CNN-A | 2.201.707 | 29/40 (early stop, best 22) | 0,996301 | 0,995705 | +0,37 pp | 83,2 s (2,85 s/epoch) |
+> | E2 CNN-B | 2.201.931 | 40/40 (hết epoch, best 33) | 0,998342 | 0,998392 | +0,12 pp | 120,8 s (3,01 s/epoch) |
+> | E3 CNN-B + aug | 2.201.931 | 40/40 (hết epoch, best 36) | 0,999362 | 0,999471 | **−1,22 pp** (train 0,9871 < val) | 378,1 s (9,44 s/epoch) |
+> | E4 CNN-C + GAP | **399.947** | 39/40 (early stop, best 32) | **0,999745** | **0,999763** | −0,07 pp | 369,5 s (9,46 s/epoch) |
+> | E5a lr 3e-4 | 2.201.931 | 10/10 (hết epoch, best 10) | 0,989542 | 0,993387 | −6,33 pp | 107,4 s (10,7 s/epoch) |
+> | E5b lr 3e-3 | 2.201.931 | 10/10 (hết epoch, best 9) | 0,771968 | 0,567247 | −26,38 pp | 107,8 s (10,74 s/epoch) |
+> | E7 class weight | 2.201.931 | 28/40 (early stop, best 21) | 0,998470 | 0,998914 | −3,52 pp | 270,4 s (9,63 s/epoch) |
+>
+> **So sánh E5 ở cùng epoch 10** (E5 chỉ chạy 10 epoch nên chỉ so xu hướng, không so best epoch):
+>
+> | Run | lr | Val Acc @ep10 | Val Macro-F1 @ep10 | Nhận xét |
+> |---|---|---|---|---|
+> | E3 (tham chiếu) | 1e-3 | 0,993113 | 0,992170 | hội tụ tốt |
+> | E5a | 3e-4 | 0,989542 | **0,993387** | tương đương E3 (chênh 0,12 pp < 0,3 pp) |
+> | E5b | 3e-3 | 0,775666 | 0,564512 | **phân kỳ**, lr quá cao |
 >
 > | Hạng mục | Giá trị |
 > |---|---|
-> | Mô hình chọn | |
-> | Lý do chọn | |
-> | Nhận xét chính (3 gạch đầu dòng) | |
-> | Trạng thái | ☐ Đạt ☐ Đạt có điều kiện ☐ Chưa đạt |
-> | Ghi chú | |
+> | Mô hình chọn | **E4 — CNN-C 4 khối conv + GAP + dropout 0,4 + augmentation** (`configs/e4_cnnc_gap_aug.yaml`, run `e4_cnnc_gap_aug_s42`) |
+> | Lý do chọn | Val macro-F1 **cao nhất bảng (0,999763)**; so với E3 (0,999471) chênh **0,029 điểm % < 0,3 điểm %** → coi là **tương đương**, theo quy tắc ưu tiên mô hình **ít tham số hơn**: E4 chỉ **399.947** params so với 2.201.931 của E3 (**−81,8 %**), cùng tốc độ train (~9,5 s/epoch) và ít bộ nhớ hơn khi suy luận. E7 (0,998914) và E2 (0,998392) thấp hơn rõ hơn 0,1 điểm %, không chọn. |
+> | Nhận xét chính (3 gạch đầu dòng) | • **Đều bão hoà ~99,6–99,97 % trên val random**: 100 % (7.841/7.841) ảnh val có **frame liền kề (±1) cùng track trong train** → val bị rò rỉ frame, nên các chênh lệch giữa run là rất nhỏ và **không dùng để tuyên bố mô hình "tốt hơn"**; Δ thật sẽ đo bằng `split_group` ở Giai đoạn 6.<br>• **Augmentation là yếu tố tăng thời gian rõ nhất** (3,0 → 9,4 s/epoch do transform PIL trên CPU) và làm train acc thấp hơn val acc (gap âm) — dấu hiệu augmentation đang hoạt động, không phải overfit.<br>• **lr 3e-3 phân kỳ** (F1 0,567), lr 3e-4 tương đương 1e-3 ở 10 epoch; **class weight giảm nhẹ F1** (0,998914 so với 0,999471) nên không dùng cho mô hình cuối. |
+> | Trạng thái | ☐ Đạt ☑ Đạt có điều kiện ☐ Chưa đạt |
+> | Ghi chú | Yêu cầu 5.4 #4 ("E3 > E1 ≥ 2 điểm %") **không thể đạt bằng chữ** vì E1 đã 99,63 % (trần do rò rỉ frame, xem 5.7): E3 hơn E1 **0,31 điểm %**. Đã kiểm tra lại split: giao index train/val = 0, giao track = 0 với split group, nhưng **gần trùng frame** trong random split là 100 % — đây là lý do, không phải bug pipeline. Không chạm test. `configs/final.yaml` **chưa tạo** (thuộc Giai đoạn 6, sau khi đo Δ random vs group). `summary.csv` còn dòng `smoke_cnnb_s42`, sẽ loại ở Giai đoạn 9. |
+>
+> **Kiểm tra 5.7 — nghi ngờ rò rỉ khi E1 đã 99 %** (đã làm, bằng số):
+> - `set(train_idx) ∩ set(val_idx) = ∅`; số track train/val = 1.045/262 với split group, giao track = 0.
+> - Với **split random** (dùng cho E1–E7): **100 %** ảnh val có ít nhất một frame **cách ±1** cùng `track_key` nằm trong train (7.841/7.841). Đây là rò rỉ frame đã dự liệu trong kế hoạch → phải đo Δ bằng split group ở Giai đoạn 6 trước khi kết luận.
+>
+> ### 5.6.1. Nhật ký thực hiện (todos)
+>
+> | # | Todo | Trạng thái | Bằng chứng |
+> |---|---|---|---|
+> | 5.1 | Tạo 7 config E1–E4, E5a/E5b, E7 (chỉ khai báo phần khác `default.yaml`) | ☑ | `configs/e{1_cnna,2_cnnb,3_cnnb_aug,4_cnnc_gap_aug,5a_lr3e4,5b_lr3e3,7_classweight}.yaml` |
+> | 5.2 | Chạy tuần tự 7 run, ghi thời gian thật | ☑ | `outputs/runs/*_s42/` (log trong `%TEMP%\run_*.log`) |
+> | 5.3 | `python -m src.summarize --figure` | ☑ | `outputs/results/summary.csv` (10 dòng), `outputs/figures/05_experiment_comparison.png` |
+> | 5.4 | Chọn mô hình theo val macro-F1 + ưu tiên ít tham số khi chênh < 0,3 điểm % | ☑ | chọn **E4** (0,999763 · 399.947 params) — lý do ghi ở bảng trên |
+> | 5.5 | Kiểm tra 5.7 (nghi ngờ rò rỉ khi E1 ≥ 99 %) | ☑ | giao index = 0, nhưng 100 % val có frame ±1 trong train → ghi rõ |
+> | 5.6 | Checklist 5.5 + điền 5.6 + 5.6.1 + bảng tiến độ, commit local | ☑ | `phase5_check.json` 11/11 PASS; commit local (không push) |
+>
+> **Tổng kết: 6/6 todo đạt.** Lệnh tái tạo: `python -m src.train --config configs/<exp>.yaml` cho từng config → `python -m src.summarize --figure --verify`.
 
 ### 5.7. Ghi chú / lưu ý
 
