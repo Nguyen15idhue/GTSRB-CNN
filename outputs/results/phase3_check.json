@@ -1,0 +1,68 @@
+{
+  "phase": 3,
+  "generated_at": "2026-10-22",
+  "passed": 12,
+  "total": 12,
+  "checks": [
+    {
+      "check": "artifact_run",
+      "passed": true,
+      "detail": "đủ 6 file"
+    },
+    {
+      "check": "metrics_schema",
+      "passed": true,
+      "detail": "9 cột, 5 dòng, khớp schema: True"
+    },
+    {
+      "check": "metrics_day_du",
+      "passed": true,
+      "detail": "epoch đầu = 1, ô trống = 0"
+    },
+    {
+      "check": "val_macro_f1_range",
+      "passed": true,
+      "detail": "min=0.9495 max=0.9946"
+    },
+    {
+      "check": "train_loss_giam",
+      "passed": true,
+      "detail": "3 epoch đầu: ['1.1543', '0.1729', '0.0863']"
+    },
+    {
+      "check": "checkpoint_load",
+      "passed": true,
+      "detail": "khóa đủ=True, forward=(2, 43), epoch=5, val_f1=0.9946"
+    },
+    {
+      "check": "overfit_batch",
+      "passed": true,
+      "detail": "overfit 1 batch: loss cuối 0.021139, acc 1.0"
+    },
+    {
+      "check": "determinism",
+      "passed": true,
+      "detail": "determinism: lệch lớn nhất 0.0 (ngưỡng 1e-4)"
+    },
+    {
+      "check": "curves_png",
+      "passed": true,
+      "detail": "curves.png 77 KB"
+    },
+    {
+      "check": "summary_csv",
+      "passed": true,
+      "detail": "1 dòng trong summary.csv, có run smoke_cnnb_s42: True"
+    },
+    {
+      "check": "aug_chi_train",
+      "passed": true,
+      "detail": "train có transform augmentation, val không có"
+    },
+    {
+      "check": "eval_guard",
+      "passed": true,
+      "detail": "forward của evaluate chạy với training=[False], grad_enabled=[False]"
+    }
+  ]
+}

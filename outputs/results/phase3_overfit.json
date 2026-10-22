@@ -1,0 +1,12 @@
+{
+  "batch_size": 32,
+  "steps": 50,
+  "params": 2201931,
+  "loss_first": 3.858838,
+  "loss_mid": 0.013308,
+  "loss_last": 0.021139,
+  "accuracy": 1.0,
+  "lr": 0.001,
+  "passed_loss": true,
+  "passed_acc": true
+}

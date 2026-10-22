@@ -43,7 +43,7 @@
 | 0 | Môi trường & công cụ | D1 sáng | G0 | ☑ | `outputs/results/env.json`, commit `62c7dbd` |
 | 1 | Dữ liệu: tải, xác minh, EDA | D1 chiều | G1 | ☑ | `outputs/results/data_report.json`, `outputs/results/train_meta.csv`, `outputs/figures/01..03`, `src/data.py` |
 | 2 | Tiền xử lý & chia tập | D2 sáng | G1 | ☑ | `outputs/results/split_random.json`, `split_group.json`, `data_stats.json`, `phase2_check.json`, `data/cache/cache_meta.json`, `outputs/figures/04_augmentation.png`, `src/data.py` |
-| 3 | Hạ tầng huấn luyện & logging | D2 chiều | G1 | ☐ | |
+| 3 | Hạ tầng huấn luyện & logging | D2 chiều | G1 | ☑ | `outputs/runs/smoke_cnnb_s42/{metrics.csv,best.pt,curves.png,config.yaml,env.json,meta.json}`, `outputs/results/phase3_check.json`, `phase3_overfit.json`, `phase3_determinism.json`, `summary.csv` |
 | 4 | Baseline | D3 | G2 | ☐ | |
 | 5 | CNN & thí nghiệm chính | D4–D6 | G2 | ☐ | |
 | 6 | Chốt mô hình, multi-seed, test 1 lần | D7 | G3 | ☐ | |
@@ -530,16 +530,18 @@ Toàn bộ giá trị của báo cáo nằm ở chỗ số liệu đáng tin. N�
 
 ### 3.5. Checklist test
 
-- [ ] `python -m src.train --config configs/smoke.yaml` chạy hết 1 epoch không lỗi.
-- [ ] `metrics.csv` dòng đầu có `epoch=1`, không có ô trống.
-- [ ] `val_macro_f1` nằm trong [0, 1].
-- [ ] `train_loss` giảm qua 3 epoch đầu.
-- [ ] Overfit 1 batch đạt accuracy 100% (test riêng).
-- [ ] Chạy lại cùng seed 3 epoch: loss 2 lần khớp (hoặc chênh < 1e-4).
-- [ ] `torch.load("best.pt")` → `model.load_state_dict` không lỗi.
-- [ ] `model.eval()` được gọi trước khi eval val (kiểm tra bằng biến `model.training == False` trong log).
-- [ ] `curves.png` mở được, trục có nhãn, có legend.
-- [ ] `summary.csv` có đúng 1 dòng cho run smoke.
+- [x] `python -m src.train --config configs/smoke.yaml` chạy hết 1 epoch không lỗi. → 5 epoch xong trong **29,3 s** (epoch 1: 18,9 s do warm-up cache; các epoch sau 2,5–2,6 s)
+- [x] `metrics.csv` dòng đầu có `epoch=1`, không có ô trống. → epoch 1, 5 dòng, 0 ô trống, đúng 9 cột
+- [x] `val_macro_f1` nằm trong [0, 1]. → min 0,9495 / max 0,9946
+- [x] `train_loss` giảm qua 3 epoch đầu. → 1,1543 → 0,1729 → 0,0863
+- [x] Overfit 1 batch đạt accuracy 100% (test riêng). → loss cuối **0,021139** (< 0,05), accuracy **100%** sau 50 vòng (batch 32)
+- [x] Chạy lại cùng seed 3 epoch: loss 2 lần khớp (hoặc chênh < 1e-4). → **lệch 0,000e+00** (1,15432531 / 0,17986633 / 0,09668001 ở cả hai lần)
+- [x] `torch.load("best.pt")` → `model.load_state_dict` không lỗi. → load `weights_only=True` OK, forward `(2, 43)`, khóa đủ 7/7
+- [x] `model.eval()` được gọi trước khi eval val (kiểm tra bằng biến `model.training == False` trong log). → `_ModeSpy` ghi lại: forward khi eval có `training=False`, `grad_enabled=False`
+- [x] `curves.png` mở được, trục có nhãn, có legend. → 3 subplot (loss / accuracy / macro-F1), 77 KB, đã mở bằng mắt
+- [x] `summary.csv` có đúng 1 dòng cho run smoke. → 1 dòng `smoke_cnnb_s42`
+
+**Kết quả:** 12/12 mục PASS (`python -m src.train --config configs/smoke.yaml --verify` → `outputs/results/phase3_check.json`).
 
 ### 3.6. Kết quả thực hiện
 
@@ -547,14 +549,28 @@ Toàn bộ giá trị của báo cáo nằm ở chỗ số liệu đáng tin. N�
 >
 > | Hạng mục | Giá trị thực tế |
 > |---|---|
-> | Ngày / người thực hiện | |
-> | Thời gian 1 epoch | |
-> | Overfit 1 batch: loss cuối / acc | |
-> | Determinism: loss epoch 1/2/3 lần 1 | |
-> | Determinism: loss epoch 1/2/3 lần 2 | |
-> | Số params model smoke | |
-> | Trạng thái | ☐ Đạt ☐ Đạt có điều kiện ☐ Chưa đạt |
-> | Ghi chú | |
+> | Ngày / người thực hiện | 22/10/2026 — AI agent, RTX 5070 / i9-14900KF / Windows 11 |
+> | Thời gian 1 epoch | **2,5–2,6 s** (epoch 1: 18,9 s do warm-up cache/worker); trung bình 5,86 s/epoch cho run 5 epoch |
+> | Overfit 1 batch: loss cuối / acc | **0,021139 / 100 %** (batch 32, 50 vòng, AdamW lr 1e-3, không AMP) |
+> | Determinism: loss epoch 1/2/3 lần 1 | 1,15432531 / 0,17986633 / 0,09668001 |
+> | Determinism: loss epoch 1/2/3 lần 2 | 1,15432531 / 0,17986633 / 0,09668001 → **lệch lớn nhất 0,000e+00** |
+> | Số params model smoke | **2.201.931** (CNN-B: 3 khối conv 32/64/128 + BN + dropout 0,3 + FC 8192→256→43) |
+> | Trạng thái | ☑ Đạt ☐ Đạt có điều kiện ☐ Chưa đạt |
+> | Ghi chú | Val acc 0,9949 sau 5 epoch là **cao bất thường** vì `split_random` chứa frame gần trùng của train (rò rỉ frame) — số này **không dùng làm kết quả báo cáo**, Giai đoạn 6 sẽ đo Δ giữa random và group. Đã sửa 2 bug trong lúc test: (1) `torch.__version__` là `TorchVersion` nên `weights_only=True` không load được checkpoint → lưu `str(...)`; (2) test `eval_guard` ban đầu PASS giả do lỗi lệch device, đã thay bằng `_ModeSpy` ghi lại `training`/`grad_enabled` thật sự. `metrics.csv` ghi + flush từng epoch. Run smoke vẫn nằm trong `summary.csv` để làm bằng chứng, sẽ loại bỏ ở Giai đoạn 9. |
+
+### 3.6.1. Nhật ký thực hiện (todos)
+
+| # | Todo | Trạng thái | Bằng chứng |
+|---|---|---|---|
+| 3.1 | `src/models.py`: `SmallCNN` (widths/BN/dropout/GAP) + `build_model` + đếm params | ☑ | forward `(2,3,64,64)` → `(2,43)`; 2.201.931 params |
+| 3.2 | `src/train.py`: đọc config, seed, AMP, train/val loop, ghi `metrics.csv` flush, early stopping, `best.pt`, `curves.png` | ☑ | `outputs/runs/smoke_cnnb_s42/` |
+| 3.3 | Test overfit 1 batch (50 vòng) | ☑ | `outputs/results/phase3_overfit.json` |
+| 3.4 | Test determinism 2 lần × 3 epoch | ☑ | `outputs/results/phase3_determinism.json` (lệch 0) |
+| 3.5 | Test rò rỉ trong code: aug chỉ train, eval luôn `eval()` + `no_grad` | ☑ | check `aug_chi_train`, `eval_guard` trong `phase3_check.json` |
+| 3.6 | `src/summarize.py`: quét run → `summary.csv` | ☑ | `outputs/results/summary.csv` 1 dòng smoke |
+| 3.7 | Điền 3.5/3.6 + bảng tiến độ, commit local | ☑ | commit local (không push) |
+
+**Tổng kết: 7/7 todo đạt.** Lệnh tái tạo: `python -m src.train --config configs/smoke.yaml [--overfit-batch|--determinism-check|--verify]`.
 
 ### 3.7. Ghi chú / lưu ý
 

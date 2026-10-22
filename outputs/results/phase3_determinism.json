@@ -1,0 +1,41 @@
+{
+  "seed": 42,
+  "epochs": 3,
+  "attempt_1": [
+    {
+      "epoch": 1,
+      "train_loss": 1.15432531,
+      "train_acc": 0.66887755
+    },
+    {
+      "epoch": 2,
+      "train_loss": 0.17986633,
+      "train_acc": 0.94693878
+    },
+    {
+      "epoch": 3,
+      "train_loss": 0.09668001,
+      "train_acc": 0.97174745
+    }
+  ],
+  "attempt_2": [
+    {
+      "epoch": 1,
+      "train_loss": 1.15432531,
+      "train_acc": 0.66887755
+    },
+    {
+      "epoch": 2,
+      "train_loss": 0.17986633,
+      "train_acc": 0.94693878
+    },
+    {
+      "epoch": 3,
+      "train_loss": 0.09668001,
+      "train_acc": 0.97174745
+    }
+  ],
+  "max_abs_diff": 0.0,
+  "threshold": 0.0001,
+  "passed": true
+}

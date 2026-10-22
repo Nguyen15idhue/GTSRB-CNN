@@ -1,0 +1,2 @@
+﻿run_id,model,params,aug,epochs_run,best_epoch,val_acc,val_macro_f1,test_acc,test_macro_f1,train_time_s,infer_ms_per_img,seed,notes,train_val_acc_gap,best_train_acc
+smoke_cnnb_s42,cnn_b,2201931,no,5,5,0.994899,0.994629,,,30.62,,42,smoke test hạ tầng (không dùng trong báo cáo kết quả),-0.003445,0.991454

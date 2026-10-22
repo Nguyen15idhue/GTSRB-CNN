@@ -1,0 +1,13 @@
+# Smoke test hạ tầng Giai đoạn 3: chạy ngắn, KHÔNG dùng để báo cáo kết quả.
+# Mục đích: kiểm tra 1 epoch chạy được, metrics.csv đúng schema, checkpoint load lại được.
+experiment:
+  id: smoke_cnnb
+  seed: 42
+  notes: "smoke test hạ tầng (không dùng trong báo cáo kết quả)"
+
+data:
+  num_workers: 4
+
+train:
+  max_epochs: 5
+  patience: 3
