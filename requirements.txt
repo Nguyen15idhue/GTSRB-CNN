@@ -1,0 +1,18 @@
+# PyTorch cho RTX 5070 (Blackwell, compute capability 12.0) PHẢI cài từ index cu128:
+#   pip install torch==2.11.0 torchvision==0.26.0 --index-url https://download.pytorch.org/whl/cu128
+# Sau đó mới: pip install -r requirements.txt
+torch==2.11.0
+torchvision==0.26.0
+
+numpy==2.5.2
+pandas==3.1.0
+scikit-learn==1.9.1
+scikit-image==0.26.0
+matplotlib==3.11.2
+seaborn==0.13.2
+pillow==12.3.0
+imagehash==4.3.2
+pyyaml==6.0.3
+tqdm==4.70.1
+
+streamlit==1.66.1
