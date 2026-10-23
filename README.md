@@ -22,9 +22,9 @@ kèm baseline, ablation, đánh giá test **một lần**, phân tích lỗi và
 
 ## 1.1. Chạy trên máy mới (từ số 0)
 
-Bản ngắn 1 trang (chỉ demo, 5 phút): **`docs/DEMO_NHANH.md`** — dùng bundle có sẵn.
-Bản ngắn cho **git clone** (không train): **`docs/CHAY_NHANH_SAU_CLONE.md`** — repo đã kèm checkpoint
-`checkpoints/final_s42/best.pt` nên clone xong chỉ cần cài `requirements-demo.txt` rồi chạy.
+Bản ngắn 1 trang (chỉ demo, 5 phút, **không train/data**): **`docs/CHAY_NHANH.md`** — dùng
+checkpoint có sẵn `checkpoints/final_s42/best.pt` (git clone) hoặc bundle; chỉ cần cài
+`requirements-demo.txt` rồi `streamlit run app.py`.
 Hướng dẫn đầy đủ, copy–paste được: **`docs/HUONG_DAN_CHAY_MAY_MOI.md`**
 (cài Python/PyTorch CUDA → tải dữ liệu → train → demo → test), kèm bảng lỗi thường gặp
 và thời gian tham khảo. Bản ngắn: mục 3–5 dưới đây.
@@ -58,7 +58,7 @@ python -c "import torch; print(torch.__version__, torch.cuda.is_available(), tor
 
 Kỳ vọng: `2.11.0+cu128 True (12, 0)`. Danh sách phiên bản đầy đủ: `requirements.txt`
 (và `requirements-lock.txt` là bản `pip freeze` tại máy chạy thật). Chỉ cần suy luận/demo:
-`pip install -r requirements-demo.txt` (vẫn phải cài torch cu128 trước).
+`pip install -r requirements-demo.txt` (đã gồm **torch CPU**, không cần CUDA/cu128).
 
 ## 4. Dữ liệu
 

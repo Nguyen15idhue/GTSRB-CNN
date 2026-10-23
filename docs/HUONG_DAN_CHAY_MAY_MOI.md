@@ -1,7 +1,6 @@
 # HƯỚNG DẪN CHẠY TRÊN MÁY MỚI (CÓ GPU)
 
-> **Chỉ muốn demo nhanh?** Xem bản 1 trang: **`docs/DEMO_NHANH.md`** (dùng bundle, 5 phút).
-> **Đã có repo bằng git clone và không muốn train?** Xem **`docs/CHAY_NHANH_SAU_CLONE.md`**.
+> **Chỉ muốn demo nhanh?** Xem bản 1 trang: **`docs/CHAY_NHANH.md`** (git clone hoặc bundle, 5 phút, không train/data).
 
 Tài liệu này dành cho người **chưa từng chạy repo**: làm theo đúng thứ tự, copy–paste lệnh,
 khoảng **30–45 phút** là có demo + kết quả. Không cần biết trước về PyTorch.
@@ -16,12 +15,11 @@ khoảng **30–45 phút** là có demo + kết quả. Không cần biết trư�
 | Mục tiêu | Cần làm | Thời gian |
 |---|---|---|
 | Chỉ **đọc kết quả** | mở `docs/bao_cao/BAO_CAO.docx` | 0 phút |
-| **Chỉ demo, không train** | giải nén bundle + cài `requirements-demo.txt` + `streamlit run app.py` | **~5 phút** |
-| **Xem demo từ mã nguồn** | cài đặt + data + **train 1 seed** + `streamlit run app.py` | ~15 phút |
+| **Chỉ demo, không train** | git clone hoặc bundle + cài `requirements-demo.txt` + `streamlit run app.py` (checkpoint có sẵn) | **~5 phút** |
 | **Tái lập đầy đủ** | cài đặt + data + 3 seed + đánh giá + báo cáo | ~30–45 phút |
 
-> Repo **không chứa checkpoint** (`best.pt` bị gitignore). Vì vậy máy mới muốn demo phải
-> **train lại** `configs/final.yaml` (hoặc được cấp sẵn `best.pt`, xem mục 0.1 và 9).
+> Repo **đã kèm checkpoint** `checkpoints/final_s42/best.pt` (ngoại lệ có chủ đích). Máy mới chỉ
+> cần cài `requirements-demo.txt` để demo; chỉ train lại khi muốn tái lập số liệu (mục 7 và 9).
 
 ---
 

@@ -7,17 +7,17 @@
 
 ## Cách dùng
 
-App tự tìm theo thứ tự:
-1. `outputs/runs/final_s42/best.pt` (nếu đã train)
-2. `checkpoints/final_s42/best.pt` (có sẵn sau khi clone)
-3. biến môi trường `GTSRB_RUN_DIR` (nếu đặt nơi khác)
+App tự tìm theo thứ tự (đúng như `app.py`):
+1. biến môi trường `GTSRB_RUN_DIR` (nếu đặt)
+2. `outputs/runs/final_s42/best.pt` (nếu đã train)
+3. `checkpoints/final_s42/best.pt` (có sẵn sau khi clone)
 
 ```powershell
 pip install -r requirements-demo.txt
 streamlit run app.py
 ```
 
-Chi tiết: `docs/CHAY_NHANH_SAU_CLONE.md`.
+Chi tiết: `docs/CHAY_NHANH.md`.
 
 ## Vì sao commit file nhị phân?
 

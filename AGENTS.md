@@ -244,8 +244,7 @@ Nguồn sự thật nằm trong `docs/kehoach/`:
 | `Phan_tich_demo_tren_may_yeu.md` | Đóng gói và demo trên máy cấu hình thấp |
 | `docs/DEMO_DATA.md` | Số ảnh từng tập, vị trí ảnh val, cách xuất thêm ảnh demo |
 | `docs/HUONG_DAN_CHAY_MAY_MOI.md` | Hướng dẫn chạy từ máy trắng (cài đặt → data → train → demo → test) |
-| `docs/DEMO_NHANH.md` | Bản 1 trang: chỉ demo bằng bundle (5 phút, không train/data) |
-| `docs/CHAY_NHANH_SAU_CLONE.md` | Bản ngắn cho git clone: cài thư viện + copy checkpoint + demo, không train |
+| `docs/CHAY_NHANH.md` | Bản 1 trang: mở demo Streamlit không train/data (git clone hoặc bundle, 5 phút) |
 | `*.docx` | Bản kế hoạch ban đầu, chỉ để tham khảo |
 
 **Quy tắc**
