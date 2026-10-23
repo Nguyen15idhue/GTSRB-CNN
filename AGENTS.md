@@ -243,6 +243,7 @@ Nguồn sự thật nằm trong `docs/kehoach/`:
 | `Phan_tich_demo_tren_may_yeu.md` | Đóng gói và demo trên máy cấu hình thấp |
 | `docs/DEMO_DATA.md` | Số ảnh từng tập, vị trí ảnh val, cách xuất thêm ảnh demo |
 | `docs/HUONG_DAN_CHAY_MAY_MOI.md` | Hướng dẫn chạy từ máy trắng (cài đặt → data → train → demo → test) |
+| `docs/DEMO_NHANH.md` | Bản 1 trang: chỉ demo bằng bundle (5 phút, không train/data) |
 | `*.docx` | Bản kế hoạch ban đầu, chỉ để tham khảo |
 
 **Quy tắc**

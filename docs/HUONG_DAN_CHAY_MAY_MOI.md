@@ -1,5 +1,7 @@
 # HƯỚNG DẪN CHẠY TRÊN MÁY MỚI (CÓ GPU)
 
+> **Chỉ muốn demo nhanh?** Xem bản 1 trang: **`docs/DEMO_NHANH.md`** (5 phút, không train, không data).
+
 Tài liệu này dành cho người **chưa từng chạy repo**: làm theo đúng thứ tự, copy–paste lệnh,
 khoảng **30–45 phút** là có demo + kết quả. Không cần biết trước về PyTorch.
 
