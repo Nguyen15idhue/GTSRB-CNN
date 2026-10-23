@@ -178,5 +178,6 @@ Mô hình chỉ có 43 lớp biển Đức. Biển Việt Nam (cấm dừng/đ�
 
 - Kế hoạch chủ: `docs/kehoach/KE_HOACH_TONG_QUAN_GTSRB_CNN.md`
 - Các bước thực hiện + nhật ký: `docs/kehoach/Cac_buoc_thuc_hien_GTSRB_CNN.md`
-- Báo cáo: `docs/bao_cao/BAO_CAO.md` (và `.docx` nếu đã xuất)
+- Báo cáo: `docs/bao_cao/BAO_CAO.md` (và `.docx` đã xuất)
+- **Lấy dữ liệu ảnh để demo (val ở đâu, cách xuất thêm): `docs/DEMO_DATA.md`**
 - Quy tắc làm việc: `AGENTS.md`

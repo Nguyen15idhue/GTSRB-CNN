@@ -241,6 +241,7 @@ Nguồn sự thật nằm trong `docs/kehoach/`:
 | `KE_HOACH_TONG_QUAN_GTSRB_CNN.md` | Kế hoạch chủ: phạm vi, thiết kế, thí nghiệm, tiêu chí |
 | `Cac_buoc_thuc_hien_GTSRB_CNN.md` | 13 giai đoạn thi hành + checklist test |
 | `Phan_tich_demo_tren_may_yeu.md` | Đóng gói và demo trên máy cấu hình thấp |
+| `docs/DEMO_DATA.md` | Số ảnh từng tập, vị trí ảnh val, cách xuất thêm ảnh demo |
 | `*.docx` | Bản kế hoạch ban đầu, chỉ để tham khảo |
 
 **Quy tắc**
