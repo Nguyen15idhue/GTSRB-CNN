@@ -121,6 +121,7 @@ def predict_topk(
     max_prob = float(probabilities.max())
     return {
         "topk": topk,
+        "probabilities": [float(value) for value in probabilities],
         "max_prob": max_prob,
         "margin": float(topk[0]["prob"] - topk[1]["prob"]) if len(topk) > 1 else max_prob,
         "tau": tau,

@@ -1,0 +1,13 @@
+# Smoke test dùng cho clean-room (Giai đoạn 9). KHÔNG dùng để báo cáo kết quả.
+# Mục đích: chứng minh môi trường mới cài từ requirements chạy được 2 epoch.
+experiment:
+  id: cleanroom_smoke
+  seed: 42
+  notes: "Clean-room smoke: 2 epoch trên split random, chỉ kiểm hạ tầng"
+
+data:
+  num_workers: 2
+
+train:
+  max_epochs: 2
+  patience: 2

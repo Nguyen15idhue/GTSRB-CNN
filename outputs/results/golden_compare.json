@@ -1,0 +1,9 @@
+{
+  "left": "outputs/results/golden_venv.json",
+  "right": "outputs/results/golden_venv_test.json",
+  "n_images": 20,
+  "max_probability_difference": 0.0,
+  "threshold": 0.001,
+  "prediction_mismatches": 0,
+  "passed": true
+}

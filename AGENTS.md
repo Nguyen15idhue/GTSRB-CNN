@@ -9,7 +9,7 @@ Hướng dẫn cho AI agent (và người) khi làm việc trong repo này.
 | Ngôn ngữ tài liệu | Tiếng Việt |
 | Ngôn ngữ code | Tên biến/hàm bằng tiếng Anh; comment/docstring tiếng Việt được phép |
 | Cập nhật lần cuối | 23/10/2026 |
-| Trạng thái repo | **Giai đoạn 8 hoàn tất + audit bổ sung 23/10/2026**: GĐ1–8 xong; GĐ6 chốt E3 trên `split_stratified_group`, multi-seed 42/123/2024, **test 1 lần: acc 0,985590 · macro-F1 0,979894** (xác minh độc lập 14/14 PASS). Audit pHash/MAD/NCC: ngoài 8 cặp MD5 đã loại, **0 cặp gần trùng được xác nhận**; pytest 11 test. **GĐ9–12 chưa làm** (clean-room, README, báo cáo, slide, nộp). |
+| Trạng thái repo | **Giai đoạn 10 hoàn tất (23/10/2026)**: GĐ1–10 xong. GĐ6 chốt E3 trên `split_stratified_group`, multi-seed, **test 1 lần: acc 0,985590 · macro-F1 0,979894** (xác minh 14/14). GĐ9: clean-room `.venv_test` (CUDA (12,0), val khớp tuyệt đối, golden test 0,000e+00, pytest 11). GĐ10: `docs/bao_cao/BAO_CAO.{md,docx}` (6 chương, 19 bảng, 20 hình). **GĐ11–12 chưa làm** (slide/video/đóng gói/nộp) theo yêu cầu. |
 
 ---
 

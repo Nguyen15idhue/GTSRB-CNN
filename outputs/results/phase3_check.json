@@ -52,7 +52,7 @@
     {
       "check": "summary_csv",
       "passed": true,
-      "detail": "10 dòng trong summary.csv, có run smoke_cnnb_s42: True"
+      "detail": "12 dòng trong summary.csv; run smoke bị loại khỏi bảng chính: True"
     },
     {
       "check": "aug_chi_train",

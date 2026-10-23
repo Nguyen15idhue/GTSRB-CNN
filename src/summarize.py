@@ -39,6 +39,8 @@ COMPARISON_FIG = FIGURES_DIR / "05_experiment_comparison.png"
 COLUMNS = (
     "run_id",
     "model",
+    "split",
+    "role",
     "params",
     "aug",
     "epochs_run",
@@ -81,6 +83,8 @@ def _from_cnn_run(run_dir: Path) -> dict[str, Any] | None:
     return {
         "run_id": meta["run_id"],
         "model": meta.get("model", ""),
+        "split": meta.get("split", ""),
+        "role": _role_of(meta["run_id"]),
         "params": meta.get("params", ""),
         "aug": "yes" if (run_dir / "config.yaml").is_file() and _aug_enabled(run_dir) else "no",
         "epochs_run": meta.get("epochs_run", len(rows)),
@@ -113,6 +117,8 @@ def _from_baseline(run_dir: Path) -> dict[str, Any] | None:
     return {
         "run_id": payload.get("run_id", run_dir.name),
         "model": payload.get("model", ""),
+        "split": payload.get("split", "random"),
+        "role": "baseline",
         "params": payload.get("params", ""),
         "aug": "no",
         "epochs_run": payload.get("epochs_run", 0),
@@ -130,14 +136,32 @@ def _from_baseline(run_dir: Path) -> dict[str, Any] | None:
     }
 
 
-def collect_runs(runs_dir: Path = RUNS_DIR) -> list[dict[str, Any]]:
-    """Thu thập mọi run hợp lệ trong ``outputs/runs``."""
+def _role_of(run_id: str) -> str:
+    """Phân loại run cho bảng tổng hợp: baseline / ablation / selection / final."""
+    if run_id.startswith("e0"):
+        return "baseline"
+    if run_id.startswith("final"):
+        return "final"
+    if run_id.startswith("cand"):
+        return "selection"
+    return "ablation"
+
+
+AUX_PREFIXES = ("diag_", "smoke_", "cand_")
+
+
+def collect_runs(runs_dir: Path = RUNS_DIR, include_aux: bool = False) -> list[dict[str, Any]]:
+    """Thu thập run cho ``summary.csv`` (mặc định bỏ run chẩn đoán/chọn mô hình/smoke)."""
     rows: list[dict[str, Any]] = []
     if not runs_dir.is_dir():
         return rows
     for run_dir in sorted(p for p in runs_dir.iterdir() if p.is_dir()):
-        if run_dir.name.startswith("diag_"):
-            LOG.info("Bỏ qua %s: run chẩn đoán, không đưa vào summary.csv", run_dir.name)
+        if not include_aux and run_dir.name.startswith(AUX_PREFIXES):
+            LOG.info(
+                "Bỏ qua %s: run phụ (diag/smoke/selection) — artifact vẫn giữ, "
+                "chỉ không đưa vào summary.csv chính",
+                run_dir.name,
+            )
             continue
         row = _from_cnn_run(run_dir) or _from_baseline(run_dir)
         if row is None:

@@ -615,8 +615,13 @@ def verify_phase3(cfg_path: str = "configs/smoke.yaml", device: torch.device | N
     )
 
     summary_rows = collect_summary_rows()
-    summary_ok = any(r["run_id"] == name for r in summary_rows)
-    add("summary_csv", summary_ok, f"{len(summary_rows)} dòng trong summary.csv, có run {name}: {summary_ok}")
+    # Từ Giai đoạn 9, run smoke bị loại khỏi summary.csv chính (artifact vẫn giữ).
+    smoke_in_summary = any(r["run_id"] == name for r in summary_rows)
+    add(
+        "summary_csv",
+        not smoke_in_summary,
+        f"{len(summary_rows)} dòng trong summary.csv; run smoke bị loại khỏi bảng chính: {not smoke_in_summary}",
+    )
 
     cfg_aug = json.loads(json.dumps(cfg))
     cfg_aug["augmentation"]["enabled"] = True

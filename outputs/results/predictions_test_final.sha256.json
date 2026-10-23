@@ -1,0 +1,7 @@
+{
+  "file": "outputs/results/predictions_test_final.csv",
+  "copied_from": "outputs/runs/final_s42/eval_test/predictions.csv",
+  "sha256": "f4eb4014d73927c01a65c8dc5211f4c34ba9eec4f7fd22ed581097de68269401",
+  "n_rows": 12630,
+  "note": "Bản sao nguyên văn của predictions.csv từ lần đánh giá test DUY NHẤT (final_s42). Không sửa nội dung, không chạy lại test. outputs/runs/ bị gitignore nên cần bản này để báo cáo/tái lập GĐ7."
+}

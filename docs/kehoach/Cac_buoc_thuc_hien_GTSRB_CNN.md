@@ -49,9 +49,9 @@
 | 6 | Chốt mô hình, multi-seed, test 1 lần | D7 | G3 | ☑ | `configs/final.yaml` (commit `8f61c5a`), `outputs/results/split_stratified_group.json`, `phase6_split_check.json`, `multiseed.json`, `test_report.json`, `test_final.json`, `test_runs.log`, `phase6_check.json`, runs `final_s42/s123/s2024` |
 | 7 | Đánh giá sâu & phân tích lỗi | D8–D9 | G4 | ☑ | `outputs/results/{per_class_test.csv,top_confusions_test.csv,error_rates_tertiles.csv,error_samples_table.csv,ood_results.csv,ood_summary.json,threshold.json,error_report.json,latency_effect.json}`, `outputs/figures/07_*.png`, `src/error_analysis.py`, `external_test/` |
 | 8 | Demo dữ liệu mới | D10 | G4 | ☑ | `app.py`, `src/predict.py`, `external_test/` (10 ảnh CC0/PD + 1 ảnh GTSRB tham chiếu + `manifest.csv`), `outputs/results/{demo_scenarios.csv,phase8_check.json,threshold.json,ood_summary.json,latency_effect.json,phash_*.json,test_verification.json}`, `outputs/figures/08_*.png`, `09_phash_*.png`, `tests/test_pipeline.py` |
-| 9 | Tái lập & đóng gói | D11 | G5 | ☐ | |
-| 10 | Báo cáo | D12–D13 | G5 | ☐ | |
-| 11 | Slide & phản biện | D14 | G5 | ☐ | |
+| 9 | Tái lập & đóng gói | D11 | G5 | ☑ | `requirements-lock.txt`, `README.md` (8 mục), `.venv_test` clean-room, `outputs/results/cleanroom.json`, `golden_compare.json`, `predictions_test_final.csv` (kèm sha256), `summary.csv` (cột `split`/`role`, 12 dòng) |
+| 10 | Báo cáo | D12–D13 | G5 | ☑ | `docs/bao_cao/BAO_CAO.md`, `docs/bao_cao/BAO_CAO.docx` (6 chương, 19 bảng, 20 hình), `outputs/figures/10_*.png`, bảng 12 mẫu sai, 6 tài liệu tham khảo |
+| 11 | Slide & phản biện | D14 | G5 | ☐ | (chưa làm theo yêu cầu — cần screenshot UI + video) |
 | 12 | Nghiệm thu & nộp | D15 | G5 | ☐ | |
 
 ### Sơ đồ gate
@@ -1291,14 +1291,16 @@ Bắt buộc có:
 
 ### 9.5. Checklist test
 
-- [ ] `python -m venv .venv_test` + cài requirements thành công.
-- [ ] Trong venv sạch: `python -c "import torch; print(torch.cuda.is_available())"` = True.
-- [ ] Chạy đúng lệnh trong README từ đầu đến cuối, không phải sửa gì.
-- [ ] `grep -r "C:\\" src/ app.py` → 0 kết quả.
-- [ ] `grep -r "/home/" src/ app.py` → 0 kết quả.
-- [ ] `python -m src.evaluate --run <best> --split val` chạy lại cho cùng số (sai khác < 0,2%).
-- [ ] `summary.csv` mở bằng Excel/pandas, không lỗi encoding.
-- [ ] README có cảnh báo "không dùng cho quyết định thực tế".
+- [x] `python -m venv .venv_test` + cài requirements thành công. → tạo từ Python 3.12 hệ thống; cài `torch==2.11.0 torchvision==0.26.0` từ index cu128 (wheel 2.753 MB, pip cache) rồi `pip install -r requirements.txt`; **0 lỗi**
+- [x] Trong venv sạch: `python -c "import torch; print(torch.cuda.is_available())"` = True. → `2.11.0+cu128 · True · (12, 0) · NVIDIA GeForce RTX 5070`
+- [x] Chạy đúng lệnh trong README từ đầu đến cuối, không phải sửa gì. → README viết lại theo đúng thứ tự (torch cu128 trước, requirements sau); clean-room chạy `configs/cleanroom_smoke.yaml` 2 epoch, `evaluate --split val`, AppTest, pytest — không sửa lệnh nào
+- [x] `grep -r "C:\\" src/ app.py` → 0 kết quả. → **0** (thêm `tests/` cũng 0; đường dẫn đều qua `PROJECT_ROOT`)
+- [x] `grep -r "/home/" src/ app.py` → 0 kết quả. → **0**
+- [x] `python -m src.evaluate --run <best> --split val` chạy lại cho cùng số (sai khác < 0,2%). → **0,983525 / 0,970613**, khớp tuyệt đối với `multiseed.json` seed 42 (sai khác **0,000000**)
+- [x] `summary.csv` mở bằng Excel/pandas, không lỗi encoding. → UTF-8-SIG, 12 dòng, 18 cột (thêm `split`, `role`); đọc lại bằng `csv.DictReader` không lỗi
+- [x] README có cảnh báo "không dùng cho quyết định thực tế". → có ở mục 1 và mục 8
+
+**Kết quả:** 8/8 mục PASS; kiểm tra bổ sung: golden test 20 ảnh giữa `.venv` và `.venv_test` lệch xác suất **0,000e+00**; pytest trong venv sạch **11 passed**.
 
 ### 9.6. Kết quả thực hiện
 
@@ -1306,14 +1308,24 @@ Bắt buộc có:
 >
 > | Hạng mục | Giá trị thực tế |
 > |---|---|
-> | Ngày / người thực hiện | |
-> | Thời gian clean-room install | |
-> | Lỗi gặp khi clean-room | |
-> | Đã sửa gì | |
-> | Số run trong summary.csv | |
-> | Kết quả evaluate lại (val acc) | |
-> | Trạng thái | ☐ Đạt ☐ Đạt có điều kiện ☐ Chưa đạt |
-> | Ghi chú | |
+> | Ngày / người thực hiện | 23/10/2026 — AI agent, RTX 5070 / i9-14900KF / Windows 11 |
+> | Thời gian clean-room install | Không đo riêng thời gian tải/cài (wheel torch 2.753 MB đã có trong pip cache); **thời gian chạy toàn bộ checklist clean-room: 1,01 phút** |
+> | Lỗi gặp khi clean-room | **0 lỗi** (exit code 0 ở cả 5 bước: CUDA, smoke 2 epoch, evaluate val, AppTest, pytest) |
+> | Đã sửa gì | (1) Viết lại README đủ 8 mục với số thật + thứ tự cài torch cu128; (2) thêm `requirements-demo.txt`, `requirements-lock.txt` (71 dòng), `python-docx`; (3) copy `predictions.csv` (2,48 MB) sang `outputs/results/` kèm sha256; (4) `summary.csv` thêm cột `split`/`role`, loại run `smoke_*`/`cand_*`/`diag_*` khỏi bảng chính; (5) thêm `tests/golden_test.py`, `configs/cleanroom_smoke.yaml` |
+> | Số run trong summary.csv | **12** (2 baseline + 7 ablation + 3 final seed; không còn smoke/cand/diag) |
+> | Kết quả evaluate lại (val acc) | **0,983525 / macro-F1 0,970613** trên 7.830 ảnh — khớp seed 42 trong `multiseed.json`, sai khác **0** |
+> | Trạng thái | ☑ Đạt ☐ Đạt có điều kiện ☐ Chưa đạt |
+> | Ghi chú | Clean-room **không chạy lại test** (test đã dùng 1 lần). Smoke train trong `.venv_test`: 2 epoch, 30,3 s, val acc 0,985971 (split random — chỉ kiểm hạ tầng, không dùng báo cáo). AppTest: **0 exception**. Golden test 20 ảnh: lệch xác suất lớn nhất **0,000e+00** (ngưỡng 1e-3). Chi tiết: `outputs/results/cleanroom.json`, `golden_compare.json`. |
+>
+> ### 9.6.1. Nhật ký thực hiện (todos)
+>
+> | # | Todo | Trạng thái | Bằng chứng |
+> |---|---|---|---|
+> | 9.1 | Viết lại README (8 mục) + requirements-demo + lock | ☑ | `README.md`, `requirements-demo.txt`, `requirements-lock.txt` |
+> | 9.2 | Copy predictions test + sha256; summary thêm `split`/`role`, lọc run phụ | ☑ | `predictions_test_final.csv`, `.sha256.json`, `summary.csv` |
+> | 9.3 | Clean-room `.venv_test`: cài, CUDA, smoke 2 epoch, eval val, AppTest, pytest | ☑ | `outputs/results/cleanroom.json` |
+> | 9.4 | Golden test 20 ảnh giữa 2 môi trường | ☑ | `golden_compare.json` (0,000e+00) |
+> | 9.5 | Checklist 9.5 + điền 9.6 + commit | ☑ | 8/8 PASS |
 
 ### 9.7. Ghi chú / lưu ý
 
@@ -1379,14 +1391,16 @@ Báo cáo không phải bản mô tả code. Mỗi chương phải trả lời m
 
 ### 10.5. Checklist test
 
-- [ ] Không còn chuỗi "TODO", "điền sau", "..." trong báo cáo.
-- [ ] Số test acc trong Ch4 khớp `test_report.json`.
-- [ ] Số 39.209/12.630 khớp `data_report.json`.
-- [ ] Bảng ablation khớp `summary.csv` từng dòng.
-- [ ] 10 ảnh trong Ch5 mở được, đúng nhãn.
-- [ ] Hình curves có đơn vị trục, legend.
-- [ ] Có câu "không dùng cho quyết định giao thông thực tế" ở Ch1 và Ch6.
-- [ ] Đánh số hình/bảng liên tục, có tham chiếu trong văn bản.
+- [x] Không còn chuỗi "TODO", "điền sau", "..." trong báo cáo. → kiểm bằng `python-docx`: **TODO 0, "điền sau" 0, "..." 0**; còn 1 dấu "…" trong câu trích dẫn điều kiện sử dụng GTSRB
+- [x] Số test acc trong Ch4 khớp `test_report.json`. → báo cáo sinh trực tiếp từ `test_report.json`; **98,559 % / 0,979894 / top-3 99,644 %** khớp `test_verification.json` (14/14)
+- [x] Số 39.209/12.630 khớp `data_report.json`. → **39.209 / 12.630** (và 39.201 dùng chia split) — lấy từ `counts`
+- [x] Bảng ablation khớp `summary.csv` từng dòng. → Bảng 4.1 và 4.2 sinh bằng `f-string` từ `summary.csv`; không gõ tay
+- [x] 10 ảnh trong Ch5 mở được, đúng nhãn. → **12 ảnh** (Hình 5.6), đã mở; nhãn đối chiếu `error_samples_table.csv` + `predictions.csv`
+- [x] Hình curves có đơn vị trục, legend. → Hình 4.1: 3 trục có nhãn/đơn vị, legend 4 cấu hình; đã mở kiểm tra
+- [x] Có câu "không dùng cho quyết định giao thông thực tế" ở Ch1 và Ch6. → Ch1.3 và Ch6.5 (và footer demo)
+- [x] Đánh số hình/bảng liên tục, có tham chiếu trong văn bản. → Hình **2.1–6.2**, Bảng **1.1–6.1, A.1, B.1**; văn bản có tham chiếu (mục 2.4, Bảng 4.2)
+
+**Kết quả:** 8/8 mục PASS. Báo cáo: `docs/bao_cao/BAO_CAO.md` + `BAO_CAO.docx` (6 chương, 19 bảng, 20 hình, 6 tài liệu tham khảo).
 
 ### 10.6. Kết quả thực hiện
 
@@ -1394,12 +1408,21 @@ Báo cáo không phải bản mô tả code. Mỗi chương phải trả lời m
 >
 > | Hạng mục | Giá trị thực tế |
 > |---|---|
-> | Ngày hoàn thành | |
-> | Số trang | |
-> | Số hình / số bảng | |
-> | Chương còn yếu | |
-> | Trạng thái | ☐ Đạt ☐ Đạt có điều kiện ☐ Chưa đạt |
-> | Ghi chú | |
+> | Ngày hoàn thành | 23/10/2026 |
+> | Số trang | **Chưa đo chính xác** (máy không có Word/LibreOffice để render); ước lượng **20–24 trang A4** từ 192 đoạn, 19 bảng, 20 hình. Khi mở bằng Word, số trang thực tế hiển thị ở footer |
+> | Số hình / số bảng | **20 hình** (20 tệp, Hình 2.1–6.2) / **19 bảng** (Bảng 1.1–6.1, A.1, B.1) |
+> | Chương còn yếu | **Ch5.5 (OOD)** — mỗi nhóm chỉ 2–4 ảnh, CI rất rộng; **Ch6** — chưa có screenshot UI/video (môi trường không có GUI) |
+> | Trạng thái | ☑ Đạt ☐ Đạt có điều kiện ☐ Chưa đạt |
+> | Ghi chú | Báo cáo sinh **từ artifact** bằng `docs/bao_cao/build_report.py` (không gõ tay số), xuất DOCX bằng `md_to_docx.py`. 6 chương đúng cấu trúc; 6 tài liệu tham khảo; phần hạn chế nêu 8 điểm; 12 mẫu sai có cột quan sát/giả thuyết tách riêng. **Chưa làm GĐ11–12** (slide/video/đóng gói/nộp) theo yêu cầu. |
+>
+> ### 10.6.1. Nhật ký thực hiện (todos)
+>
+> | # | Todo | Trạng thái | Bằng chứng |
+> |---|---|---|---|
+> | 10.1 | Vẽ 6 hình còn thiếu (curves 4 run, top-10 bar, confusion full, multi-seed, kiến trúc, pipeline) | ☑ | `outputs/figures/10_*.png` |
+> | 10.2 | Sinh báo cáo 6 chương từ artifact (không gõ tay số) | ☑ | `docs/bao_cao/BAO_CAO.md` (568 dòng) |
+> | 10.3 | Xuất DOCX, kiểm bảng/hình/caption, đánh số liên tục | ☑ | `docs/bao_cao/BAO_CAO.docx` (6,76 MB; 19 bảng, 20 hình) |
+> | 10.4 | Checklist 10.5 + điền 10.6 + commit | ☑ | 8/8 PASS |
 
 ### 10.7. Ghi chú / lưu ý
 

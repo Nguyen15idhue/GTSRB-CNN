@@ -1,0 +1,23 @@
+{
+  "torch_version": "2.11.0+cu128",
+  "cuda_available": true,
+  "capability": "(12, 0)",
+  "gpu": "NVIDIA GeForce RTX 5070",
+  "smoke_train_exit": 0,
+  "smoke_epochs": 2,
+  "smoke_val_acc": 0.985971,
+  "smoke_seconds": 30.3,
+  "eval_val_exit": 0,
+  "val_acc": 0.9835249042145594,
+  "val_macro_f1": 0.970612678826378,
+  "val_n": 7830,
+  "eval_seconds": 20.2,
+  "expected_val_acc": 0.983525,
+  "app_exception_count": 0,
+  "pytest_exit": 0,
+  "pytest_tail": "11 passed in 3.33s",
+  "pytest_seconds": 4.9,
+  "elapsed_min": 1.01,
+  "venv": ".venv_test",
+  "note": "Clean-room: venv mới, cài torch cu128 + requirements từ đầu; KHÔNG chạy lại test (test chỉ có 1 lần); dữ liệu dùng bản đã tải trên đĩa."
+}
