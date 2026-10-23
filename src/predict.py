@@ -65,6 +65,29 @@ def should_reject(max_prob: float, tau: float) -> bool:
     return float(max_prob) < float(tau)
 
 
+def validate_image_bytes(filename: str, data: bytes, max_mb: float = 20.0) -> Image.Image:
+    """Kiểm tra file upload: kích thước, định dạng, ảnh hỏng → raise ValueError thân thiện."""
+    from io import BytesIO
+
+    from PIL import Image, UnidentifiedImageError
+
+    if len(data) > max_mb * 1024 * 1024:
+        raise ValueError(f"Ảnh quá lớn ({len(data) / 1024**2:.1f} MB). Giới hạn {max_mb:.0f} MB.")
+    suffix = Path(filename).suffix.lower()
+    if suffix not in (".jpg", ".jpeg", ".png"):
+        raise ValueError(f"Định dạng '{suffix or 'không rõ'}' không hỗ trợ. Chỉ nhận JPG/JPEG/PNG.")
+    try:
+        with Image.open(BytesIO(data)) as probe:
+            probe.verify()
+        image = Image.open(BytesIO(data))
+        image.load()
+        return image.convert("RGB")
+    except (UnidentifiedImageError, OSError, ValueError) as exc:
+        raise ValueError(
+            "File không phải ảnh hợp lệ hoặc đã bị hỏng (kiểm tra lại đuôi file)."
+        ) from exc
+
+
 @torch.no_grad()
 def predict_topk(
     image: Any,

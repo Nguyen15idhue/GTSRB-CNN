@@ -48,7 +48,7 @@
 | 5 | CNN & thí nghiệm chính | D4–D6 | G2 | ☑ | `outputs/runs/e1_cnna_s42` … `e7_classweight_s42`, `outputs/runs/diag_e3_group_s42` (chẩn đoán), `outputs/results/summary.csv`, `phase5_check.json`, `leak_delta.json`, `outputs/figures/05_experiment_comparison.png`, 7 config `configs/e*.yaml` |
 | 6 | Chốt mô hình, multi-seed, test 1 lần | D7 | G3 | ☑ | `configs/final.yaml` (commit `8f61c5a`), `outputs/results/split_stratified_group.json`, `phase6_split_check.json`, `multiseed.json`, `test_report.json`, `test_final.json`, `test_runs.log`, `phase6_check.json`, runs `final_s42/s123/s2024` |
 | 7 | Đánh giá sâu & phân tích lỗi | D8–D9 | G4 | ☑ | `outputs/results/{per_class_test.csv,top_confusions_test.csv,error_rates_tertiles.csv,error_samples_table.csv,ood_results.csv,threshold.json,error_report.json}`, `outputs/figures/07_*.png`, `src/error_analysis.py`, `external_test/` |
-| 8 | Demo dữ liệu mới | D10 | G4 | ☐ | |
+| 8 | Demo dữ liệu mới | D10 | G4 | ☑ | `app.py`, `src/predict.py`, `external_test/` (11 ảnh CC0/PD + `manifest.csv`), `outputs/results/{demo_scenarios.csv,phase8_check.json,threshold.json}`, `outputs/figures/08_*.png` |
 | 9 | Tái lập & đóng gói | D11 | G5 | ☐ | |
 | 10 | Báo cáo | D12–D13 | G5 | ☐ | |
 | 11 | Slide & phản biện | D14 | G5 | ☐ | |
@@ -1158,16 +1158,18 @@ Làm đúng ba điểm trên sẽ biến demo từ "trình diễn may rủi" th�
 
 ### 8.5. Checklist test
 
-- [ ] Upload ảnh test bất kỳ → app trả kết quả trong < 2 giây.
-- [ ] Kết quả top-3 có tổng xác suất ≤ 1 và giảm dần.
-- [ ] Tên lớp hiển thị đúng tiếng Việt (đối chiếu `class_names.json`).
-- [ ] Upload file `.txt` đổi đuôi `.jpg` → app báo lỗi thân thiện.
-- [ ] Upload ảnh > 20 MB → app báo lỗi, không treo.
-- [ ] Đổi tên checkpoint → app báo "không tìm thấy checkpoint".
-- [ ] Ảnh không có biển + τ bật → hiển thị "không xác định".
-- [ ] `manifest.csv` có đủ số dòng = số ảnh trong `external_test/`.
-- [ ] Mở từng ảnh trong `external_test/` kiểm tra ẩn danh.
-- [ ] Footer có câu "không dùng cho quyết định giao thông thực tế".
+- [x] Upload ảnh test bất kỳ → app trả kết quả trong < 2 giây. → đo 20 lần: **median 0,70 ms**, max **1,21 ms** (nhanh hơn ngưỡng 2 s rất nhiều)
+- [x] Kết quả top-3 có tổng xác suất ≤ 1 và giảm dần. → kiểm 5/5 kịch bản: giảm dần, tổng ≤ 1
+- [x] Tên lớp hiển thị đúng tiếng Việt (đối chiếu `class_names.json`). → `predict_topk` lấy trực tiếp `name_vi` từ `configs/class_names.json`; output khớp (vd. "Giới hạn tốc độ 30 km/h")
+- [x] Upload file `.txt` đổi đuôi `.jpg` → app báo lỗi thân thiện. → `validate_image_bytes` raise "File không phải ảnh hợp lệ hoặc đã bị hỏng…", app hiển thị `st.error`
+- [x] Upload ảnh > 20 MB → app báo lỗi, không treo. → chặn trước khi decode: "Ảnh quá lớn (21,0 MB). Giới hạn 20 MB."
+- [x] Đổi tên checkpoint → app báo "không tìm thấy checkpoint". → `load_model` raise `FileNotFoundError: Không tìm thấy checkpoint …`; app `st.error` + `st.stop()`
+- [x] Ảnh không có biển + τ bật → hiển thị "không xác định". → 3/4 ảnh đường bị từ chối; **1 ảnh bị nhận nhầm với conf 1,00** → ghi rõ hạn chế của τ
+- [x] `manifest.csv` có đủ số dòng = số ảnh trong `external_test/`. → **11 dòng / 11 ảnh**
+- [x] Mở từng ảnh trong `external_test/` kiểm tra ẩn danh. → đã mở lưới `08_external_contact.png`: **11/11 không có người/biển số**, EXIF bị loại khi lưu lại
+- [x] Footer có câu "không dùng cho quyết định giao thông thực tế". → có trong `st.caption`; AppTest xác nhận chuỗi xuất hiện
+
+**Kết quả:** 10/10 mục PASS (`outputs/results/phase8_check.json`, 8 check tự động + 2 kiểm tra thủ công đã ghi bằng chứng).
 
 ### 8.6. Kết quả thực hiện
 
@@ -1175,17 +1177,29 @@ Làm đúng ba điểm trên sẽ biến demo từ "trình diễn may rủi" th�
 >
 > | Hạng mục | Giá trị thực tế |
 > |---|---|
-> | Ngày / người thực hiện | |
-> | Số ảnh ngoài dataset | |
-> | Số ảnh đã ẩn danh | |
-> | Kịch bản 1 (ảnh test): đúng/sai | |
-> | Kịch bản 2 (ảnh crop): đúng/sai | |
-> | Kịch bản 3 (cảnh thật): đúng/sai | |
-> | Kịch bản 4 (không biển): dự đoán / bị từ chối | |
-> | Ngưỡng τ | |
-> | Thời gian phản hồi trung bình | |
-> | Trạng thái | ☐ Đạt ☐ Đạt có điều kiện ☐ Chưa đạt |
-> | Ghi chú | |
+> | Ngày / người thực hiện | 23/10/2026 — AI agent, RTX 5070 / i9-14900KF / Windows 11 |
+> | Số ảnh ngoài dataset | **11** (1 ảnh test GTSRB + 2 biển tốc độ Mỹ/Hàn + 4 biển chữ Philippines + 4 đường không biển), **CC0/Public domain**, ghi nguồn + giấy phép trong `external_test/manifest.csv` |
+> | Số ảnh đã ẩn danh | **11/11** — đã mở lưới `08_external_contact.png`, không có người/biển số; ảnh được lưu lại (bỏ EXIF) trước khi đưa vào repo |
+> | Kịch bản 1 (ảnh test): đúng/sai | **Đúng** — lớp 16 "Cấm xe trên 3,5 tấn", conf **1,000** |
+> | Kịch bản 2 (ảnh crop): đúng/sai | **Đúng** — biển Hàn 30 → lớp 1 "Giới hạn tốc độ 30 km/h", conf **0,950** |
+> | Kịch bản 3 (cảnh thật): đúng/sai | **Top-1 đúng** (lớp 0, biển Mỹ 20) nhưng conf **0,673 < τ** → app hiển thị "không xác định"; đúng tinh thần "biển nhỏ thì không nên tin" |
+> | Kịch bản 4 (không biển): dự đoán / bị từ chối | 4 ảnh: **3 bị từ chối** (conf 0,61 / 0,45 / 0,86) → "không xác định"; **1 bị nhận nhầm "Nhường đường" conf 0,996** (ảnh đường có vạch vàng) |
+> | Ngưỡng τ | **0,9462** (phân vị 5 % max-prob trên val; acceptance in-dist 94,99 %) — **không** chỉnh theo ảnh demo |
+> | Thời gian phản hồi trung bình | **0,70 ms** (median), max **1,21 ms** cho 1 ảnh (20 lần đo, sau warm-up) |
+> | Trạng thái | ☑ Đạt ☐ Đạt có điều kiện ☐ Chưa đạt |
+> | Ghi chú | • App dùng đúng `src.data.preprocess` (import, không viết lại) và checkpoint cuối `final_s42`; τ đọc từ `threshold.json`. AppTest chạy app không exception, có footer cảnh báo.<br>• **Chưa có screenshot trình duyệt**: môi trường không có browser automation; thay bằng ảnh minh chứng `08_scenarios.png` + `08_external_contact.png` (ghi rõ **không phải** screenshot UI) và kết quả từng kịch bản trong `demo_scenarios.csv`. Cần chụp 5 ảnh màn hình khi trình bày trên máy có GUI.<br>• **τ không bảo vệ tuyệt đối**: 1/4 ảnh không biển vẫn bị nhận nhầm với confidence rất cao → phải nêu trong báo cáo/slide, không tuyên bố "lọc được ảnh không biển".<br>• Không sửa ảnh demo cho đến khi đúng; các ca sai được giữ nguyên và phân tích (kịch bản 3, 4). |
+>
+> ### 8.6.1. Nhật ký thực hiện (todos)
+>
+> | # | Todo | Trạng thái | Bằng chứng |
+> |---|---|---|---|
+> | 8.1 | `src/predict.py`: `load_model`, `preprocess` (import từ `src.data`), `predict_topk`, `should_reject`, `validate_image_bytes` | ☑ | `src/predict.py` |
+> | 8.2 | `app.py` Streamlit: upload, top-3, cảnh báo τ, 3 lỗi, footer | ☑ | AppTest 0 exception (`phase8_check.json`) |
+> | 8.3 | 11 ảnh ngoài dataset + `manifest.csv` (nguồn, giấy phép, mô tả, ẩn danh, nhãn kỳ vọng) | ☑ | `external_test/`, `manifest.csv` |
+> | 8.4 | Chạy 5 kịch bản, ghi latency + kết quả | ☑ | `demo_scenarios.csv`, `08_scenarios.png` |
+> | 8.5 | Checklist 8.5 (10 mục) + điền 8.6 + commit | ☑ | 10/10 PASS; `phase8_check.json` |
+>
+> **Tổng kết: 5/5 todo đạt.** Lệnh chạy: `streamlit run app.py`; kiểm thử tự động: `python -m pytest` (không có) → dùng `phase8_check.json` tái tạo bằng script kiểm thử trong log.
 
 ### 8.7. Ghi chú / lưu ý
 

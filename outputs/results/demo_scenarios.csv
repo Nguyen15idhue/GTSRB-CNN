@@ -1,0 +1,7 @@
+﻿scenario,filename,expected_id,pred_id,pred_name,prob,top3,rejected,correct_top1,latency_ms
+1. Ảnh test GTSRB (chưa dùng train),ext_01_gtsrb_test_00000.png,16,16,"Cấm xe trên 3,5 tấn",0.999997,"Cấm xe trên 3,5 tấn (1.000) | Giới hạn tốc độ 100 km/h (0.000) | Cấm vượt (0.000)",False,1,150.17
+2. Ảnh biển nước ngoài đã crop,ext_03_kr_speed30_crop.jpg,1,1,Giới hạn tốc độ 30 km/h,0.949504,Giới hạn tốc độ 30 km/h (0.950) | Giới hạn tốc độ 50 km/h (0.025) | Giới hạn tốc độ 80 km/h (0.024),False,1,2.19
+"3. Cảnh thật, biển nhỏ",ext_02_us_speed20_scene.jpg,0,0,Giới hạn tốc độ 20 km/h,0.673364,Giới hạn tốc độ 20 km/h (0.673) | Giới hạn tốc độ 30 km/h (0.314) | Giới hạn tốc độ 120 km/h (0.005),True,1,3.52
+4. Ảnh không có biển,ext_09_road_hills.jpg,,34,Rẽ trái phía trước,0.607856,Rẽ trái phía trước (0.608) | Đi bên phải (0.178) | Đường cong nguy hiểm bên phải (0.067),True,,3.19
+4b. Ảnh không có biển (bị nhận nhầm),ext_08_road_autumn.jpg,,13,Nhường đường,0.99595,Nhường đường (0.996) | Đường ưu tiên (0.004) | Đèn tín hiệu giao thông (0.000),False,,3.59
+5. File lỗi / quá lớn,fake.jpg (nội dung .txt) + big.jpg 21 MB,,,,,,"app báo lỗi thân thiện, không crash",,

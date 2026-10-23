@@ -9,7 +9,7 @@ Hướng dẫn cho AI agent (và người) khi làm việc trong repo này.
 | Ngôn ngữ tài liệu | Tiếng Việt |
 | Ngôn ngữ code | Tên biến/hàm bằng tiếng Anh; comment/docstring tiếng Việt được phép |
 | Cập nhật lần cuối | 23/10/2026 |
-| Trạng thái repo | **Giai đoạn 5 hoàn tất**: dữ liệu + EDA (GĐ1), cache/split/preprocess (GĐ2), hạ tầng train (GĐ3), baseline (GĐ4), 7 run CNN E1–E4/E5a/E5b/E7 (GĐ5). Chưa chạm test — Giai đoạn 6 mới đánh giá test 1 lần. |
+| Trạng thái repo | **Giai đoạn 8 hoàn tất**: GĐ1 dữ liệu · GĐ2 cache/split/preprocess · GĐ3 hạ tầng train · GĐ4 baseline · GĐ5 E1–E7 · **GĐ6 chốt E3 trên `split_stratified_group`, multi-seed 42/123/2024, test 1 lần (acc 0,9856 · macro-F1 0,9799)** · GĐ7 phân tích lỗi + OOD · GĐ8 demo Streamlit. Test đã dùng hết 1 lần — không chạy lại. |
 
 ---
 
@@ -117,7 +117,7 @@ pip install -r requirements.txt
 - Cache: `uint8` shape `(N, 64, 64, 3)` trong `.npy`, không commit. **`X_train.npy` là pool 39.201 ảnh** dùng để chia split (chưa phải tập train 31.360); danh sách train/val thật nằm trong `split_random.json`.
 - Augmentation **chỉ** cho train: affine nhẹ, color jitter nhẹ, perspective nhẹ.
 - **Cấm** `HorizontalFlip`, `VerticalFlip`, xoay 90/180 (đổi nghĩa biển).
-- Split lưu ra JSON (`split_random.json`, `split_group.json`) và tái sử dụng; không sinh lại mỗi run.
+- Split lưu ra JSON (`split_random.json`, `split_group.json`, `split_stratified_group.json`) và tái sử dụng; không sinh lại mỗi run. `split_stratified_group` là split chính của Giai đoạn 6 (track rời nhau **và** đủ 43 lớp ở val: 31.371/7.830).
 - Track ID (nếu trích được) dùng cho `split_group` và phân tích rò rỉ.
 
 ---
