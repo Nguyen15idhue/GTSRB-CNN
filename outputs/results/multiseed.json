@@ -1,0 +1,71 @@
+{
+  "generated_at": "2026-10-23",
+  "config": "configs/final.yaml",
+  "config_sha256": "fbd41d11b4f6ea2a509c39edf0ebdc4cfd641fce461fe1fbd5be3866091c2794",
+  "split": "stratified_group",
+  "n_seeds": 3,
+  "seeds": [
+    {
+      "run_id": "final_s123",
+      "seed": 123,
+      "val_acc": 0.977522,
+      "val_macro_f1": 0.961541,
+      "best_epoch": 29,
+      "epochs_run": 36,
+      "params": 2201931,
+      "train_time_s": 341.14,
+      "val_classes_missing": [],
+      "config": {
+        "id": "final",
+        "seed": 123,
+        "notes": "FINAL: CNN-B + BN + dropout 0.3 + WD 1e-4 + aug, split stratified_group (chọn trên val sạch)"
+      }
+    },
+    {
+      "run_id": "final_s2024",
+      "seed": 2024,
+      "val_acc": 0.981481,
+      "val_macro_f1": 0.964021,
+      "best_epoch": 39,
+      "epochs_run": 40,
+      "params": 2201931,
+      "train_time_s": 377.52,
+      "val_classes_missing": [],
+      "config": {
+        "id": "final",
+        "seed": 2024,
+        "notes": "FINAL: CNN-B + BN + dropout 0.3 + WD 1e-4 + aug, split stratified_group (chọn trên val sạch)"
+      }
+    },
+    {
+      "run_id": "final_s42",
+      "seed": 42,
+      "val_acc": 0.983525,
+      "val_macro_f1": 0.970613,
+      "best_epoch": 34,
+      "epochs_run": 40,
+      "params": 2201931,
+      "train_time_s": 386.95,
+      "val_classes_missing": [],
+      "config": {
+        "id": "final",
+        "seed": 42,
+        "notes": "FINAL: CNN-B + BN + dropout 0.3 + WD 1e-4 + aug, split stratified_group (chọn trên val sạch)"
+      }
+    }
+  ],
+  "val_acc": {
+    "mean": 0.980843,
+    "std": 0.003052,
+    "min": 0.977522,
+    "max": 0.983525
+  },
+  "val_macro_f1": {
+    "mean": 0.965392,
+    "std": 0.004689,
+    "min": 0.961541,
+    "max": 0.970613
+  },
+  "params": 2201931,
+  "notes": "std theo ddof=1; chỉ số trên val stratified_group (val sạch track, đủ 43 lớp)"
+}

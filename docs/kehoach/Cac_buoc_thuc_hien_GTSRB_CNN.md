@@ -46,7 +46,7 @@
 | 3 | Hạ tầng huấn luyện & logging | D2 chiều | G1 | ☑ | `outputs/runs/smoke_cnnb_s42/{metrics.csv,best.pt,curves.png,config.yaml,env.json,meta.json}`, `outputs/results/phase3_check.json`, `phase3_overfit.json`, `phase3_determinism.json`, `summary.csv` |
 | 4 | Baseline | D3 | G2 | ☑ | `outputs/runs/e0a_majority/metrics.json`, `outputs/runs/e0b_hog_svc/{metrics.json,model.joblib}`, `outputs/results/phase4_check.json` |
 | 5 | CNN & thí nghiệm chính | D4–D6 | G2 | ☑ | `outputs/runs/e1_cnna_s42` … `e7_classweight_s42`, `outputs/runs/diag_e3_group_s42` (chẩn đoán), `outputs/results/summary.csv`, `phase5_check.json`, `leak_delta.json`, `outputs/figures/05_experiment_comparison.png`, 7 config `configs/e*.yaml` |
-| 6 | Chốt mô hình, multi-seed, test 1 lần | D7 | G3 | ☐ | |
+| 6 | Chốt mô hình, multi-seed, test 1 lần | D7 | G3 | ☑ | `configs/final.yaml` (commit `8f61c5a`), `outputs/results/split_stratified_group.json`, `phase6_split_check.json`, `multiseed.json`, `test_report.json`, `test_final.json`, `test_runs.log`, `phase6_check.json`, runs `final_s42/s123/s2024` |
 | 7 | Đánh giá sâu & phân tích lỗi | D8–D9 | G4 | ☐ | |
 | 8 | Demo dữ liệu mới | D10 | G4 | ☐ | |
 | 9 | Tái lập & đóng gói | D11 | G5 | ☐ | |
@@ -909,15 +909,17 @@ python -m src.evaluate --run outputs/runs/<final>_s42 --split test --confirm-fre
 
 ### 6.5. Checklist test
 
-- [ ] `git log` có commit "freeze".
-- [ ] 3 run seed khác nhau, `config.yaml` trong mỗi run giống nhau trừ seed.
-- [ ] `multiseed.json` có mean và std (không phải chỉ 1 giá trị).
-- [ ] `test_report.json` chứa `checkpoint_sha256` và `git_commit`.
-- [ ] `predictions.csv` có `len == 12630`.
-- [ ] `predictions.csv` không có dòng trùng `path`.
-- [ ] Confusion matrix: tổng mỗi hàng = 1 (sau chuẩn hóa) hoặc = support (không chuẩn hóa).
-- [ ] Test acc nằm trong khoảng hợp lý (90–100%); nếu < 90% → điều tra.
-- [ ] File `test_final.json` **không bị ghi đè** nếu chạy lại (kiểm tra timestamp).
+- [x] `git log` có commit "freeze". → commit **`8f61c5a`** `freeze: final config e3_cnnb_aug tren split stratified_group`
+- [x] 3 run seed khác nhau, `config.yaml` trong mỗi run giống nhau trừ seed. → seed **42 / 123 / 2024**; so sánh 3 file `config.yaml` sau khi bỏ `experiment.seed` → **giống hệt**
+- [x] `multiseed.json` có mean và std (không phải chỉ 1 giá trị). → acc **0,980843 ± 0,003052**; macro-F1 **0,965392 ± 0,004689** (std ddof=1, 3 seed)
+- [x] `test_report.json` chứa `checkpoint_sha256` và `git_commit`. → sha256 **`9c4dd0d6…cbcbe33`** (khớp file `best.pt`), commit `8f61c5a6cc…`
+- [x] `predictions.csv` có `len == 12630`. → **12.630 dòng**
+- [x] `predictions.csv` không có dòng trùng `path`. → **12.630 path duy nhất / 12.630 dòng**
+- [x] Confusion matrix: tổng mỗi hàng = 1 (sau chuẩn hóa) hoặc = support (không chuẩn hóa). → 43×43, **tổng hàng = support** cho cả 43 lớp (tổng 12.630); hình là bản chuẩn hóa theo hàng
+- [x] Test acc nằm trong khoảng hợp lý (90–100%); nếu < 90% → điều tra. → **98,559 %**
+- [x] File `test_final.json` **không bị ghi đè** nếu chạy lại (kiểm tra timestamp). → chạy lại bị **từ chối**, `mtime` không đổi, log vẫn **1 entry**
+
+**Kết quả:** 9/9 mục PASS (`outputs/results/phase6_check.json`).
 
 ### 6.6. Kết quả thực hiện
 
@@ -925,20 +927,35 @@ python -m src.evaluate --run outputs/runs/<final>_s42 --split test --confirm-fre
 >
 > | Hạng mục | Giá trị thực tế |
 > |---|---|
-> | Ngày chốt config | |
-> | Mô hình cuối | |
-> | Seed 42: val acc / F1 | |
-> | Seed 123: val acc / F1 | |
-> | Seed 2024: val acc / F1 | |
-> | Val mean ± std (acc) | |
-> | Val mean ± std (macro-F1) | |
-> | **Test acc** | |
-> | **Test macro-F1** | |
-> | Chênh val–test | |
-> | hash checkpoint | |
-> | commit hash | |
-> | Trạng thái | ☐ Đạt ☐ Đạt có điều kiện ☐ Chưa đạt |
-> | Ghi chú | |
+> | Ngày chốt config | **23/10/2026**, commit `8f61c5a` (`freeze: …`) |
+> | Mô hình cuối | **E3 — CNN-B** (3 khối conv 32/64/128 + BN + dropout 0,3 + WD 1e-4 + aug), **2.201.931 params**, split `stratified_group` |
+> | Split dùng để chốt | **31.371 train / 7.830 val** (1.046 / 261 track, giao track = 0, val đủ **43/43 lớp**, lớp ít nhất 30 ảnh, val 19,97 %, không còn frame ±5 trùng track) — `outputs/results/split_stratified_group.json`, `phase6_split_check.json` 7/7 PASS |
+> | Chọn mô hình trên val sạch | `cand_e3_sgroup_s42` **0,983525 / 0,970613** vs `cand_e4_sgroup_s42` **0,976373 / 0,954453** → E3 hơn **1,62 điểm %** (> 0,3) nên chọn E3; đảo ngược lựa chọn E4 của Giai đoạn 5 (lúc đó val random bị bão hoà) |
+> | Seed 42: val acc / F1 | **0,983525 / 0,970613** (best epoch 34/40) |
+> | Seed 123: val acc / F1 | **0,977522 / 0,961541** (best epoch 29/40) |
+> | Seed 2024: val acc / F1 | **0,981481 / 0,964021** (best epoch 39/40) |
+> | Val mean ± std (acc) | **0,980843 ± 0,003052** |
+> | Val mean ± std (macro-F1) | **0,965392 ± 0,004689** |
+> | **Test acc** | **0,985590** (12.630/12.630 ảnh) |
+> | **Test macro-F1** | **0,979894** (43 lớp; top-3 accuracy **0,996437**) |
+> | Chênh val–test | **acc +0,47 điểm %**, **macro-F1 +1,45 điểm %** (test **cao hơn** val) — đã kiểm tra lại metric, xem ghi chú |
+> | hash checkpoint | `9c4dd0d677d655e25f36ab2b29f6d8c73e7754056b2ba93c398030b85cbcbe33` |
+> | commit hash | `8f61c5a6cc20b08291cf8bb89e13a9208ab804ad` (freeze) |
+> | Trạng thái | ☑ Đạt ☐ Đạt có điều kiện ☐ Chưa đạt |
+> | Ghi chú | • **Không tune trên test**: test chỉ chạy **1 lần** sau commit freeze (`test_runs.log` có đúng 1 dòng), chạy lại bị từ chối trước khi ghi file.<br>• **Test > val**: không phải lỗi metric — accuracy tính lại từ `predictions.csv` khớp từng bit (0,985590); nguyên nhân là **phân phối**: ảnh test GTSRB được cắt sát biển, độ phân giải lớn hơn, ít ảnh biển nhỏ/mờ; val stratified-group còn chứa track khó (biển nhỏ, ngược sáng). Số định lượng ở Giai đoạn 7 (error rate theo tertile).<br>• Không có lớp nào vắng ở test (43/43), nên macro-F1/43 = macro-F1 trên lớp có mặt.<br>• `test_final.json` và `test_report.json` cùng nội dung; đã bổ sung `top3_accuracy` bằng cách tính lại từ cột `top3` của `predictions.csv` (cùng lần chạy test, **không chạy lại model**) — ghi rõ trong `postprocess_note`. |
+>
+> ### 6.6.1. Nhật ký thực hiện (todos)
+>
+> | # | Todo | Trạng thái | Bằng chứng |
+> |---|---|---|---|
+> | 6.1 | Tạo `split_stratified_group` đủ 43 lớp, track rời nhau + kiểm chứng | ☑ | `split_stratified_group.json`; `phase6_split_check.json` 7/7 |
+> | 6.2 | Chạy 2 ứng viên E3/E4 trên val sạch, chọn theo val macro-F1 | ☑ | `cand_e3_sgroup_s42`, `cand_e4_sgroup_s42`; E3 0,970613 > E4 0,954453 |
+> | 6.3 | Đóng băng `configs/final.yaml` + commit freeze | ☑ | commit `8f61c5a`; header ghi ngày/lý do/run tham chiếu |
+> | 6.4 | Multi-seed 42/123/2024 + `multiseed.json` (mean ± std) | ☑ | `final_s42/s123/s2024`; `multiseed.json` |
+> | 6.5 | Mở rộng `src/evaluate.py` cho test: hash, log, predictions 12.630 dòng, chặn ghi đè | ☑ | `eval_test/`; `test_runs.log` |
+> | 6.6 | Chạy test đúng 1 lần + checklist 6.5 + điền 6.6 + commit | ☑ | test acc 0,985590; `phase6_check.json` 9/9 |
+>
+> **Tổng kết: 6/6 todo đạt.** Lệnh tái tạo: `python -m src.train --config configs/final.yaml --seed {42,123,2024}` → `python -m src.summarize --multiseed` → `python -m src.evaluate --run outputs/runs/final_s42 --split test --confirm-freeze`.
 
 ### 6.7. Ghi chú / lưu ý
 

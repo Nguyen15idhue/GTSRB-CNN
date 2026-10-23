@@ -1,4 +1,6 @@
 ﻿run_id,model,params,aug,epochs_run,best_epoch,val_acc,val_macro_f1,test_acc,test_macro_f1,train_time_s,infer_ms_per_img,seed,notes,train_val_acc_gap,best_train_acc
+cand_e3_sgroup_s42,cnn_b,2201931,yes,40,34,0.983525,0.970613,,,381.26,,42,"Ứng viên E3 trên split_stratified_group (val sạch track, đủ 43 lớp)",0.005573,0.989098
+cand_e4_sgroup_s42,cnn_c,399947,yes,40,34,0.976373,0.954453,,,377.34,,42,"Ứng viên E4 trên split_stratified_group (val sạch track, đủ 43 lớp)",0.022926,0.999299
 e0a_majority,majority,0,no,0,0,0.057391,0.002524,,,0.0064,0.00081,42,Majority class: dự đoán mọi ảnh là lớp nhiều nhất trong train,,
 e0b_hog_svc,hog_linear_svc,75895,no,0,0,0.965693,0.973994,,,1926.43,0.0069,42,"HOG trên ảnh xám 64x64, StandardScaler fit trên train, LinearSVC OvR; chọn C theo val macro-F1; KHÔNG augmentation",,
 e1_cnna_s42,cnn_a,2201707,no,29,22,0.996301,0.995705,,,83.15,,42,"CNN-A: 3 khối conv, không BN/dropout/weight decay, không augmentation",0.003699,1.0
@@ -8,4 +10,7 @@ e4_cnnc_gap_aug_s42,cnn_c,399947,yes,39,32,0.999745,0.999763,,,369.48,,42,CNN-C:
 e5a_lr3e4_s42,cnn_b,2201931,yes,10,10,0.989542,0.993387,,,107.38,,42,"CNN-B + aug, lr 3e-4, 10 epoch (so sánh xu hướng lr, không hội tụ hoàn toàn)",-0.06333,0.926212
 e5b_lr3e3_s42,cnn_b,2201931,yes,10,9,0.771968,0.567247,,,107.77,,42,"CNN-B + aug, lr 3e-3, 10 epoch (so sánh xu hướng lr, không hội tụ hoàn toàn)",-0.263805,0.508163
 e7_classweight_s42,cnn_b,2201931,yes,28,21,0.99847,0.998914,,,270.39,,42,CNN-B + aug + class weight 1/sqrt(freq) (so với E3: xử lý mất cân bằng),-0.035237,0.963233
+final_s123,cnn_b,2201931,yes,36,29,0.977522,0.961541,,,341.14,,123,"FINAL: CNN-B + BN + dropout 0.3 + WD 1e-4 + aug, split stratified_group (chọn trên val sạch)",-0.009845,0.967677
+final_s2024,cnn_b,2201931,yes,40,39,0.981481,0.964021,,,377.52,,2024,"FINAL: CNN-B + BN + dropout 0.3 + WD 1e-4 + aug, split stratified_group (chọn trên val sạch)",-0.002934,0.978547
+final_s42,cnn_b,2201931,yes,40,34,0.983525,0.970613,0.9855898653998416,0.9798935304586205,386.95,,42,"FINAL: CNN-B + BN + dropout 0.3 + WD 1e-4 + aug, split stratified_group (chọn trên val sạch)",0.005573,0.989098
 smoke_cnnb_s42,cnn_b,2201931,no,5,5,0.994899,0.994629,,,30.62,,42,smoke test hạ tầng (không dùng trong báo cáo kết quả),-0.003445,0.991454

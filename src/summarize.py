@@ -77,6 +77,7 @@ def _from_cnn_run(run_dir: Path) -> dict[str, Any] | None:
     if not rows:
         return None
     best = max(rows, key=lambda r: float(r["val_macro_f1"]))
+    test_report = _read_json(run_dir / "eval_test" / "metrics.json") or {}
     return {
         "run_id": meta["run_id"],
         "model": meta.get("model", ""),
@@ -86,8 +87,8 @@ def _from_cnn_run(run_dir: Path) -> dict[str, Any] | None:
         "best_epoch": meta.get("best_epoch", best["epoch"]),
         "val_acc": float(best["val_acc"]),
         "val_macro_f1": float(best["val_macro_f1"]),
-        "test_acc": meta.get("test_acc", ""),
-        "test_macro_f1": meta.get("test_macro_f1", ""),
+        "test_acc": test_report.get("accuracy", ""),
+        "test_macro_f1": test_report.get("macro_f1_43", ""),
         "train_time_s": meta.get("train_time_s", ""),
         "infer_ms_per_img": meta.get("infer_ms_per_img", ""),
         "seed": meta.get("seed", ""),
@@ -335,10 +336,82 @@ def load_config_by_id(run_name: str) -> dict[str, Any]:
     return yaml.safe_load(path.read_text(encoding="utf-8"))
 
 
+def build_multiseed(pattern: str = "final_s") -> dict[str, Any]:
+    """Tổng hợp các run multi-seed thành ``multiseed.json`` (mean ± std, ddof=1)."""
+    import hashlib
+
+    from .config import PROJECT_ROOT
+
+    seeds: list[dict[str, Any]] = []
+    for run_dir in sorted((p for p in RUNS_DIR.iterdir() if p.is_dir()), key=lambda p: p.name):
+        if not run_dir.name.startswith(pattern):
+            continue
+        meta = _read_json(run_dir / "meta.json")
+        if meta is None:
+            continue
+        seeds.append(
+            {
+                "run_id": meta["run_id"],
+                "seed": int(meta["seed"]),
+                "val_acc": float(meta["best_val_acc"]),
+                "val_macro_f1": float(meta["best_val_macro_f1"]),
+                "best_epoch": int(meta["best_epoch"]),
+                "epochs_run": int(meta["epochs_run"]),
+                "params": int(meta["params"]),
+                "train_time_s": float(meta["train_time_s"]),
+                "val_classes_missing": meta.get("val_classes_missing", []),
+                "config": meta.get("experiment", {}),
+            }
+        )
+    if len(seeds) < 2:
+        raise RuntimeError(f"Cần ≥ 2 run khớp '{pattern}', tìm thấy {len(seeds)}")
+
+    acc = np.array([s["val_acc"] for s in seeds])
+    f1 = np.array([s["val_macro_f1"] for s in seeds])
+    final_cfg = PROJECT_ROOT / "configs" / "final.yaml"
+    payload = {
+        "generated_at": time.strftime("%Y-%m-%d"),
+        "config": "configs/final.yaml",
+        "config_sha256": (
+            hashlib.sha256(final_cfg.read_bytes()).hexdigest() if final_cfg.is_file() else None
+        ),
+        "split": seeds[0].get("config", {}).get("id", "final") and load_config_by_id(seeds[0]["run_id"])["data"]["split"],
+        "n_seeds": len(seeds),
+        "seeds": seeds,
+        "val_acc": {
+            "mean": round(float(acc.mean()), 6),
+            "std": round(float(acc.std(ddof=1)), 6),
+            "min": round(float(acc.min()), 6),
+            "max": round(float(acc.max()), 6),
+        },
+        "val_macro_f1": {
+            "mean": round(float(f1.mean()), 6),
+            "std": round(float(f1.std(ddof=1)), 6),
+            "min": round(float(f1.min()), 6),
+            "max": round(float(f1.max()), 6),
+        },
+        "params": seeds[0]["params"],
+        "notes": "std theo ddof=1; chỉ số trên val stratified_group (val sạch track, đủ 43 lớp)",
+    }
+    out = RESULTS_DIR / "multiseed.json"
+    out.write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8")
+    LOG.info(
+        "multiseed: acc %.6f ± %.6f | macro-F1 %.6f ± %.6f (%d seed) → %s",
+        payload["val_acc"]["mean"],
+        payload["val_acc"]["std"],
+        payload["val_macro_f1"]["mean"],
+        payload["val_macro_f1"]["std"],
+        len(seeds),
+        out,
+    )
+    return payload
+
+
 def parse_args(argv: Sequence[str] | None = None) -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Tổng hợp summary.csv từ outputs/runs")
     parser.add_argument("--figure", action="store_true", help="vẽ hình so sánh val acc / macro-F1")
     parser.add_argument("--verify", action="store_true", help="chạy checklist Giai đoạn 5")
+    parser.add_argument("--multiseed", action="store_true", help="tổng hợp multiseed.json từ run final_s*")
     return parser.parse_args(argv)
 
 
@@ -348,6 +421,9 @@ def main(argv: Sequence[str] | None = None) -> int:
             stream.reconfigure(encoding="utf-8", errors="replace")
     logging.basicConfig(level=logging.INFO, format="%(asctime)s | %(levelname)-7s | %(message)s")
     args = parse_args(argv)
+    if args.multiseed:
+        build_multiseed()
+        return 0
     if args.verify:
         checks = verify_phase5()
         failed = [c["check"] for c in checks if not c["passed"]]

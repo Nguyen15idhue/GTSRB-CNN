@@ -284,9 +284,10 @@ def get_device(prefer: str = "auto"):
 
 def git_commit(short: bool = True) -> str:
     """Hash commit hiện tại (chuỗi rỗng nếu không lấy được)."""
+    args = ["git", "rev-parse", "--short", "HEAD"] if short else ["git", "rev-parse", "HEAD"]
     try:
         out = subprocess.run(
-            ["git", "rev-parse", "--short" if short else "HEAD", "HEAD"],
+            args,
             cwd=PROJECT_ROOT,
             capture_output=True,
             text=True,
@@ -294,7 +295,8 @@ def git_commit(short: bool = True) -> str:
         )
     except (OSError, subprocess.CalledProcessError):
         return ""
-    return out.stdout.strip()
+    lines = [line.strip() for line in out.stdout.splitlines() if line.strip()]
+    return lines[0] if lines else ""
 
 
 def collect_env() -> dict[str, Any]:

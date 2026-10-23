@@ -1,0 +1,53 @@
+{
+  "phase": 6,
+  "generated_at": "2026-10-23",
+  "passed": 9,
+  "total": 9,
+  "checks": [
+    {
+      "check": "commit_freeze",
+      "passed": true,
+      "detail": "8f61c5a freeze: final config e3_cnnb_aug tren split stratified_group"
+    },
+    {
+      "check": "ba_seed_giong_config",
+      "passed": true,
+      "detail": "seed [42, 123, 2024]; config giống nhau sau khi bỏ seed: True"
+    },
+    {
+      "check": "multiseed_mean_std",
+      "passed": true,
+      "detail": "acc 0.980843 ± 0.003052 | F1 0.965392 ± 0.004689 (3 seed)"
+    },
+    {
+      "check": "report_co_hash_commit",
+      "passed": true,
+      "detail": "sha256 khớp file: True | git_commit=8f61c5a6cc"
+    },
+    {
+      "check": "predictions_12630",
+      "passed": true,
+      "detail": "12630 dòng (kỳ vọng 12.630)"
+    },
+    {
+      "check": "predictions_khong_trung_path",
+      "passed": true,
+      "detail": "12630 path duy nhất / 12630 dòng"
+    },
+    {
+      "check": "confusion_tong_hang_bang_support",
+      "passed": true,
+      "detail": "43×43, tổng hàng == support cho cả 43 lớp: True; tổng = 12630"
+    },
+    {
+      "check": "test_acc_hop_ly",
+      "passed": true,
+      "detail": "test acc 0.985590"
+    },
+    {
+      "check": "chan_ghi_de_test_final",
+      "passed": true,
+      "detail": "lần chạy thứ 2 bị từ chối: True; mtime không đổi: True"
+    }
+  ]
+}
