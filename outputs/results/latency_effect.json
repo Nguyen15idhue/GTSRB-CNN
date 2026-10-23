@@ -1,0 +1,61 @@
+{
+  "measured_at": "2026-10-23",
+  "device": "cuda",
+  "n_runs": 20,
+  "naive_interpretation_warning": "Đây KHÔNG phải thời gian người dùng chờ trên trình duyệt: chưa tính upload mạng, Streamlit rerun và render giao diện. Chỉ đo phần xử lý trong Python.",
+  "model_only_ms": {
+    "median": 3.016,
+    "p95": 3.662,
+    "max": 4.992
+  },
+  "end_to_end_python_ms": {
+    "median": 5.78,
+    "p95": 7.798,
+    "max": 12.207,
+    "includes": "đọc bytes → validate (chặn dung lượng/định dạng/decode) → preprocess → forward → top-3"
+  },
+  "effect_size": {
+    "blur_laplacian": {
+      "worst_group": 0,
+      "best_group": 1,
+      "error_rate_worst": 0.022069292833412413,
+      "error_rate_best": 0.010223490252020961,
+      "difference_points": 1.185,
+      "difference_ci95_points": [
+        0.647,
+        1.722
+      ],
+      "r_point_biserial": -0.0163,
+      "r_squared": 0.00027,
+      "effect_size_note": "r² rất nhỏ: biến chỉ giải thích một phần rất nhỏ phương sai của kết quả đúng/sai; p nhỏ chủ yếu do n = 12.630, không có nghĩa là yếu tố dự báo mạnh."
+    },
+    "brightness_mean": {
+      "worst_group": 0,
+      "best_group": 2,
+      "error_rate_worst": 0.017577197149643675,
+      "error_rate_best": 0.008788598574821838,
+      "difference_points": 0.879,
+      "difference_ci95_points": [
+        0.392,
+        1.366
+      ],
+      "r_point_biserial": 0.0348,
+      "r_squared": 0.00121,
+      "effect_size_note": "r² rất nhỏ: biến chỉ giải thích một phần rất nhỏ phương sai của kết quả đúng/sai; p nhỏ chủ yếu do n = 12.630, không có nghĩa là yếu tố dự báo mạnh."
+    },
+    "roi_area_ratio": {
+      "worst_group": 0,
+      "best_group": 2,
+      "error_rate_worst": 0.022781205505458035,
+      "error_rate_best": 0.007885304659498216,
+      "difference_points": 1.49,
+      "difference_ci95_points": [
+        0.965,
+        2.014
+      ],
+      "r_point_biserial": 0.0655,
+      "r_squared": 0.00429,
+      "effect_size_note": "r² rất nhỏ: biến chỉ giải thích một phần rất nhỏ phương sai của kết quả đúng/sai; p nhỏ chủ yếu do n = 12.630, không có nghĩa là yếu tố dự báo mạnh."
+    }
+  }
+}

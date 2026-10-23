@@ -9,7 +9,7 @@ Hướng dẫn cho AI agent (và người) khi làm việc trong repo này.
 | Ngôn ngữ tài liệu | Tiếng Việt |
 | Ngôn ngữ code | Tên biến/hàm bằng tiếng Anh; comment/docstring tiếng Việt được phép |
 | Cập nhật lần cuối | 23/10/2026 |
-| Trạng thái repo | **Giai đoạn 8 hoàn tất**: GĐ1 dữ liệu · GĐ2 cache/split/preprocess · GĐ3 hạ tầng train · GĐ4 baseline · GĐ5 E1–E7 · **GĐ6 chốt E3 trên `split_stratified_group`, multi-seed 42/123/2024, test 1 lần (acc 0,9856 · macro-F1 0,9799)** · GĐ7 phân tích lỗi + OOD · GĐ8 demo Streamlit. Test đã dùng hết 1 lần — không chạy lại. |
+| Trạng thái repo | **Giai đoạn 8 hoàn tất + audit bổ sung 23/10/2026**: GĐ1–8 xong; GĐ6 chốt E3 trên `split_stratified_group`, multi-seed 42/123/2024, **test 1 lần: acc 0,985590 · macro-F1 0,979894** (xác minh độc lập 14/14 PASS). Audit pHash/MAD/NCC: ngoài 8 cặp MD5 đã loại, **0 cặp gần trùng được xác nhận**; pytest 11 test. **GĐ9–12 chưa làm** (clean-room, README, báo cáo, slide, nộp). |
 
 ---
 
@@ -200,6 +200,9 @@ epoch,lr,train_loss,train_acc,val_loss,val_acc,val_macro_f1,epoch_time_s,gpu_mem
 - Không dùng test để chọn mô hình, LR, epoch, ngưỡng.
 - Accuracy không đủ; luôn báo cáo kèm **macro-F1** và per-class.
 - **Macro-F1 luôn tính trên đủ 43 lớp** (`labels=range(43)`, `zero_division=0`). Nếu split thiếu lớp phải báo kèm `macro_f1_present_classes`, support từng lớp và trần lý thuyết (`số lớp có mặt / 43`) — không so sánh trực tiếp F1/43 giữa hai split khác support.
+- Khi so sánh nhóm (tertile, split…), báo cáo **cả effect size** (r², chênh điểm % kèm CI95), không chỉ p-value; n nhỏ (OOD 3–6 ảnh) phải ghi CI và không kết luận tỷ lệ chính xác.
+- Thời gian suy luận phải ghi rõ phạm vi đo (model-only vs end-to-end trong Python vs thời gian UI); không gọi model-only là "thời gian phản hồi app".
+- Audit trùng/gần trùng: MD5 chỉ bắt trùng tuyệt đối; dùng pHash/MAD/NCC để **lọc ứng viên**, kiểm chứng ở ảnh gốc và xem ảnh trước khi kết luận — **không tự động xóa** ảnh theo ngưỡng hash.
 - Confusion matrix chuẩn hóa theo hàng; ghi rõ nếu không chuẩn hóa.
 - Mọi bảng kết quả trong báo cáo/slide phải khớp `summary.csv`, `test_final.json`, `multiseed.json`.
 - Nếu chạy lại test do bug: tạo file `test_final_v2.json` và ghi lý do, không ghi đè.

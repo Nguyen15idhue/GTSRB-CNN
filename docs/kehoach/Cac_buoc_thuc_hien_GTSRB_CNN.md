@@ -47,8 +47,8 @@
 | 4 | Baseline | D3 | G2 | ☑ | `outputs/runs/e0a_majority/metrics.json`, `outputs/runs/e0b_hog_svc/{metrics.json,model.joblib}`, `outputs/results/phase4_check.json` |
 | 5 | CNN & thí nghiệm chính | D4–D6 | G2 | ☑ | `outputs/runs/e1_cnna_s42` … `e7_classweight_s42`, `outputs/runs/diag_e3_group_s42` (chẩn đoán), `outputs/results/summary.csv`, `phase5_check.json`, `leak_delta.json`, `outputs/figures/05_experiment_comparison.png`, 7 config `configs/e*.yaml` |
 | 6 | Chốt mô hình, multi-seed, test 1 lần | D7 | G3 | ☑ | `configs/final.yaml` (commit `8f61c5a`), `outputs/results/split_stratified_group.json`, `phase6_split_check.json`, `multiseed.json`, `test_report.json`, `test_final.json`, `test_runs.log`, `phase6_check.json`, runs `final_s42/s123/s2024` |
-| 7 | Đánh giá sâu & phân tích lỗi | D8–D9 | G4 | ☑ | `outputs/results/{per_class_test.csv,top_confusions_test.csv,error_rates_tertiles.csv,error_samples_table.csv,ood_results.csv,threshold.json,error_report.json}`, `outputs/figures/07_*.png`, `src/error_analysis.py`, `external_test/` |
-| 8 | Demo dữ liệu mới | D10 | G4 | ☑ | `app.py`, `src/predict.py`, `external_test/` (11 ảnh CC0/PD + `manifest.csv`), `outputs/results/{demo_scenarios.csv,phase8_check.json,threshold.json}`, `outputs/figures/08_*.png` |
+| 7 | Đánh giá sâu & phân tích lỗi | D8–D9 | G4 | ☑ | `outputs/results/{per_class_test.csv,top_confusions_test.csv,error_rates_tertiles.csv,error_samples_table.csv,ood_results.csv,ood_summary.json,threshold.json,error_report.json,latency_effect.json}`, `outputs/figures/07_*.png`, `src/error_analysis.py`, `external_test/` |
+| 8 | Demo dữ liệu mới | D10 | G4 | ☑ | `app.py`, `src/predict.py`, `external_test/` (10 ảnh CC0/PD + 1 ảnh GTSRB tham chiếu + `manifest.csv`), `outputs/results/{demo_scenarios.csv,phase8_check.json,threshold.json,ood_summary.json,latency_effect.json,phash_*.json,test_verification.json}`, `outputs/figures/08_*.png`, `09_phash_*.png`, `tests/test_pipeline.py` |
 | 9 | Tái lập & đóng gói | D11 | G5 | ☐ | |
 | 10 | Báo cáo | D12–D13 | G5 | ☐ | |
 | 11 | Slide & phản biện | D14 | G5 | ☐ | |
@@ -1049,23 +1049,23 @@ Có đủ bảng/hình cho Chương 4–5: per-class report, confusion matrix, t
 > | Số lớp có F1 < 0,90 | **1** lớp (trên 43) |
 > | Lớp F1 thấp nhất (ID, F1, support) | **27 — Người đi bộ (Pedestrians), F1 0,846, support 60**; kế tiếp: 30 (0,915), 23 (0,937), 22 (0,947), 39 (0,954) |
 > | Top 1 cặp nhầm (số lượng) | **27 → 11** (Người đi bộ → Đường ưu tiên tại giao lộ tới): **15 ảnh**; kế tiếp 2→1 (12), 8→5 (11), 22→25 (10), 12→13 (10) |
-> | Error rate nhóm mờ nhất vs nét nhất | **2,21 %** vs **1,09 %** (gấp **2,16×**); point-biserial r = −0,016, p = 0,068 → **chưa đủ ý nghĩa thống kê** ở mức 5 % |
-> | Error rate nhóm tối nhất vs sáng nhất | **1,76 %** vs **0,88 %** (gấp **2,00×**); r = +0,035, p = 9,3e-5 → có ý nghĩa |
-> | Error rate nhóm biển nhỏ nhất vs lớn nhất | **2,28 %** vs **0,79 %** (gấp **2,89×**); r = +0,066, p = 1,8e-13 → ý nghĩa mạnh nhất |
+> | Error rate nhóm mờ nhất vs nét nhất | **2,21 %** vs **1,09 %** (chênh 1,19 điểm %, CI95 0,65–1,72); point-biserial r = −0,016, **r² = 0,0003**, p = 0,068 → quan hệ **rất yếu và không tuyến tính** |
+> | Error rate nhóm tối nhất vs sáng nhất | **1,76 %** vs **0,88 %** (chênh 0,88 điểm %, CI95 0,39–1,37); r = +0,035, **r² = 0,0012**, p = 9,3e-5 |
+> | Error rate nhóm biển nhỏ nhất vs lớn nhất | **2,28 %** vs **0,79 %** (chênh 1,49 điểm %, CI95 0,97–2,01); r = +0,066, **r² = 0,0043**, p = 1,8e-13 |
 > | Số mẫu sai đã phân tích | **12** (4 nhóm nguyên nhân × 3, ưu tiên confidence cao) — `error_samples_table.csv` + `figures/07_error_samples.png` |
-> | OOD: số ảnh / số dự đoán đúng | **11 ảnh**: 1 ảnh test GTSRB + 2 biển tốc độ (Mỹ, Hàn) + 4 biển chữ Philippines + 4 đường không biển / **top-1 đúng 3/3** ảnh có nhãn kỳ vọng (16, 0, 1) — nhưng ảnh biển Mỹ nhỏ (conf 0,67) **bị τ từ chối**, tức chỉ 2/3 vừa đúng vừa được chấp nhận |
-> | Ngưỡng τ / acceptance in-dist / rejection OOD | **τ = 0,9462** (phân vị 5 % max-prob trên val) / **94,99 %** (7.438/7.830) / **75 %** (3/4 ảnh không biển bị từ chối; **1 ảnh đường bị nhận nhầm "Nhường đường" với conf 1,00**) |
+> | OOD: số ảnh / số dự đoán đúng | **10 ảnh OOD** (không tính 1 ảnh GTSRB tham chiếu): 2 biển tốc độ (Mỹ, Hàn) + 4 biển chữ Philippines + 4 đường không biển / top-1 đúng **3/3** ảnh có nhãn kỳ vọng (0, 1, và 16 của ảnh tham chiếu) — ảnh biển Mỹ nhỏ (conf 0,67) **bị τ từ chối** |
+> | Ngưỡng τ / acceptance in-dist / rejection OOD | **τ = 0,9462** (phân vị 5 % max-prob trên val) / **94,99 %** (7.438/7.830) / nhóm **không biển: 3/4 = 75 %** (CI95 Wilson 30–95 %); nhóm **biển OOD: 3/6 bị từ chối** (tốc độ 1/2, biển chữ 2/4) |
 > | Trạng thái | ☑ Đạt ☐ Đạt có điều kiện ☐ Chưa đạt |
-> | Ghi chú | • **Định lượng theo nguyên nhân**: biển nhỏ là yếu tố liên quan lỗi mạnh nhất (2,89×), rồi độ sáng (2,00×); độ mờ có xu hướng 2,16× nhưng p = 0,068 nên chỉ ghi là **xu hướng**, không kết luận. Đây là **quan sát**, không phải quan hệ nhân quả.<br>• 4 cơ chế lỗi lặp lại được thấy khi mở ảnh: (1) **cháy sáng** làm mất viền đỏ của biển "đường ưu tiên" → nhầm "nhường đường" (4/12 mẫu); (2) **mờ** làm mất thanh trắng của "cấm đi vào" → nhầm "dừng lại" (2/12); (3) **thiếu sáng** làm mất hướng mũi tên → nhầm trái/phải (2/12); (4) **chữ số 50/30** khác nhau một nét, cộng moiré do resize (2/12).<br>• Với lớp 27 (F1 0,846) cần đối chiếu support: chỉ 60 ảnh test → 1 ảnh sai làm F1 giảm ~0,03, nên **không** kết luận "model kém" mà chỉ ghi nhận cụm nhầm 27→11.<br>• **OOD**: ảnh biển nước ngoài (Mỹ/Hàn) vẫn được nhận đúng nhãn tương ứng, nhưng **biển chữ Philippines** bị gán nhãn Đức với conf 0,95–0,99 → đúng bản chất domain shift.<br>• **τ không bảo vệ tuyệt đối**: 1/4 ảnh đường bị nhận nhầm với conf 1,00 → phải nói rõ trong demo/báo cáo.<br>• E8 (ROI crop) là mục "nếu kịp" nên **không làm**, ghi nhận để dành hướng phát triển. |
+> | Ghi chú | • **Kích thước hiệu ứng rất nhỏ**: dù p nhỏ ở độ sáng/ROI, r² chỉ **0,0012 / 0,0043** → ba biến này chỉ giải thích dưới 0,5 % phương sai đúng/sai; **không** nên nói "yếu tố dự báo mạnh". Chênh lệch nhóm lớn nhất là 1,49 điểm % (biển nhỏ), không phải "gấp 2,89 lần" theo nghĩa nguy cơ tuyệt đối.<br>• 4 cơ chế lỗi lặp lại được thấy khi mở ảnh: (1) **cháy sáng** làm mất viền đỏ của biển "đường ưu tiên" → nhầm "nhường đường" (4/12 mẫu); (2) **mờ** làm mất thanh trắng của "cấm đi vào" → nhầm "dừng lại" (2/12); (3) **thiếu sáng** làm mất hướng mũi tên → nhầm trái/phải (2/12); (4) **chữ số 50/30** khác nhau một nét, cộng moiré do resize (2/12).<br>• Với lớp 27 (F1 0,846) cần đối chiếu support: chỉ 60 ảnh test → 1 ảnh sai làm F1 giảm ~0,03, nên **không** kết luận "model kém" mà chỉ ghi nhận cụm nhầm 27→11.<br>• **OOD chia nhóm**: biển nước ngoài (Mỹ/Hàn) top-1 đúng nhưng 1/2 bị τ từ chối vì biển nhỏ; **biển chữ Philippines** bị gán nhãn Đức conf 0,95–0,99 (2/4 lọt qua τ) → domain shift đúng như dự kiến. Số mẫu mỗi nhóm chỉ 2–4 nên **CI rất rộng**, không kết luận tỷ lệ chính xác.<br>• **τ là cơ chế từ chối theo confidence, KHÔNG phải bộ phát hiện OOD**: 1/4 ảnh không biển vẫn lọt với conf 1,00.<br>• E8 (ROI crop) là mục "nếu kịp" nên **không làm**, ghi nhận để dành hướng phát triển. |
 >
 > ### 7.6.1. Nhật ký thực hiện (todos)
 >
 > | # | Todo | Trạng thái | Bằng chứng |
 > |---|---|---|---|
 > | 7.1 | `src/error_analysis.py`: per-class, confusion + zoom 15 lớp yếu, top-10 cặp kèm ảnh | ☑ | `per_class_test.csv`, `07_per_class_f1.png`, `07_confusion_zoom15.png`, `07_top_pairs.png` |
-> | 7.2 | Error rate theo tertile blur/brightness/ROI + tương quan | ☑ | `error_rates_tertiles.csv`, `07_error_rates.png` |
+> | 7.2 | Error rate theo tertile blur/brightness/ROI + tương quan + effect size | ☑ | `error_rates_tertiles.csv`, `07_error_rates.png`, `latency_effect.json` |
 > | 7.3 | Chọn 12 mẫu sai, crop ROI, viết quan sát/giả thuyết sau khi xem ảnh | ☑ | `error_samples_table.csv`, `07_error_samples.png` |
-> | 7.4 | Thu 11 ảnh CC0/PD + manifest, OOD eval, chọn τ trên val | ☑ | `external_test/`, `manifest.csv`, `ood_results.csv`, `threshold.json`, `07_ood.png` |
+> | 7.4 | Thu 10 ảnh CC0/PD (+1 ảnh GTSRB tham chiếu) + manifest, OOD eval theo nhóm, chọn τ trên val | ☑ | `external_test/`, `manifest.csv`, `ood_results.csv`, `ood_summary.json`, `threshold.json` |
 > | 7.5 | Checklist 7.5 + điền 7.6 + commit | ☑ | 9/9 PASS |
 >
 > **Tổng kết: 5/5 todo đạt.** Lệnh tái tạo: `python -m src.error_analysis --run outputs/runs/final_s42` (sau khi đã có test report).
@@ -1158,7 +1158,7 @@ Làm đúng ba điểm trên sẽ biến demo từ "trình diễn may rủi" th�
 
 ### 8.5. Checklist test
 
-- [x] Upload ảnh test bất kỳ → app trả kết quả trong < 2 giây. → đo 20 lần: **median 0,70 ms**, max **1,21 ms** (nhanh hơn ngưỡng 2 s rất nhiều)
+- [x] Upload ảnh test bất kỳ → app trả kết quả trong < 2 giây. → đo **end-to-end trong Python** (bytes → validate → preprocess → forward → top-3): **median 5,78 ms**, p95 7,80 ms, max 12,2 ms; riêng model 3,02 ms. **Chưa tính** upload mạng, Streamlit rerun và render UI — thời gian người dùng chờ trên trình duyệt chưa được đo
 - [x] Kết quả top-3 có tổng xác suất ≤ 1 và giảm dần. → kiểm 5/5 kịch bản: giảm dần, tổng ≤ 1
 - [x] Tên lớp hiển thị đúng tiếng Việt (đối chiếu `class_names.json`). → `predict_topk` lấy trực tiếp `name_vi` từ `configs/class_names.json`; output khớp (vd. "Giới hạn tốc độ 30 km/h")
 - [x] Upload file `.txt` đổi đuôi `.jpg` → app báo lỗi thân thiện. → `validate_image_bytes` raise "File không phải ảnh hợp lệ hoặc đã bị hỏng…", app hiển thị `st.error`
@@ -1178,14 +1178,14 @@ Làm đúng ba điểm trên sẽ biến demo từ "trình diễn may rủi" th�
 > | Hạng mục | Giá trị thực tế |
 > |---|---|
 > | Ngày / người thực hiện | 23/10/2026 — AI agent, RTX 5070 / i9-14900KF / Windows 11 |
-> | Số ảnh ngoài dataset | **11** (1 ảnh test GTSRB + 2 biển tốc độ Mỹ/Hàn + 4 biển chữ Philippines + 4 đường không biển), **CC0/Public domain**, ghi nguồn + giấy phép trong `external_test/manifest.csv` |
+> | Số ảnh ngoài dataset | **10 ảnh OOD** (2 biển tốc độ Mỹ/Hàn + 4 biển chữ Philippines + 4 đường không biển) **+ 1 ảnh GTSRB test làm tham chiếu** (không tính là OOD). Trong `manifest.csv`: 10 ảnh **CC0/Public domain**, 1 ảnh **GTSRB** ghi rõ "điều kiện sử dụng nghiên cứu, KHÔNG phải CC0/PD" |
 > | Số ảnh đã ẩn danh | **11/11** — đã mở lưới `08_external_contact.png`, không có người/biển số; ảnh được lưu lại (bỏ EXIF) trước khi đưa vào repo |
-> | Kịch bản 1 (ảnh test): đúng/sai | **Đúng** — lớp 16 "Cấm xe trên 3,5 tấn", conf **1,000** |
+> | Kịch bản 1 (ảnh test): đúng/sai | **Đúng** — lớp 16 "Cấm xe trên 3,5 tấn", conf **1,000** (ảnh tham chiếu trong phân phối, không phải OOD) |
 > | Kịch bản 2 (ảnh crop): đúng/sai | **Đúng** — biển Hàn 30 → lớp 1 "Giới hạn tốc độ 30 km/h", conf **0,950** |
 > | Kịch bản 3 (cảnh thật): đúng/sai | **Top-1 đúng** (lớp 0, biển Mỹ 20) nhưng conf **0,673 < τ** → app hiển thị "không xác định"; đúng tinh thần "biển nhỏ thì không nên tin" |
-> | Kịch bản 4 (không biển): dự đoán / bị từ chối | 4 ảnh: **3 bị từ chối** (conf 0,61 / 0,45 / 0,86) → "không xác định"; **1 bị nhận nhầm "Nhường đường" conf 0,996** (ảnh đường có vạch vàng) |
+> | Kịch bản 4 (không biển): dự đoán / bị từ chối | **n = 4**: **3 bị từ chối** (conf 0,61 / 0,45 / 0,86), **1 bị nhận nhầm "Nhường đường" conf 0,996** → tỷ lệ từ chối 3/4 = 75 % nhưng **CI95 Wilson 30–95 %** vì mẫu quá nhỏ |
 > | Ngưỡng τ | **0,9462** (phân vị 5 % max-prob trên val; acceptance in-dist 94,99 %) — **không** chỉnh theo ảnh demo |
-> | Thời gian phản hồi trung bình | **0,70 ms** (median), max **1,21 ms** cho 1 ảnh (20 lần đo, sau warm-up) |
+> | Thời gian phản hồi | **end-to-end trong Python**: median **5,78 ms**, p95 7,80 ms, max 12,2 ms (20 lần, sau warm-up); riêng model 3,02 ms. **Không bao gồm** upload mạng + Streamlit render → chưa phải thời gian người dùng chờ |
 > | Trạng thái | ☑ Đạt ☐ Đạt có điều kiện ☐ Chưa đạt |
 > | Ghi chú | • App dùng đúng `src.data.preprocess` (import, không viết lại) và checkpoint cuối `final_s42`; τ đọc từ `threshold.json`. AppTest chạy app không exception, có footer cảnh báo.<br>• **Chưa có screenshot trình duyệt**: môi trường không có browser automation; thay bằng ảnh minh chứng `08_scenarios.png` + `08_external_contact.png` (ghi rõ **không phải** screenshot UI) và kết quả từng kịch bản trong `demo_scenarios.csv`. Cần chụp 5 ảnh màn hình khi trình bày trên máy có GUI.<br>• **τ không bảo vệ tuyệt đối**: 1/4 ảnh không biển vẫn bị nhận nhầm với confidence rất cao → phải nêu trong báo cáo/slide, không tuyên bố "lọc được ảnh không biển".<br>• Không sửa ảnh demo cho đến khi đúng; các ca sai được giữ nguyên và phân tích (kịch bản 3, 4). |
 >
@@ -1199,7 +1199,32 @@ Làm đúng ba điểm trên sẽ biến demo từ "trình diễn may rủi" th�
 > | 8.4 | Chạy 5 kịch bản, ghi latency + kết quả | ☑ | `demo_scenarios.csv`, `08_scenarios.png` |
 > | 8.5 | Checklist 8.5 (10 mục) + điền 8.6 + commit | ☑ | 10/10 PASS; `phase8_check.json` |
 >
-> **Tổng kết: 5/5 todo đạt.** Lệnh chạy: `streamlit run app.py`; kiểm thử tự động: `python -m pytest` (không có) → dùng `phase8_check.json` tái tạo bằng script kiểm thử trong log.
+> **Tổng kết: 5/5 todo đạt.** Lệnh chạy: `streamlit run app.py`; kiểm thử tự động: `python -m pytest tests -q` (xem 8.8).
+
+### 8.8. Audit bổ sung (23/10/2026) — pHash, độc lập test, license, latency
+
+> **Bối cảnh:** sau khi nhận góp ý, các điểm sau được kiểm chứng **chỉ bằng đọc/đo, không train lại, không chạy lại test**. Artifact: `phash_audit.json`, `phash_pairs.csv`, `phash_verify.json`, `phash_highres.json`, `phash_test_suspects.csv`, `test_verification.json`, `ood_summary.json`, `latency_effect.json`, `tests/test_pipeline.py`.
+>
+> **(a) Audit ảnh gần trùng train↔test (pHash).** Cách làm 3 tầng, **không tự động xóa** ảnh nào:
+> 1. pHash 64-bit trên cache 64×64 cho **31.371 ảnh train (split_stratified_group) × 12.630 ảnh test**; tìm cặp Hamming ≤ 7 bằng multi-index 8 dải × 8 bit (không bỏ sót cặp ≤ 7). Baseline cặp ngẫu nhiên: median **30**, min 10.
+> 2. Kết quả thô: **16 cặp pHash trùng tuyệt đối** (14 ảnh test khác nhau) và **17.214 cặp Hamming ≤ 7**, nhưng đây là **va chạm hash giữa các biển cùng lớp** (64 bit quá thô), không phải ảnh trùng. Kiểm chứng cấp 2 trên 64×64: chỉ **13 ảnh test (0,10 %)** có MAD < 5 và NCC > 0,95 cùng nhãn (tập trung lớp 10 — biển tròn tối, ít chi tiết).
+> 3. Kiểm chứng cấp 3 trên **ảnh gốc** (crop ROI → 128×128): NCC **trung vị 0,811, cao nhất 0,949**; MAD128 trung vị 6,15 → **0 cặp gần trùng được xác nhận** (mở `09_phash_highres.png` xem trực tiếp: cùng loại biển nhưng khác khung hình/nền/độ nét). 13/13 ảnh nghi ngờ đều được model dự đoán **đúng**; nếu loại toàn bộ 13 ảnh này khỏi test, accuracy thay đổi **tối đa 0,103 điểm %**.
+>
+> **Kết luận (a):** ngoài **8 cặp MD5** đã loại từ Giai đoạn 1, **không có bằng chứng** về cặp trùng/gần trùng thật giữa train và test ở ngưỡng kiểm chứng được; rủi ro còn lại ≤ 0,1 điểm % và đã ghi rõ. Không xóa ảnh theo ngưỡng pHash.
+>
+> **(b) Xác minh độc lập số liệu test — 14/14 PASS** (`test_verification.json`): 12.630 dòng, 12.630 path duy nhất, **đúng tập Final_Test**, **0 dòng lệch nhãn** so với `GT-final_test.csv`; accuracy tính lại **0,985590** và macro-F1/43 **0,979894** khớp từng bit với report; support cộng = 12.630; confusion 43×43 có tổng hàng = support; **sha256 checkpoint khớp** (`9c4dd0d6…`); `test_runs.log` **đúng 1 dòng**; chỉ có **một** thư mục `eval_test` trong toàn bộ `outputs/runs`; top-3 tính lại khớp 0,996437. `test_report.json` và `test_final.json` giống nhau từng byte.
+>
+> **(c) License ảnh demo:** đã sửa — **10 ảnh CC0/Public domain** + **1 ảnh GTSRB test** (ghi rõ "điều kiện sử dụng nghiên cứu, phải trích dẫn Stallkamp et al., **KHÔNG phải CC0/PD**"), thêm cột `group` để tách `reference_gtsrb_test` khỏi OOD.
+>
+> **(d) OOD theo nhóm có n và CI** (`ood_summary.json`): ảnh tham chiếu GTSRB **loại khỏi OOD**; nhóm **không biển n = 4 → từ chối 3/4 = 75 % (CI95 Wilson 30–95 %)**; nhóm **biển OOD n = 6 → từ chối 3/6** (tốc độ 1/2, biển chữ 2/4). Với n = 4–6, **không kết luận tỷ lệ chính xác**; τ vẫn chỉ là **cơ chế từ chối theo confidence**, không phải bộ phát hiện OOD.
+>
+> **(e) Phạm vi đo latency:** model-only median **3,02 ms**; **end-to-end trong Python** (bytes → validate → preprocess → forward → top-3) median **5,78 ms**, p95 7,80 ms, max 12,2 ms. **Chưa tính** upload mạng, Streamlit rerun và render UI → con số "0,70 ms" ghi trước đây chỉ là model-only và **không** đại diện thời gian người dùng chờ; đã thay bằng số có ghi rõ phạm vi.
+>
+> **(f) Effect size:** chênh error rate nhóm tệ nhất – tốt nhất: mờ **1,19 điểm %** (CI95 0,65–1,72), tối **0,88 điểm %** (0,39–1,37), biển nhỏ **1,49 điểm %** (0,97–2,01); nhưng **r² = 0,0003 / 0,0012 / 0,0043** → ba biến chỉ giải thích **dưới 0,5 %** phương sai đúng/sai. p nhỏ chủ yếu do n = 12.630; **không** suy diễn nhân quả hay "yếu tố dự báo mạnh".
+>
+> **(g) Bộ test tự động:** thêm `tests/test_pipeline.py` (11 test: preprocess, split random, split stratified_group, macro-F1 43 lớp, checkpoint + forward, validate upload, predictions/report integrity, log test 1 lần, threshold trên val, manifest + license, class_names). Chạy `python -m pytest tests -q` → **11 passed** (~3 s). Đã thêm `pytest==8.4.2` vào `requirements.txt`.
+>
+> **(h) Chưa làm:** Giai đoạn 9–12 (clean-room, README, báo cáo, slide, đóng gói/nộp) vẫn **☐** — xem bảng tiến độ. Đây là phần còn thiếu lớn nhất trước khi nghiệm thu.
 
 ### 8.7. Ghi chú / lưu ý
 

@@ -1,0 +1,125 @@
+{
+  "generated_at": "2026-10-23",
+  "n_external_images_total": 11,
+  "n_reference_excluded": 1,
+  "n_ood_used": 10,
+  "groups": {
+    "ood_sign_speed": {
+      "n": 2,
+      "n_rejected": 1,
+      "n_accepted": 1,
+      "files": [
+        {
+          "filename": "ext_02_us_speed20_scene.jpg",
+          "pred": "Giới hạn tốc độ 20 km/h",
+          "prob": 0.673364,
+          "rejected": true,
+          "expected_id": "0",
+          "correct_top1": "yes"
+        },
+        {
+          "filename": "ext_03_kr_speed30_crop.jpg",
+          "pred": "Giới hạn tốc độ 30 km/h",
+          "prob": 0.949504,
+          "rejected": false,
+          "expected_id": "1",
+          "correct_top1": "yes"
+        }
+      ],
+      "rejection_rate": 0.5,
+      "rejection_ci95_wilson": [
+        0.0945,
+        0.9055
+      ]
+    },
+    "ood_sign_text": {
+      "n": 4,
+      "n_rejected": 2,
+      "n_accepted": 2,
+      "files": [
+        {
+          "filename": "ext_04_ph_toll_no_load.png",
+          "pred": "Cấm vượt cho xe trên 3,5 tấn",
+          "prob": 0.510786,
+          "rejected": true,
+          "expected_id": "",
+          "correct_top1": "n/a"
+        },
+        {
+          "filename": "ext_05_ph_toll_etc.png",
+          "pred": "Cấm vượt cho xe trên 3,5 tấn",
+          "prob": 0.948195,
+          "rejected": false,
+          "expected_id": "",
+          "correct_top1": "n/a"
+        },
+        {
+          "filename": "ext_06_ph_toll_no_load_2.png",
+          "pred": "Cấm đi vào",
+          "prob": 0.993928,
+          "rejected": false,
+          "expected_id": "",
+          "correct_top1": "n/a"
+        },
+        {
+          "filename": "ext_07_ph_toll_etc_2.png",
+          "pred": "Cấm đi vào",
+          "prob": 0.877194,
+          "rejected": true,
+          "expected_id": "",
+          "correct_top1": "n/a"
+        }
+      ],
+      "rejection_rate": 0.5,
+      "rejection_ci95_wilson": [
+        0.15,
+        0.85
+      ]
+    },
+    "no_sign": {
+      "n": 4,
+      "n_rejected": 3,
+      "n_accepted": 1,
+      "files": [
+        {
+          "filename": "ext_08_road_autumn.jpg",
+          "pred": "Nhường đường",
+          "prob": 0.99595,
+          "rejected": false,
+          "expected_id": "",
+          "correct_top1": "n/a"
+        },
+        {
+          "filename": "ext_09_road_hills.jpg",
+          "pred": "Rẽ trái phía trước",
+          "prob": 0.607856,
+          "rejected": true,
+          "expected_id": "",
+          "correct_top1": "n/a"
+        },
+        {
+          "filename": "ext_10_forest_road_bw.jpg",
+          "pred": "Giới hạn tốc độ 100 km/h",
+          "prob": 0.450209,
+          "rejected": true,
+          "expected_id": "",
+          "correct_top1": "n/a"
+        },
+        {
+          "filename": "ext_11_forest_road_snow.jpg",
+          "pred": "Giới hạn tốc độ 100 km/h",
+          "prob": 0.864089,
+          "rejected": true,
+          "expected_id": "",
+          "correct_top1": "n/a"
+        }
+      ],
+      "rejection_rate": 0.75,
+      "rejection_ci95_wilson": [
+        0.3006,
+        0.9544
+      ]
+    }
+  },
+  "note": "Ảnh GTSRB test (ext_01) là ảnh tham chiếu trong phân phối, KHÔNG tính vào OOD. τ chỉ là cơ chế từ chối theo confidence, không phải bộ phát hiện OOD."
+}

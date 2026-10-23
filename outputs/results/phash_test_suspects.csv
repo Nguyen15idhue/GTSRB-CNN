@@ -1,0 +1,14 @@
+﻿test_path,test_label,train_path,train_label,mad,ncc,phash_distance
+data/gtsrb/GTSRB/Final_Test/Images/10413.ppm,6,data/gtsrb/GTSRB/Training/00006/00000_00008.ppm,6,2.5085,0.957051,6
+data/gtsrb/GTSRB/Final_Test/Images/12588.ppm,10,data/gtsrb/GTSRB/Training/00010/00047_00006.ppm,10,2.6505,0.95085,6
+data/gtsrb/GTSRB/Final_Test/Images/02292.ppm,10,data/gtsrb/GTSRB/Training/00010/00012_00006.ppm,10,2.9334,0.954575,6
+data/gtsrb/GTSRB/Final_Test/Images/05611.ppm,10,data/gtsrb/GTSRB/Training/00010/00021_00003.ppm,10,2.9694,0.951903,6
+data/gtsrb/GTSRB/Final_Test/Images/01783.ppm,10,data/gtsrb/GTSRB/Training/00010/00060_00005.ppm,10,3.0239,0.958217,4
+data/gtsrb/GTSRB/Final_Test/Images/10217.ppm,10,data/gtsrb/GTSRB/Training/00010/00060_00005.ppm,10,3.0876,0.955922,4
+data/gtsrb/GTSRB/Final_Test/Images/11989.ppm,10,data/gtsrb/GTSRB/Training/00010/00060_00005.ppm,10,3.1855,0.951074,4
+data/gtsrb/GTSRB/Final_Test/Images/09188.ppm,10,data/gtsrb/GTSRB/Training/00010/00060_00003.ppm,10,3.2,0.95462,2
+data/gtsrb/GTSRB/Final_Test/Images/08897.ppm,10,data/gtsrb/GTSRB/Training/00010/00060_00007.ppm,10,3.2075,0.96132,2
+data/gtsrb/GTSRB/Final_Test/Images/02293.ppm,10,data/gtsrb/GTSRB/Training/00010/00060_00000.ppm,10,3.2519,0.954848,4
+data/gtsrb/GTSRB/Final_Test/Images/06764.ppm,10,data/gtsrb/GTSRB/Training/00010/00060_00007.ppm,10,3.3968,0.952683,4
+data/gtsrb/GTSRB/Final_Test/Images/08338.ppm,10,data/gtsrb/GTSRB/Training/00010/00048_00014.ppm,10,3.5081,0.958893,4
+data/gtsrb/GTSRB/Final_Test/Images/00415.ppm,10,data/gtsrb/GTSRB/Training/00010/00030_00028.ppm,10,3.9182,0.951436,6

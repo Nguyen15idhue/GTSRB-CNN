@@ -1,0 +1,538 @@
+{
+  "generated_at": "2026-10-23",
+  "method": {
+    "hash": "pHash 64 bit (imagehash) trên ảnh 64×64 từ cache; xác nhận phụ bằng dHash",
+    "train_set": "split_stratified_group['train'] (tập thực sự dùng để huấn luyện final)",
+    "test_set": "12.630 ảnh test chính thức",
+    "search": "multi-index 8 dải × 8 bit (đủ để không bỏ sót cặp Hamming ≤ 7)",
+    "threshold_note": "ngưỡng ≤7 chỉ để LỌC ỨNG VIÊN, không tự động xóa; quyết định cuối dựa trên xem ảnh"
+  },
+  "n_train_compared": 31371,
+  "n_test": 12630,
+  "exact_phash_matches": 16,
+  "candidates_within_hamming_7": 17214,
+  "same_label_within_hamming_7": 9155,
+  "test_nearest_hamming_histogram": {
+    "0": 14,
+    "1-3": 148,
+    "4-7": 1572,
+    "8-15": 0,
+    ">15": 10896
+  },
+  "baseline_random_pairs": {
+    "n": 10000,
+    "median": 30.0,
+    "p10": 24.0,
+    "p90": 36.0,
+    "min": 10
+  },
+  "min_distance_overall": 0,
+  "n_test_with_no_candidate": 0,
+  "pairs": [
+    {
+      "test_index": 9290,
+      "test_path": "data/gtsrb/GTSRB/Final_Test/Images/09290.ppm",
+      "test_label": 8,
+      "train_index": 11910,
+      "train_path": "data/gtsrb/GTSRB/Training/00008/00004_00000.ppm",
+      "train_label": 8,
+      "phash_distance": 0,
+      "dhash_distance": 4
+    },
+    {
+      "test_index": 5081,
+      "test_path": "data/gtsrb/GTSRB/Final_Test/Images/05081.ppm",
+      "test_label": 10,
+      "train_index": 16512,
+      "train_path": "data/gtsrb/GTSRB/Training/00010/00061_00012.ppm",
+      "train_label": 10,
+      "phash_distance": 0,
+      "dhash_distance": 7
+    },
+    {
+      "test_index": 6915,
+      "test_path": "data/gtsrb/GTSRB/Final_Test/Images/06915.ppm",
+      "test_label": 10,
+      "train_index": 14983,
+      "train_path": "data/gtsrb/GTSRB/Training/00010/00010_00013.ppm",
+      "train_label": 10,
+      "phash_distance": 0,
+      "dhash_distance": 7
+    },
+    {
+      "test_index": 9188,
+      "test_path": "data/gtsrb/GTSRB/Final_Test/Images/09188.ppm",
+      "test_label": 10,
+      "train_index": 14983,
+      "train_path": "data/gtsrb/GTSRB/Training/00010/00010_00013.ppm",
+      "train_label": 10,
+      "phash_distance": 0,
+      "dhash_distance": 7
+    },
+    {
+      "test_index": 10212,
+      "test_path": "data/gtsrb/GTSRB/Final_Test/Images/10212.ppm",
+      "test_label": 10,
+      "train_index": 16644,
+      "train_path": "data/gtsrb/GTSRB/Training/00010/00065_00024.ppm",
+      "train_label": 10,
+      "phash_distance": 0,
+      "dhash_distance": 7
+    },
+    {
+      "test_index": 4838,
+      "test_path": "data/gtsrb/GTSRB/Final_Test/Images/04838.ppm",
+      "test_label": 10,
+      "train_index": 14674,
+      "train_path": "data/gtsrb/GTSRB/Training/00010/00000_00004.ppm",
+      "train_label": 10,
+      "phash_distance": 0,
+      "dhash_distance": 8
+    },
+    {
+      "test_index": 5157,
+      "test_path": "data/gtsrb/GTSRB/Final_Test/Images/05157.ppm",
+      "test_label": 5,
+      "train_index": 8814,
+      "train_path": "data/gtsrb/GTSRB/Training/00005/00024_00024.ppm",
+      "train_label": 5,
+      "phash_distance": 0,
+      "dhash_distance": 9
+    },
+    {
+      "test_index": 8230,
+      "test_path": "data/gtsrb/GTSRB/Final_Test/Images/08230.ppm",
+      "test_label": 10,
+      "train_index": 16636,
+      "train_path": "data/gtsrb/GTSRB/Training/00010/00065_00016.ppm",
+      "train_label": 10,
+      "phash_distance": 0,
+      "dhash_distance": 9
+    },
+    {
+      "test_index": 1058,
+      "test_path": "data/gtsrb/GTSRB/Final_Test/Images/01058.ppm",
+      "test_label": 15,
+      "train_index": 23312,
+      "train_path": "data/gtsrb/GTSRB/Training/00015/00009_00010.ppm",
+      "train_label": 15,
+      "phash_distance": 0,
+      "dhash_distance": 10
+    },
+    {
+      "test_index": 4818,
+      "test_path": "data/gtsrb/GTSRB/Final_Test/Images/04818.ppm",
+      "test_label": 10,
+      "train_index": 16512,
+      "train_path": "data/gtsrb/GTSRB/Training/00010/00061_00012.ppm",
+      "train_label": 10,
+      "phash_distance": 0,
+      "dhash_distance": 10
+    },
+    {
+      "test_index": 8230,
+      "test_path": "data/gtsrb/GTSRB/Final_Test/Images/08230.ppm",
+      "test_label": 10,
+      "train_index": 16637,
+      "train_path": "data/gtsrb/GTSRB/Training/00010/00065_00017.ppm",
+      "train_label": 10,
+      "phash_distance": 0,
+      "dhash_distance": 10
+    },
+    {
+      "test_index": 9290,
+      "test_path": "data/gtsrb/GTSRB/Final_Test/Images/09290.ppm",
+      "test_label": 8,
+      "train_index": 11911,
+      "train_path": "data/gtsrb/GTSRB/Training/00008/00004_00001.ppm",
+      "train_label": 8,
+      "phash_distance": 0,
+      "dhash_distance": 10
+    },
+    {
+      "test_index": 7120,
+      "test_path": "data/gtsrb/GTSRB/Final_Test/Images/07120.ppm",
+      "test_label": 10,
+      "train_index": 16635,
+      "train_path": "data/gtsrb/GTSRB/Training/00010/00065_00015.ppm",
+      "train_label": 10,
+      "phash_distance": 0,
+      "dhash_distance": 11
+    },
+    {
+      "test_index": 2711,
+      "test_path": "data/gtsrb/GTSRB/Final_Test/Images/02711.ppm",
+      "test_label": 10,
+      "train_index": 16512,
+      "train_path": "data/gtsrb/GTSRB/Training/00010/00061_00012.ppm",
+      "train_label": 10,
+      "phash_distance": 0,
+      "dhash_distance": 14
+    },
+    {
+      "test_index": 10830,
+      "test_path": "data/gtsrb/GTSRB/Final_Test/Images/10830.ppm",
+      "test_label": 5,
+      "train_index": 4446,
+      "train_path": "data/gtsrb/GTSRB/Training/00002/00067_00006.ppm",
+      "train_label": 2,
+      "phash_distance": 0,
+      "dhash_distance": 14
+    },
+    {
+      "test_index": 3223,
+      "test_path": "data/gtsrb/GTSRB/Final_Test/Images/03223.ppm",
+      "test_label": 4,
+      "train_index": 7842,
+      "train_path": "data/gtsrb/GTSRB/Training/00004/00058_00012.ppm",
+      "train_label": 4,
+      "phash_distance": 0,
+      "dhash_distance": 15
+    },
+    {
+      "test_index": 4905,
+      "test_path": "data/gtsrb/GTSRB/Final_Test/Images/04905.ppm",
+      "test_label": 10,
+      "train_index": 14683,
+      "train_path": "data/gtsrb/GTSRB/Training/00010/00000_00013.ppm",
+      "train_label": 10,
+      "phash_distance": 2,
+      "dhash_distance": 3
+    },
+    {
+      "test_index": 5734,
+      "test_path": "data/gtsrb/GTSRB/Final_Test/Images/05734.ppm",
+      "test_label": 16,
+      "train_index": 23810,
+      "train_path": "data/gtsrb/GTSRB/Training/00016/00004_00028.ppm",
+      "train_label": 16,
+      "phash_distance": 2,
+      "dhash_distance": 3
+    },
+    {
+      "test_index": 618,
+      "test_path": "data/gtsrb/GTSRB/Final_Test/Images/00618.ppm",
+      "test_label": 10,
+      "train_index": 15183,
+      "train_path": "data/gtsrb/GTSRB/Training/00010/00017_00003.ppm",
+      "train_label": 10,
+      "phash_distance": 2,
+      "dhash_distance": 4
+    },
+    {
+      "test_index": 1473,
+      "test_path": "data/gtsrb/GTSRB/Final_Test/Images/01473.ppm",
+      "test_label": 10,
+      "train_index": 16585,
+      "train_path": "data/gtsrb/GTSRB/Training/00010/00063_00025.ppm",
+      "train_label": 10,
+      "phash_distance": 2,
+      "dhash_distance": 4
+    },
+    {
+      "test_index": 5937,
+      "test_path": "data/gtsrb/GTSRB/Final_Test/Images/05937.ppm",
+      "test_label": 10,
+      "train_index": 16585,
+      "train_path": "data/gtsrb/GTSRB/Training/00010/00063_00025.ppm",
+      "train_label": 10,
+      "phash_distance": 2,
+      "dhash_distance": 4
+    },
+    {
+      "test_index": 8230,
+      "test_path": "data/gtsrb/GTSRB/Final_Test/Images/08230.ppm",
+      "test_label": 10,
+      "train_index": 16470,
+      "train_path": "data/gtsrb/GTSRB/Training/00010/00060_00000.ppm",
+      "train_label": 10,
+      "phash_distance": 2,
+      "dhash_distance": 4
+    },
+    {
+      "test_index": 2328,
+      "test_path": "data/gtsrb/GTSRB/Final_Test/Images/02328.ppm",
+      "test_label": 10,
+      "train_index": 14982,
+      "train_path": "data/gtsrb/GTSRB/Training/00010/00010_00012.ppm",
+      "train_label": 10,
+      "phash_distance": 2,
+      "dhash_distance": 5
+    },
+    {
+      "test_index": 2328,
+      "test_path": "data/gtsrb/GTSRB/Final_Test/Images/02328.ppm",
+      "test_label": 10,
+      "train_index": 16233,
+      "train_path": "data/gtsrb/GTSRB/Training/00010/00052_00003.ppm",
+      "train_label": 10,
+      "phash_distance": 2,
+      "dhash_distance": 5
+    },
+    {
+      "test_index": 5081,
+      "test_path": "data/gtsrb/GTSRB/Final_Test/Images/05081.ppm",
+      "test_label": 10,
+      "train_index": 16144,
+      "train_path": "data/gtsrb/GTSRB/Training/00010/00049_00004.ppm",
+      "train_label": 10,
+      "phash_distance": 2,
+      "dhash_distance": 5
+    },
+    {
+      "test_index": 6249,
+      "test_path": "data/gtsrb/GTSRB/Final_Test/Images/06249.ppm",
+      "test_label": 10,
+      "train_index": 16644,
+      "train_path": "data/gtsrb/GTSRB/Training/00010/00065_00024.ppm",
+      "train_label": 10,
+      "phash_distance": 2,
+      "dhash_distance": 5
+    },
+    {
+      "test_index": 6915,
+      "test_path": "data/gtsrb/GTSRB/Final_Test/Images/06915.ppm",
+      "test_label": 10,
+      "train_index": 16471,
+      "train_path": "data/gtsrb/GTSRB/Training/00010/00060_00001.ppm",
+      "train_label": 10,
+      "phash_distance": 2,
+      "dhash_distance": 5
+    },
+    {
+      "test_index": 6915,
+      "test_path": "data/gtsrb/GTSRB/Final_Test/Images/06915.ppm",
+      "test_label": 10,
+      "train_index": 16472,
+      "train_path": "data/gtsrb/GTSRB/Training/00010/00060_00002.ppm",
+      "train_label": 10,
+      "phash_distance": 2,
+      "dhash_distance": 5
+    },
+    {
+      "test_index": 7120,
+      "test_path": "data/gtsrb/GTSRB/Final_Test/Images/07120.ppm",
+      "test_label": 10,
+      "train_index": 16470,
+      "train_path": "data/gtsrb/GTSRB/Training/00010/00060_00000.ppm",
+      "train_label": 10,
+      "phash_distance": 2,
+      "dhash_distance": 5
+    },
+    {
+      "test_index": 9188,
+      "test_path": "data/gtsrb/GTSRB/Final_Test/Images/09188.ppm",
+      "test_label": 10,
+      "train_index": 16471,
+      "train_path": "data/gtsrb/GTSRB/Training/00010/00060_00001.ppm",
+      "train_label": 10,
+      "phash_distance": 2,
+      "dhash_distance": 5
+    },
+    {
+      "test_index": 9188,
+      "test_path": "data/gtsrb/GTSRB/Final_Test/Images/09188.ppm",
+      "test_label": 10,
+      "train_index": 16472,
+      "train_path": "data/gtsrb/GTSRB/Training/00010/00060_00002.ppm",
+      "train_label": 10,
+      "phash_distance": 2,
+      "dhash_distance": 5
+    },
+    {
+      "test_index": 9583,
+      "test_path": "data/gtsrb/GTSRB/Final_Test/Images/09583.ppm",
+      "test_label": 15,
+      "train_index": 23313,
+      "train_path": "data/gtsrb/GTSRB/Training/00015/00009_00011.ppm",
+      "train_label": 15,
+      "phash_distance": 2,
+      "dhash_distance": 5
+    },
+    {
+      "test_index": 618,
+      "test_path": "data/gtsrb/GTSRB/Final_Test/Images/00618.ppm",
+      "test_label": 10,
+      "train_index": 15182,
+      "train_path": "data/gtsrb/GTSRB/Training/00010/00017_00002.ppm",
+      "train_label": 10,
+      "phash_distance": 2,
+      "dhash_distance": 6
+    },
+    {
+      "test_index": 1058,
+      "test_path": "data/gtsrb/GTSRB/Final_Test/Images/01058.ppm",
+      "test_label": 15,
+      "train_index": 23313,
+      "train_path": "data/gtsrb/GTSRB/Training/00015/00009_00011.ppm",
+      "train_label": 15,
+      "phash_distance": 2,
+      "dhash_distance": 6
+    },
+    {
+      "test_index": 1551,
+      "test_path": "data/gtsrb/GTSRB/Final_Test/Images/01551.ppm",
+      "test_label": 10,
+      "train_index": 16471,
+      "train_path": "data/gtsrb/GTSRB/Training/00010/00060_00001.ppm",
+      "train_label": 10,
+      "phash_distance": 2,
+      "dhash_distance": 6
+    },
+    {
+      "test_index": 2328,
+      "test_path": "data/gtsrb/GTSRB/Final_Test/Images/02328.ppm",
+      "test_label": 10,
+      "train_index": 14670,
+      "train_path": "data/gtsrb/GTSRB/Training/00010/00000_00000.ppm",
+      "train_label": 10,
+      "phash_distance": 2,
+      "dhash_distance": 6
+    },
+    {
+      "test_index": 2806,
+      "test_path": "data/gtsrb/GTSRB/Final_Test/Images/02806.ppm",
+      "test_label": 10,
+      "train_index": 16156,
+      "train_path": "data/gtsrb/GTSRB/Training/00010/00049_00016.ppm",
+      "train_label": 10,
+      "phash_distance": 2,
+      "dhash_distance": 6
+    },
+    {
+      "test_index": 3265,
+      "test_path": "data/gtsrb/GTSRB/Final_Test/Images/03265.ppm",
+      "test_label": 16,
+      "train_index": 24001,
+      "train_path": "data/gtsrb/GTSRB/Training/00016/00011_00009.ppm",
+      "train_label": 16,
+      "phash_distance": 2,
+      "dhash_distance": 6
+    },
+    {
+      "test_index": 4818,
+      "test_path": "data/gtsrb/GTSRB/Final_Test/Images/04818.ppm",
+      "test_label": 10,
+      "train_index": 16144,
+      "train_path": "data/gtsrb/GTSRB/Training/00010/00049_00004.ppm",
+      "train_label": 10,
+      "phash_distance": 2,
+      "dhash_distance": 6
+    },
+    {
+      "test_index": 5146,
+      "test_path": "data/gtsrb/GTSRB/Final_Test/Images/05146.ppm",
+      "test_label": 10,
+      "train_index": 15700,
+      "train_path": "data/gtsrb/GTSRB/Training/00010/00034_00010.ppm",
+      "train_label": 10,
+      "phash_distance": 2,
+      "dhash_distance": 6
+    },
+    {
+      "test_index": 6396,
+      "test_path": "data/gtsrb/GTSRB/Final_Test/Images/06396.ppm",
+      "test_label": 10,
+      "train_index": 16644,
+      "train_path": "data/gtsrb/GTSRB/Training/00010/00065_00024.ppm",
+      "train_label": 10,
+      "phash_distance": 2,
+      "dhash_distance": 6
+    },
+    {
+      "test_index": 6764,
+      "test_path": "data/gtsrb/GTSRB/Final_Test/Images/06764.ppm",
+      "test_label": 10,
+      "train_index": 14980,
+      "train_path": "data/gtsrb/GTSRB/Training/00010/00010_00010.ppm",
+      "train_label": 10,
+      "phash_distance": 2,
+      "dhash_distance": 6
+    },
+    {
+      "test_index": 6764,
+      "test_path": "data/gtsrb/GTSRB/Final_Test/Images/06764.ppm",
+      "test_label": 10,
+      "train_index": 15979,
+      "train_path": "data/gtsrb/GTSRB/Training/00010/00043_00019.ppm",
+      "train_label": 10,
+      "phash_distance": 2,
+      "dhash_distance": 6
+    },
+    {
+      "test_index": 7488,
+      "test_path": "data/gtsrb/GTSRB/Final_Test/Images/07488.ppm",
+      "test_label": 8,
+      "train_index": 8466,
+      "train_path": "data/gtsrb/GTSRB/Training/00005/00013_00006.ppm",
+      "train_label": 5,
+      "phash_distance": 2,
+      "dhash_distance": 6
+    },
+    {
+      "test_index": 7998,
+      "test_path": "data/gtsrb/GTSRB/Final_Test/Images/07998.ppm",
+      "test_label": 4,
+      "train_index": 8477,
+      "train_path": "data/gtsrb/GTSRB/Training/00005/00013_00017.ppm",
+      "train_label": 5,
+      "phash_distance": 2,
+      "dhash_distance": 6
+    },
+    {
+      "test_index": 7998,
+      "test_path": "data/gtsrb/GTSRB/Final_Test/Images/07998.ppm",
+      "test_label": 4,
+      "train_index": 8478,
+      "train_path": "data/gtsrb/GTSRB/Training/00005/00013_00018.ppm",
+      "train_label": 5,
+      "phash_distance": 2,
+      "dhash_distance": 6
+    },
+    {
+      "test_index": 9399,
+      "test_path": "data/gtsrb/GTSRB/Final_Test/Images/09399.ppm",
+      "test_label": 10,
+      "train_index": 15700,
+      "train_path": "data/gtsrb/GTSRB/Training/00010/00034_00010.ppm",
+      "train_label": 10,
+      "phash_distance": 2,
+      "dhash_distance": 6
+    },
+    {
+      "test_index": 9583,
+      "test_path": "data/gtsrb/GTSRB/Final_Test/Images/09583.ppm",
+      "test_label": 15,
+      "train_index": 23311,
+      "train_path": "data/gtsrb/GTSRB/Training/00015/00009_00009.ppm",
+      "train_label": 15,
+      "phash_distance": 2,
+      "dhash_distance": 6
+    },
+    {
+      "test_index": 11305,
+      "test_path": "data/gtsrb/GTSRB/Final_Test/Images/11305.ppm",
+      "test_label": 14,
+      "train_index": 22950,
+      "train_path": "data/gtsrb/GTSRB/Training/00014/00023_00001.ppm",
+      "train_label": 14,
+      "phash_distance": 2,
+      "dhash_distance": 6
+    },
+    {
+      "test_index": 2806,
+      "test_path": "data/gtsrb/GTSRB/Final_Test/Images/02806.ppm",
+      "test_label": 10,
+      "train_index": 14983,
+      "train_path": "data/gtsrb/GTSRB/Training/00010/00010_00013.ppm",
+      "train_label": 10,
+      "phash_distance": 2,
+      "dhash_distance": 7
+    }
+  ],
+  "pairs_truncated": {
+    "kept": 50,
+    "total": 17214,
+    "full_list": "outputs/results/phash_pairs.csv (17.214 cặp) / phash_test_suspects.csv (13 ảnh)"
+  }
+}

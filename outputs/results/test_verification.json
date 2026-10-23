@@ -1,0 +1,83 @@
+{
+  "generated_at": "2026-10-23",
+  "accuracy_recomputed": 0.9855898653998416,
+  "macro_f1_43_recomputed": 0.9798935304586205,
+  "accuracy_report": 0.9855898653998416,
+  "macro_f1_report": 0.9798935304586205,
+  "n_rows": 12630,
+  "checkpoint_sha256": "9c4dd0d677d655e25f36ab2b29f6d8c73e7754056b2ba93c398030b85cbcbe33",
+  "passed": 14,
+  "total": 14,
+  "checks": [
+    {
+      "check": "test_final_bang_test_report",
+      "passed": true,
+      "detail": "hai file giống nhau từng byte JSON"
+    },
+    {
+      "check": "du_12630_dong",
+      "passed": true,
+      "detail": "12630 dòng"
+    },
+    {
+      "check": "path_duy_nhat",
+      "passed": true,
+      "detail": "12630 path duy nhất"
+    },
+    {
+      "check": "dung_tap_test_chinh_thuc",
+      "passed": true,
+      "detail": "12630/12.630 stem khớp GT; tất cả path thuộc Final_Test"
+    },
+    {
+      "check": "nhan_khop_gt_csv",
+      "passed": true,
+      "detail": "0 dòng lệch nhãn so với GT-final_test.csv"
+    },
+    {
+      "check": "accuracy_tinh_lai",
+      "passed": true,
+      "detail": "0.985590 vs report 0.985590"
+    },
+    {
+      "check": "macro_f1_43_tinh_lai",
+      "passed": true,
+      "detail": "0.979894 vs report 0.979894"
+    },
+    {
+      "check": "support_tung_lop",
+      "passed": true,
+      "detail": "tổng support = 12630"
+    },
+    {
+      "check": "sha256_checkpoint",
+      "passed": true,
+      "detail": "9c4dd0d677d655e2… khớp report"
+    },
+    {
+      "check": "confusion_tong_hang",
+      "passed": true,
+      "detail": "(43, 43), tổng hàng = support cho cả 43 lớp"
+    },
+    {
+      "check": "log_mot_lan_test",
+      "passed": true,
+      "detail": "1 dòng: 2026-10-23T12:16:21 | run=final_s42 | n=12630 | acc=0.985590 | macro_f1=0.979894 | sha256=9c4dd0d677d655e2 | g"
+    },
+    {
+      "check": "khong_co_lan_test_khac",
+      "passed": true,
+      "detail": "các thư mục eval_test: ['outputs/runs/final_s42/eval_test/metrics.json']"
+    },
+    {
+      "check": "prob_trong_0_1",
+      "passed": true,
+      "detail": "min 0.1957 max 1.0000"
+    },
+    {
+      "check": "top3_tinh_lai",
+      "passed": true,
+      "detail": "0.996437 vs report 0.996437"
+    }
+  ]
+}
