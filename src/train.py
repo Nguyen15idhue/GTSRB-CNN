@@ -176,7 +176,22 @@ def evaluate(
         y_pred.extend(predictions.cpu().tolist())
         seen += len(targets)
     accuracy = float((np.asarray(y_true) == np.asarray(y_pred)).mean())
-    macro_f1 = float(f1_score(y_true, y_pred, average="macro", zero_division=0))
+    # Macro-F1 LUÔN tính trên đủ 43 lớp: nếu val thiếu lớp, lớp đó = 0 chứ không bị
+    # loại khỏi trung bình (mặc định của sklearn chỉ lấy các lớp xuất hiện).
+    labels_all = list(range(NUM_CLASSES))
+    macro_f1 = float(
+        f1_score(y_true, y_pred, average="macro", labels=labels_all, zero_division=0)
+    )
+    support = np.bincount(np.asarray(y_true, dtype=np.int64), minlength=NUM_CLASSES)
+    missing = [c for c in labels_all if int(support[c]) == 0]
+    if missing:
+        LOG.warning(
+            "Val thiếu %d lớp %s → macro-F1 vẫn tính trên 43 lớp (các lớp này = 0), "
+            "trần lý thuyết = %.4f",
+            len(missing),
+            missing,
+            (NUM_CLASSES - len(missing)) / NUM_CLASSES,
+        )
     return total_loss / max(seen, 1), accuracy, macro_f1
 
 
@@ -354,6 +369,8 @@ def run_training(
 
     train_time = time.perf_counter() - started
     plot_curves(rows, out_dir / "curves.png", f"{name} (best epoch {best_epoch})")
+    val_labels = loaders["val"].dataset.labels[load_split(cfg["data"]["split"])["val"]]
+    val_support = np.bincount(val_labels, minlength=NUM_CLASSES).astype(int).tolist()
     meta = {
         "run_id": name,
         "experiment": cfg["experiment"],
@@ -361,6 +378,9 @@ def run_training(
         "params": params,
         "seed": used_seed,
         "split": cfg["data"]["split"],
+        "val_class_support": val_support,
+        "val_classes_missing": [c for c, count in enumerate(val_support) if count == 0],
+        "macro_f1_labels": NUM_CLASSES,
         "epochs_run": len(rows),
         "best_epoch": best_epoch,
         "best_val_macro_f1": round(best_f1, 6),
@@ -371,12 +391,11 @@ def run_training(
         ),
         "train_time_s": round(train_time, 2),
         "epoch_time_mean_s": round(float(np.mean([r["epoch_time_s"] for r in rows])), 2),
-        "params": params,
         "device": str(device),
         "amp": use_amp,
         "num_workers": loaders["meta"]["num_workers"],
         "git_commit": git_commit(short=False),
-        "torch_version": torch.__version__,
+        "torch_version": str(torch.__version__),
         "notes": cfg["experiment"].get("notes", ""),
     }
     (out_dir / "meta.json").write_text(json.dumps(meta, ensure_ascii=False, indent=2), encoding="utf-8")

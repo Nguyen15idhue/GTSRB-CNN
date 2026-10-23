@@ -1,0 +1,26 @@
+# CHẨN ĐOÁN RÒ RỈ FRAME — KHÔNG dùng làm kết quả cuối, KHÔNG đóng băng final.yaml.
+# Cấu hình y hệt E3 (CNN-B + BN + dropout 0.3 + WD 1e-4 + augmentation nhẹ),
+# chỉ khác split: dùng split_group (track val không xuất hiện trong train).
+# Mục đích: đo Δ hiệu năng giữa val random (rò rỉ frame) và val group (sạch track),
+# theo yêu cầu audit ngày 23/10/2026. Vẫn KHÔNG chạm tập test.
+experiment:
+  id: diag_e3_group
+  seed: 42
+  notes: "CHẨN ĐOÁN rò rỉ: E3 trên split_group (track rời nhau), không dùng làm kết quả cuối"
+
+data:
+  split: group
+
+model:
+  name: cnn_b
+  widths: [32, 64, 128]
+  use_bn: true
+  dropout: 0.3
+  gap: false
+  fc_hidden: 256
+
+augmentation:
+  enabled: true
+
+train:
+  weight_decay: 0.0001

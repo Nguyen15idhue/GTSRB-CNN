@@ -45,7 +45,7 @@
 | 2 | Tiền xử lý & chia tập | D2 sáng | G1 | ☑ | `outputs/results/split_random.json`, `split_group.json`, `data_stats.json`, `phase2_check.json`, `data/cache/cache_meta.json`, `outputs/figures/04_augmentation.png`, `src/data.py` |
 | 3 | Hạ tầng huấn luyện & logging | D2 chiều | G1 | ☑ | `outputs/runs/smoke_cnnb_s42/{metrics.csv,best.pt,curves.png,config.yaml,env.json,meta.json}`, `outputs/results/phase3_check.json`, `phase3_overfit.json`, `phase3_determinism.json`, `summary.csv` |
 | 4 | Baseline | D3 | G2 | ☑ | `outputs/runs/e0a_majority/metrics.json`, `outputs/runs/e0b_hog_svc/{metrics.json,model.joblib}`, `outputs/results/phase4_check.json` |
-| 5 | CNN & thí nghiệm chính | D4–D6 | G2 | ☑ | `outputs/runs/e1_cnna_s42` … `e7_classweight_s42`, `outputs/results/summary.csv`, `phase5_check.json`, `outputs/figures/05_experiment_comparison.png`, 7 config `configs/e*.yaml` |
+| 5 | CNN & thí nghiệm chính | D4–D6 | G2 | ☑ | `outputs/runs/e1_cnna_s42` … `e7_classweight_s42`, `outputs/runs/diag_e3_group_s42` (chẩn đoán), `outputs/results/summary.csv`, `phase5_check.json`, `leak_delta.json`, `outputs/figures/05_experiment_comparison.png`, 7 config `configs/e*.yaml` |
 | 6 | Chốt mô hình, multi-seed, test 1 lần | D7 | G3 | ☐ | |
 | 7 | Đánh giá sâu & phân tích lỗi | D8–D9 | G4 | ☐ | |
 | 8 | Demo dữ liệu mới | D10 | G4 | ☐ | |
@@ -325,7 +325,7 @@ Bao gồm: nguồn, ngày tải, cách tải, số ảnh train/test, số lớp,
 > | Lớp nhiều nhất (ID, số ảnh) | Lớp **2** (Giới hạn tốc độ 50 km/h) — **2.250** ảnh train |
 > | Tỷ lệ mất cân bằng | **10,71** lần (max/min); trung vị 600, trung bình 911,8 ảnh/lớp; **9 lớp < 300 ảnh** |
 > | Số ảnh lỗi | **0** — mở thành công 51.839/51.839 ảnh, 100% mode RGB |
-> | Số cặp trùng trong train / train-test | Trong train **0** cặp; trong test **0** cặp; train↔test **8 cặp** (cùng nhãn 14, cùng track `00023`) → **đã loại 8 ảnh train** khỏi tập huấn luyện, danh sách ở `outputs/results/excluded_train_duplicates.csv` |
+> | Số cặp trùng trong train / train-test | Trong train **0** cặp; trong test **0** cặp; train↔test **8 cặp** (cùng nhãn 14; 8 ảnh train thuộc **track `00023` của tập train**) → **đã loại 8 ảnh train** khỏi tập huấn luyện, danh sách ở `outputs/results/excluded_train_duplicates.csv` |
 > | Số track (nếu trích được) | **1.307** track, trích được **100%** ảnh train (1.306 track đủ 30 frame, 1 track 29 frame); test không có track trong tên file |
 > | License note (tóm tắt) | Nguyên văn: *"The data is free to use. However, we cordially ask you to cite the following publication if you do: ..."* (Stallkamp et al., IJCNN 2011) — không suy diễn thành giấy phép cụ thể |
 > | Trạng thái | ☑ Đạt ☐ Đạt có điều kiện ☐ Chưa đạt |
@@ -341,7 +341,7 @@ Bao gồm: nguồn, ngày tải, cách tải, số ảnh train/test, số lớp,
 | 1.2 | Tải dữ liệu: test qua `torchvision` (12.630), train từ archive chính thức (39.209) | ☑ | `data/gtsrb/GTSRB/Training` (39.209 ảnh), `Final_Test/Images` (12.630), `GT-final_test.csv` |
 | 1.3 | Đếm & xác minh số ảnh, 43 lớp, tổng theo lớp, tỷ lệ mất cân bằng | ☑ | 39.209 / 12.630 ảnh; 43/43 lớp; min 210 (lớp 0), max 2.250 (lớp 2); max/min = **10,71**; 9 lớp train < 300 ảnh |
 | 1.4 | Quét ảnh: PIL, ảnh lỗi, mode, histogram kích thước gốc | ☑ | 51.839 ảnh mở được, **0 lỗi**, 100% mode RGB; cạnh ngắn 25–266 px, median 43 px; aspect ratio 0,368–1,438 |
-| 1.5 | Hash MD5: trùng trong train, trong test, train↔test | ☑ | Trong train: 0; trong test: 0; **8 cặp train↔test** (cùng nhãn 14, cùng track `00023`) → **đã loại 8 ảnh train** khỏi tập huấn luyện, lưu `excluded_train_duplicates.csv` |
+| 1.5 | Hash MD5: trùng trong train, trong test, train↔test | ☑ | Trong train: 0; trong test: 0; **8 cặp train↔test** (cùng nhãn 14; 8 ảnh train thuộc **track `00023` của tập train**) → **đã loại 8 ảnh train** khỏi tập huấn luyện, lưu `excluded_train_duplicates.csv` |
 | 1.6 | ROI từ `GT-*.csv` + `GT-final_test.csv`, đối chiếu ClassId, trích `track_id` → `train_meta.csv` | ☑ | ROI hợp lệ 39.209/39.209 và 12.630/12.630 (**100%**); ClassId lệch **0**; track trích được **100%**, 1.307 track (1.306 track đủ 30 frame, 1 track 29 frame); `train_meta.csv` 39.209 dòng + cột `usable_for_train` (39.201 = 1, 8 = 0) |
 | 1.7 | Vẽ 3 hình EDA | ☑ | `outputs/figures/01_class_distribution.png` (50 KB), `02_image_sizes.png` (45 KB), `03_sample_grid.png` (308 KB); đã mở cả 3 bằng mắt, đọc được nhãn trục, lớp < 300 tô đỏ, lưới 43 ảnh crop theo ROI |
 | 1.8 | Sinh `data_report.json` đầy đủ trường + `license_note` | ☑ | `outputs/results/data_report.json` (6,7 KB): nguồn, cách tải, MD5 archive, per-class train/test, thống kê kích thước, trùng lặp + danh sách 8 cặp, ROI, track, `license_note` |
@@ -359,7 +359,7 @@ Bao gồm: nguồn, ngày tải, cách tải, số ảnh train/test, số lớp,
 - Nếu track ID không trích được theo giả định, **đừng bịa**; ghi rõ "không trích được" và dùng split random + phân tích val–test.
 - Khi hiển thị ảnh trong báo cáo: crop quanh ROI để tránh lộ người/xe ở nền.
 - License: chép nguyên văn câu điều kiện sử dụng tại ngày truy cập; không suy diễn thành "CC-BY" hay bất kỳ giấy phép cụ thể nào.
-- **8 cặp trùng train↔test đã xử lý** (đều nhãn 14, track `00023`): **loại 8 ảnh train** khỏi tập huấn luyện, lưu danh sách `outputs/results/excluded_train_duplicates.csv`; file vẫn giữ trên đĩa nên `len(train_ds) = 39.209`, nhưng Giai đoạn 2 chỉ chia split trên 39.201 ảnh `usable_for_train=1`.
+- **8 cặp trùng train↔test đã xử lý** (đều nhãn 14; 8 ảnh train thuộc **track `00023` của tập train**, test không có track): **loại 8 ảnh train** khỏi tập huấn luyện, lưu danh sách `outputs/results/excluded_train_duplicates.csv`; file vẫn giữ trên đĩa nên `len(train_ds) = 39.209`, nhưng Giai đoạn 2 chỉ chia split trên 39.201 ảnh `usable_for_train=1`.
 
 ---
 
@@ -445,7 +445,7 @@ Các hàm tối thiểu:
 > | Dung lượng cache | **610,7 MB** (`X_train.npy` 481,7 MB · `X_test.npy` 155,2 MB · nhãn/ROI/paths 8,3 MB), tại `data/cache/` |
 > | Thời gian tạo cache | **13,6 s** (39.201 + 12.630 ảnh, resize 64×64 bilinear, ổ đĩa nóng) |
 > | Trạng thái | ☑ Đạt ☐ Đạt có điều kiện ☐ Chưa đạt |
-> | Ghi chú | `preprocess()` là **hàm duy nhất** trong `src/data.py`, không viết lại ở nơi khác; augmentation chỉ gắn vào `train_loader`; có kiểm tra tự động chặn `Flip`/`RandomRotation`; ảnh đã chuẩn hóa có max 2,558 (biên lý thuyết 2,60) nên "xấp xỉ [-2,2]" trong tài liệu chỉ là ước lượng. Group split không stratify nên 4 lớp hiếm vắng ở val — đã ghi rõ theo 2.7. |
+> | Ghi chú | `preprocess()` là **hàm duy nhất** trong `src/data.py`, không viết lại ở nơi khác; augmentation chỉ gắn vào `train_loader`; có kiểm tra tự động chặn `Flip`/`RandomRotation`; ảnh đã chuẩn hóa có max 2,558 (biên lý thuyết 2,60) nên "xấp xỉ [-2,2]" trong tài liệu chỉ là ước lượng. Group split không stratify nên 4 lớp hiếm vắng ở val — đã ghi rõ theo 2.7. **`X_train.npy` là pool 39.201 ảnh** dùng để chia split, không phải tập train 31.360; danh sách train/val thật nằm trong `split_random.json`. |
 
 ### 2.6.1. Nhật ký thực hiện (todos)
 
@@ -776,13 +776,13 @@ python -m src.summarize
 > |---|---|
 > | Mô hình chọn | **E4 — CNN-C 4 khối conv + GAP + dropout 0,4 + augmentation** (`configs/e4_cnnc_gap_aug.yaml`, run `e4_cnnc_gap_aug_s42`) |
 > | Lý do chọn | Val macro-F1 **cao nhất bảng (0,999763)**; so với E3 (0,999471) chênh **0,029 điểm % < 0,3 điểm %** → coi là **tương đương**, theo quy tắc ưu tiên mô hình **ít tham số hơn**: E4 chỉ **399.947** params so với 2.201.931 của E3 (**−81,8 %**), cùng tốc độ train (~9,5 s/epoch) và ít bộ nhớ hơn khi suy luận. E7 (0,998914) và E2 (0,998392) thấp hơn rõ hơn 0,1 điểm %, không chọn. |
-> | Nhận xét chính (3 gạch đầu dòng) | • **Đều bão hoà ~99,6–99,97 % trên val random**: 100 % (7.841/7.841) ảnh val có **frame liền kề (±1) cùng track trong train** → val bị rò rỉ frame, nên các chênh lệch giữa run là rất nhỏ và **không dùng để tuyên bố mô hình "tốt hơn"**; Δ thật sẽ đo bằng `split_group` ở Giai đoạn 6.<br>• **Augmentation là yếu tố tăng thời gian rõ nhất** (3,0 → 9,4 s/epoch do transform PIL trên CPU) và làm train acc thấp hơn val acc (gap âm) — dấu hiệu augmentation đang hoạt động, không phải overfit.<br>• **lr 3e-3 phân kỳ** (F1 0,567), lr 3e-4 tương đương 1e-3 ở 10 epoch; **class weight giảm nhẹ F1** (0,998914 so với 0,999471) nên không dùng cho mô hình cuối. |
+> | Nhận xét chính (3 gạch đầu dòng) | • **Đều bão hoà ~99,6–99,97 % trên val random**: **95,22 %** (7.466/7.841) ảnh val có frame **cách ±1** cùng track trong train, **99,60 %** cách ±2 và **100 %** cách ±5 (trung vị khoảng cách = **1 frame**) → val bị rò rỉ frame, nên các chênh lệch giữa run là rất nhỏ và **không dùng để tuyên bố mô hình "tốt hơn"**; Δ thật đã đo bằng `split_group` ở mục 5.8.<br>• **Augmentation là yếu tố tăng thời gian rõ nhất** (3,0 → 9,4 s/epoch do transform PIL trên CPU) và làm train acc thấp hơn val acc (gap âm) — dấu hiệu augmentation đang hoạt động, không phải overfit.<br>• **lr 3e-3 phân kỳ** (F1 0,567), lr 3e-4 tương đương 1e-3 ở 10 epoch; **class weight giảm nhẹ F1** (0,998914 so với 0,999471) nên không dùng cho mô hình cuối. |
 > | Trạng thái | ☐ Đạt ☑ Đạt có điều kiện ☐ Chưa đạt |
 > | Ghi chú | Yêu cầu 5.4 #4 ("E3 > E1 ≥ 2 điểm %") **không thể đạt bằng chữ** vì E1 đã 99,63 % (trần do rò rỉ frame, xem 5.7): E3 hơn E1 **0,31 điểm %**. Đã kiểm tra lại split: giao index train/val = 0, giao track = 0 với split group, nhưng **gần trùng frame** trong random split là 100 % — đây là lý do, không phải bug pipeline. Không chạm test. `configs/final.yaml` **chưa tạo** (thuộc Giai đoạn 6, sau khi đo Δ random vs group). `summary.csv` còn dòng `smoke_cnnb_s42`, sẽ loại ở Giai đoạn 9. |
 >
 > **Kiểm tra 5.7 — nghi ngờ rò rỉ khi E1 đã 99 %** (đã làm, bằng số):
 > - `set(train_idx) ∩ set(val_idx) = ∅`; số track train/val = 1.045/262 với split group, giao track = 0.
-> - Với **split random** (dùng cho E1–E7): **100 %** ảnh val có ít nhất một frame **cách ±1** cùng `track_key` nằm trong train (7.841/7.841). Đây là rò rỉ frame đã dự liệu trong kế hoạch → phải đo Δ bằng split group ở Giai đoạn 6 trước khi kết luận.
+> - Với **split random** (dùng cho E1–E7): giao index = 0 nhưng giao **track = 1.306/1.307**; **95,22 %** ảnh val có frame train **cách ±1** cùng `track_key`, **99,60 %** cách ±2, **100 %** cách ±5, trung vị khoảng cách = **1 frame**. (Số "100 % ±1" ghi ở bản trước là **sai do script** dùng `parse_track_id` thay vì số frame; đã tính lại ngày 23/10/2026 — xem 5.8.)
 >
 > ### 5.6.1. Nhật ký thực hiện (todos)
 >
@@ -792,10 +792,56 @@ python -m src.summarize
 > | 5.2 | Chạy tuần tự 7 run, ghi thời gian thật | ☑ | `outputs/runs/*_s42/` (log trong `%TEMP%\run_*.log`) |
 > | 5.3 | `python -m src.summarize --figure` | ☑ | `outputs/results/summary.csv` (10 dòng), `outputs/figures/05_experiment_comparison.png` |
 > | 5.4 | Chọn mô hình theo val macro-F1 + ưu tiên ít tham số khi chênh < 0,3 điểm % | ☑ | chọn **E4** (0,999763 · 399.947 params) — lý do ghi ở bảng trên |
-> | 5.5 | Kiểm tra 5.7 (nghi ngờ rò rỉ khi E1 ≥ 99 %) | ☑ | giao index = 0, nhưng 100 % val có frame ±1 trong train → ghi rõ |
+> | 5.5 | Kiểm tra 5.7 (nghi ngờ rò rỉ khi E1 ≥ 99 %) | ☑ | giao index = 0, nhưng 95,22 % val có frame ±1 (100 % trong ±5) → ghi rõ; audit 23/10/2026 xem 5.8 |
 > | 5.6 | Checklist 5.5 + điền 5.6 + 5.6.1 + bảng tiến độ, commit local | ☑ | `phase5_check.json` 11/11 PASS; commit local (không push) |
 >
 > **Tổng kết: 6/6 todo đạt.** Lệnh tái tạo: `python -m src.train --config configs/<exp>.yaml` cho từng config → `python -m src.summarize --figure --verify`.
+
+### 5.8. Chẩn đoán rò rỉ frame (audit 23/10/2026)
+
+> **Bối cảnh:** sau khi thấy val random đạt 99,6–99,97 %, một buổi audit độc lập được chạy để trả lời "có lỗi không". Kết quả: **không có bug pipeline**, nhưng có **rò rỉ frame** và có **2 sai sót phải sửa** (một số liệu ghi sai + một lỗi metric). Mục này ghi lại toàn bộ số liệu; artifact: `outputs/results/leak_delta.json`, run `outputs/runs/diag_e3_group_s42/`.
+>
+> **(a) Đính chính số liệu frame.** Bản ghi ở 5.6/5.7 trước đây nói "100 % val có frame ±1" là **sai** (script cũ dùng `parse_track_id` — tức track — thay vì số frame). Số đúng, tính lại từ `split_random.json` + tên file:
+>
+> | Cửa sổ | random split | group split |
+> |---|---|---|
+> | ±0 frame | 0 / 7.841 = 0,00 % | 0 % |
+> | ±1 frame | **7.466 / 7.841 = 95,22 %** | 0 % |
+> | ±2 frame | 7.810 / 7.841 = 99,60 % | 0 % |
+> | ±5 frame | **7.841 / 7.841 = 100 %** | 0 % |
+> | Khoảng cách frame gần nhất | trung vị **1**, p90 = 1, max 5 | không có |
+> | Giao track train/val | 1.306 / 1.307 (chỉ 1 track không có mặt ở val) | **0** |
+>
+> Kết luận rò rỉ **không đổi** (thậm chí rõ hơn: trung vị chỉ 1 frame), nhưng con số phải là 95,22 % chứ không phải 100 %.
+>
+> **(b) Bằng chứng mạnh hơn: 1-NN không huấn luyện gì** (ảnh xám 16×16, L2, mẫu 1.000 ảnh val, seed 42):
+>
+> | Điều kiện | Accuracy |
+> |---|---|
+> | val random, cho phép láng giềng cùng track | **0,9050** |
+> | val random, **cấm** láng giềng cùng track | 0,3650 |
+> | val group (track không có trong train) | **0,3100** |
+>
+> Tức là chỉ cần "ảnh giống nhất" đã đạt 90,5 % trên val random, nhưng chỉ 31 % khi track tách rời → val random bị "giải sẵn", không đo tổng quát hóa.
+>
+> **(c) Thí nghiệm đo Δ** — `configs/diag_e3_group.yaml` (y hệt E3, chỉ đổi `data.split: group`), run **`diag_e3_group_s42`**, seed 42, train/val = 31.341/7.860, best epoch 25, dừng epoch 32, 309,5 s:
+>
+> | Chỉ số | E3 (val random, rò rỉ) | diag E3 (val group, sạch track) | Δ |
+> |---|---|---|---|
+> | Accuracy | 0,999362 | **0,984733** | **−1,46 điểm %** |
+> | Macro-F1 / 43 lớp | 0,999471 | 0,883512 | −11,60 điểm % |
+> | Macro-F1 / 39 lớp **có mặt** | 0,999471 | **0,974128** | **−2,53 điểm %** |
+> | Lớp vắng ở val | 0 | 0, 19, 34, 39 (trần F1/43 = 0,90698) | — |
+>
+> Trong Δ 11,60 điểm của macro-F1/43, **9,06 điểm là do 4 lớp vắng bị tính 0** (không phải rò rỉ); phần do rò rỉ thật ≈ **2,53 điểm**, khớp với Δ trên các lớp có mặt. **Kết luận:** rò rỉ thổi khoảng **1,5 điểm accuracy / 2,5 điểm macro-F1**, mô hình vẫn tổng quát tốt trên track mới (98,5 %); nhưng val random **bão hoà** nên không dùng để phân hạng mô hình.
+>
+> **(d) Lỗi metric đã sửa.** `train.py::evaluate` trước đây gọi `f1_score(..., average="macro")` **không có `labels=range(43)`**, nên lớp vắng ở val bị loại khỏi trung bình. Demo sklearn: 0,5630 (2 lớp) vs 0,0393 (đủ 43 lớp). Với `split_random` (đủ 43 lớp) số E1–E7 **không đổi** — đã kiểm chứng bằng cách đánh giá lại E3 qua `src/evaluate.py`: acc 0,999362 / F1 0,999471, **trùng khớp** số cũ. Từ nay: macro-F1 **luôn trên 43 lớp**, kèm `macro_f1_present_classes` và support từng lớp.
+>
+> **(e) Đã bổ sung code.** `src/evaluate.py` (trước là stub 4 dòng) nay tính metric + `predictions.csv` + `confusion_matrix.png` (chuẩn hóa theo hàng), là nơi duy nhất để Giai đoạn 6 dùng lại; `--split test` bị chặn tới Giai đoạn 6. `meta.json` của run mới ghi thêm `val_class_support`, `val_classes_missing`, `macro_f1_labels`.
+>
+> **(f) Ảnh hưởng tới Giai đoạn 5.** Kết quả E1–E7 và lựa chọn E4 **giữ nguyên** (chênh E4–E3 vẫn là 2 ảnh / 7.841), nhưng **chưa chốt** mô hình cuối: Giai đoạn 6 phải xác nhận lại trên val sạch (group) + multi-seed, và nên tạo **stratified-group split** để val group có đủ 43 lớp trước khi báo cáo test.
+>
+> **(g) Việc còn lại (không làm ở Giai đoạn 5):** stratified-group split đủ lớp, multi-seed 42/123/2024, đóng băng `configs/final.yaml`, đánh giá test **một lần**, pHash audit gần trùng, lockfile + clean-room (Giai đoạn 9).
 
 ### 5.7. Ghi chú / lưu ý
 

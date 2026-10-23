@@ -37,7 +37,7 @@ Xây dựng pipeline học sâu hoàn chỉnh cho bài toán phân loại **43 l
 
 Thay đổi bất kỳ hằng số nào ở trên phải: ghi lý do, cập nhật tài liệu trong `docs/kehoach/`, và chạy lại các thí nghiệm bị ảnh hưởng.
 
-> **Lý do Train/Val = 31.360 / 7.841 (cập nhật 22/10/2026).** GTSRB có **8 ảnh train trùng MD5** với 8 ảnh test (đều nhãn 14, track `00023`). Đã **loại 8 ảnh đó khỏi tập huấn luyện** để test độc lập hoàn toàn: `39.209 − 8 = 39.201` ảnh dùng chia split, 80/20 stratified (seed 42) → **31.360 / 7.841**. File dữ liệu vẫn giữ nguyên trên đĩa (39.209) để số đếm khớp công bố; danh sách loại trừ ở `outputs/results/excluded_train_duplicates.csv` và cột `usable_for_train` trong `train_meta.csv`.
+> **Lý do Train/Val = 31.360 / 7.841 (cập nhật 22/10/2026).** GTSRB có **8 ảnh train trùng MD5** với 8 ảnh test (đều nhãn 14; 8 ảnh train này thuộc **track `00023` của tập train**, còn file test như `02291.ppm` **không có metadata track**). Đã **loại 8 ảnh đó khỏi tập huấn luyện** để test độc lập hoàn toàn: `39.209 − 8 = 39.201` ảnh dùng chia split, 80/20 stratified (seed 42) → **31.360 / 7.841**. File dữ liệu vẫn giữ nguyên trên đĩa (39.209) để số đếm khớp công bố; danh sách loại trừ ở `outputs/results/excluded_train_duplicates.csv` và cột `usable_for_train` trong `train_meta.csv`.
 
 ---
 
@@ -114,7 +114,7 @@ pip install -r requirements.txt
 - Nguồn: `torchvision.datasets.GTSRB`, `root="data"`, split `train`/`test`.
 - Ảnh gốc kích thước thay đổi → luôn `convert("RGB")` rồi resize.
 - `mean`/`std` tính **trên train** sau khi chia; lưu vào config, không hard-code.
-- Cache: `uint8` shape `(N, 64, 64, 3)` trong `.npy`, không commit.
+- Cache: `uint8` shape `(N, 64, 64, 3)` trong `.npy`, không commit. **`X_train.npy` là pool 39.201 ảnh** dùng để chia split (chưa phải tập train 31.360); danh sách train/val thật nằm trong `split_random.json`.
 - Augmentation **chỉ** cho train: affine nhẹ, color jitter nhẹ, perspective nhẹ.
 - **Cấm** `HorizontalFlip`, `VerticalFlip`, xoay 90/180 (đổi nghĩa biển).
 - Split lưu ra JSON (`split_random.json`, `split_group.json`) và tái sử dụng; không sinh lại mỗi run.
@@ -199,6 +199,7 @@ epoch,lr,train_loss,train_acc,val_loss,val_acc,val_macro_f1,epoch_time_s,gpu_mem
 - Lệnh test phải có cờ `--confirm-freeze` và ghi log.
 - Không dùng test để chọn mô hình, LR, epoch, ngưỡng.
 - Accuracy không đủ; luôn báo cáo kèm **macro-F1** và per-class.
+- **Macro-F1 luôn tính trên đủ 43 lớp** (`labels=range(43)`, `zero_division=0`). Nếu split thiếu lớp phải báo kèm `macro_f1_present_classes`, support từng lớp và trần lý thuyết (`số lớp có mặt / 43`) — không so sánh trực tiếp F1/43 giữa hai split khác support.
 - Confusion matrix chuẩn hóa theo hàng; ghi rõ nếu không chuẩn hóa.
 - Mọi bảng kết quả trong báo cáo/slide phải khớp `summary.csv`, `test_final.json`, `multiseed.json`.
 - Nếu chạy lại test do bug: tạo file `test_final_v2.json` và ghi lý do, không ghi đè.

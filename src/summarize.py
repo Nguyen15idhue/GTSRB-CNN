@@ -135,6 +135,9 @@ def collect_runs(runs_dir: Path = RUNS_DIR) -> list[dict[str, Any]]:
     if not runs_dir.is_dir():
         return rows
     for run_dir in sorted(p for p in runs_dir.iterdir() if p.is_dir()):
+        if run_dir.name.startswith("diag_"):
+            LOG.info("Bỏ qua %s: run chẩn đoán, không đưa vào summary.csv", run_dir.name)
+            continue
         row = _from_cnn_run(run_dir) or _from_baseline(run_dir)
         if row is None:
             LOG.warning("Bỏ qua %s: thiếu meta.json/metrics.csv/metrics.json", run_dir.name)

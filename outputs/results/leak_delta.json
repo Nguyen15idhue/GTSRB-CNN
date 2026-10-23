@@ -1,0 +1,104 @@
+{
+  "generated_at": "2026-10-23",
+  "purpose": "Đo mức lạc quan của val random do rò rỉ frame (biển báo là track video nhiều frame gần giống nhau) và kiểm chứng lại các số liệu audit ngày 23/10/2026.",
+  "status": "CHẨN ĐOÁN — không phải kết quả cuối, không dùng để chốt mô hình, chưa chạm test",
+  "method": {
+    "random_run": "e3_cnnb_aug_s42 (split_random: track train/val chồng nhau)",
+    "group_run": "diag_e3_group_s42 (split_group: track train/val rời nhau)",
+    "config_identical_except_split": true,
+    "seed": 42,
+    "note": "Hai run khác nhau ở cả train và val (31.360/7.841 vs 31.341/7.860) nên Δ là chênh lệch tổng hợp; nguyên nhân chính là track bị chồng ở random split."
+  },
+  "frame_adjacency": {
+    "split_random": {
+      "within_1_frame": {
+        "count": 7466,
+        "total": 7841,
+        "ratio": 0.9522
+      },
+      "within_2_frames": {
+        "count": 7810,
+        "total": 7841,
+        "ratio": 0.996
+      },
+      "within_5_frames": {
+        "count": 7841,
+        "total": 7841,
+        "ratio": 1.0
+      },
+      "nearest_frame_distance_median": 1,
+      "track_overlap": {
+        "train_tracks": 1307,
+        "val_tracks": 1306,
+        "shared": 1306
+      }
+    },
+    "split_group": {
+      "within_5_frames": {
+        "count": 0,
+        "total": 7860,
+        "ratio": 0.0
+      },
+      "track_overlap": {
+        "train_tracks": 1045,
+        "val_tracks": 262,
+        "shared": 0
+      }
+    },
+    "correction_note": "Con số '100% val có frame ±1' ghi trong tài liệu Giai đoạn 5 là SAI do script cũ dùng parse_track_id (track) thay vì số frame. Số đúng: ±1 = 95,22%, ±2 = 99,60%, ±5 = 100%, trung vị khoảng cách = 1 frame."
+  },
+  "one_nearest_neighbour": {
+    "feature": "ảnh xám 16x16 (mean-pool 4x4), khoảng cách L2, không huấn luyện gì",
+    "n_val_sampled": 1000,
+    "seed": 42,
+    "accuracy_random_split": 0.905,
+    "accuracy_random_split_banned_same_track": 0.365,
+    "accuracy_group_split": 0.31,
+    "note": "1-NN đạt 90,5% trên val random nhưng chỉ 31,0% trên val group → val random bị 'giải sẵn'."
+  },
+  "results": {
+    "random_split_leaky": {
+      "run_id": "e3_cnnb_aug_s42",
+      "val_acc": 0.9993623262338988,
+      "macro_f1_43": 0.9994707613846258,
+      "macro_f1_present_classes": 0.9994707613846258,
+      "n_classes_present": 43,
+      "missing_classes": []
+    },
+    "group_split_clean_tracks": {
+      "run_id": "diag_e3_group_s42",
+      "val_acc": 0.9847328244274809,
+      "macro_f1_43": 0.8835115839126796,
+      "macro_f1_present_classes": 0.9741281566216724,
+      "n_classes_present": 39,
+      "missing_classes": [
+        0,
+        19,
+        34,
+        39
+      ],
+      "macro_f1_ceiling_43": 0.9069767441860465,
+      "best_epoch": 25,
+      "epochs_run": 32
+    },
+    "delta": {
+      "accuracy_points": 1.46,
+      "macro_f1_43_points": 11.6,
+      "macro_f1_present_classes_points": 2.53,
+      "macro_f1_43_structural_part_points": 9.06,
+      "macro_f1_43_leak_part_points": 2.53,
+      "interpretation": "Δ macro-F1/43 = 11,60 điểm, trong đó ~9,06 điểm là do 4 lớp vắng ở group val bị tính 0 (trần 39/43 = 0,9070). Phần do rò rỉ thật ≈ 2,5 điểm, khớp với Δ trên các lớp có mặt."
+    }
+  },
+  "caveats": [
+    "Group val thiếu 4 lớp (0, 19, 34, 39) → macro-F1 43 lớp có trần 0,90698; phải đọc kèm macro_f1_present_classes.",
+    "Hai run khác train set (31.360 vs 31.341) nên Δ không chỉ do rò rỉ; tuy nhiên track overlap là khác biệt bản chất.",
+    "Chỉ 1 seed, 1 cấu hình (E3) — chưa phải kết quả multi-seed của Giai đoạn 6.",
+    "Không đánh giá trên test; test vẫn nguyên vẹn 12.630 ảnh."
+  ],
+  "action_items": [
+    "Giai đoạn 6: dùng macro_f1_present_classes + ghi rõ support khi báo cáo group split.",
+    "Cân nhắc stratified-group split để val group có đủ 43 lớp trước khi chốt mô hình.",
+    "Không dùng val random (99,9%) làm con số kết quả cuối trong báo cáo."
+  ]
+}

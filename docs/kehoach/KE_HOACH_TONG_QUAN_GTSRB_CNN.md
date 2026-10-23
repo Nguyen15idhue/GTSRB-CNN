@@ -225,7 +225,7 @@ Bảng đầy đủ 43 lớp ở **Phụ lục A**. File này là nguồn duy nh
 | Validation | 7.841 | 20% của 39.201 | Chọn mô hình, early stopping, chọn ngưỡng unknown | Không cập nhật trọng số từ nhãn val |
 | Test | 12.630 | Split chính thức | Đánh giá cuối cùng | Chỉ chạy **một lần** sau khi đóng băng config |
 
-> **Cập nhật 22/10/2026:** GTSRB có 8 ảnh train trùng MD5 với test (nhãn 14, track `00023`) nên 8 ảnh đó bị **loại khỏi tập huấn luyện**. File vẫn giữ đủ 39.209 trên đĩa để số đếm khớp công bố, nhưng chỉ chia split trên 39.201 ảnh (`usable_for_train=1` trong `outputs/results/train_meta.csv`); danh sách loại trừ ở `outputs/results/excluded_train_duplicates.csv`.
+> **Cập nhật 22/10/2026:** GTSRB có 8 ảnh train trùng MD5 với test (nhãn 14; 8 ảnh train thuộc **track `00023` của tập train** — file test không có metadata track) nên 8 ảnh đó bị **loại khỏi tập huấn luyện**. File vẫn giữ đủ 39.209 trên đĩa để số đếm khớp công bố, nhưng chỉ chia split trên 39.201 ảnh (`usable_for_train=1` trong `outputs/results/train_meta.csv`); danh sách loại trừ ở `outputs/results/excluded_train_duplicates.csv`.
 
 Cách chia: `sklearn.model_selection.train_test_split(..., stratify=labels, test_size=0.2, random_state=42)`.
 
