@@ -18,7 +18,79 @@ khoảng **30–45 phút** là có demo + kết quả. Không cần biết trư�
 | **Tái lập đầy đủ** | cài đặt + data + 3 seed + đánh giá + báo cáo | ~30–45 phút |
 
 > Repo **không chứa checkpoint** (`best.pt` bị gitignore). Vì vậy máy mới muốn demo phải
-> **train lại** `configs/final.yaml` (hoặc được cấp sẵn `best.pt`, xem mục 9).
+> **train lại** `configs/final.yaml` (hoặc được cấp sẵn `best.pt`, xem mục 0.1 và 9).
+
+---
+
+## 0.1. `git clone` xong có gì, còn thiếu gì?
+
+`git clone` chỉ mang **mã nguồn + báo cáo + kết quả test đã lưu**, không mang môi trường/dữ liệu/checkpoint.
+
+| Có sẵn trong repo | Thiếu — phải tự thêm |
+|---|---|
+| `src/`, `app.py`, `configs/` (kể cả `final.yaml`), `tests/` | `.venv` + thư viện Python |
+| `.streamlit/config.toml`, `requirements.txt`, `requirements-demo.txt` | `data/` GTSRB (1,4 GB) |
+| `docs/bao_cao/BAO_CAO.docx` (mở đọc ngay) | `outputs/runs/*/best.pt` (checkpoint, 8,8 MB) |
+| `outputs/results/`: `test_report.json`, `test_final.json`, `summary.csv`, `multiseed.json`, `threshold.json`, `predictions_test_final.csv` | `outputs/demo_images/` (tuỳ chọn) |
+| `external_test/` 11 ảnh + manifest, `outputs/figures/` | Playwright Chromium (tuỳ chọn, nếu test UI) |
+
+> Bị gitignore: `data/`, `outputs/runs/`, `outputs/demo_images/`, `outputs/GTSRB_demo_bundle.zip`, `.venv*`.
+> Dung lượng clone: ~68 MB (kể cả `.git`); ~29 MB nội dung.
+
+### Ba mức cài đặt
+
+**A. Chỉ đọc báo cáo — không cần cài gì:** mở `docs/bao_cao/BAO_CAO.docx`.
+
+**B. Chỉ demo (không train, không data) — ~5 phút.** Cần Python 3.12 + **copy `best.pt`** (từ máy cũ
+hoặc từ `GTSRB_demo_bundle.zip`; không có trong git):
+
+```powershell
+py -3.12 -m venv .venv
+.\.venv\Scripts\Activate.ps1
+pip install -r requirements-demo.txt          # torch CPU, ~1 GB, không cần GPU
+# đặt checkpoint tại: outputs\runs\final_s42\best.pt
+# (hoặc nơi khác + set GTSRB_RUN_DIR trỏ tới thư mục có best.pt)
+streamlit run app.py
+```
+
+**C. Chạy đầy đủ (train/eval) — ~30–45 phút.** Cần Python 3.12, Git, **driver NVIDIA**
+(không cần cài CUDA Toolkit), ~8 GB trống:
+
+```powershell
+py -3.12 -m venv .venv
+.\.venv\Scripts\Activate.ps1
+pip install torch==2.11.0 torchvision==0.26.0 --index-url https://download.pytorch.org/whl/cu128
+pip install -r requirements.txt
+python -c "import torch; print(torch.__version__, torch.cuda.is_available(), torch.cuda.get_device_capability())"
+python -m src.data --download --report
+python -m src.data --prepare --verify
+python -m src.train --config configs/final.yaml --seed 42
+streamlit run app.py
+```
+
+### Không cần cài
+
+- **CUDA Toolkit** riêng: torch cu128 đã kèm runtime.
+- **Visual Studio / Build Tools**: các gói đều có wheel.
+- **GPU cho demo**: torch CPU đủ (model 1 ảnh ~1,2 ms).
+- **Dữ liệu tải thủ công**: chỉ khi mạng chặn, xem mục 5.
+
+### Hai điều dễ vấp sau khi clone
+
+1. **Test bị từ chối**: repo đã có `outputs/results/test_report.json` (test chỉ chạy 1 lần).
+   Muốn tái lập: sao lưu 3 file `test_report.json`, `test_final.json`, `test_runs.log` rồi xoá,
+   sau đó chạy **đúng 1 lần** `python -m src.evaluate --run outputs/runs/final_s42 --split test --confirm-freeze`
+   (chi tiết mục 9).
+2. **Streamlit lần đầu có thể hỏi Email**: thông tin này lưu theo user, không nằm trong repo → nhấn **Enter**.
+
+### Tóm tắt một dòng
+
+- **Clone + đọc báo cáo:** không cần cài gì.
+- **Clone + demo:** Python + `requirements-demo.txt` + **copy `best.pt`**.
+- **Clone + train/eval:** Python + torch cu128 + requirements + `--download --prepare`.
+
+> Muốn “clone xong chạy Streamlit luôn” mà không copy checkpoint: dùng `GTSRB_demo_bundle.zip`
+> (mục 8.1) hoặc đính kèm `best.pt` vào GitHub Release — **không** commit checkpoint vào git.
 
 ---
 
@@ -60,6 +132,9 @@ cd C:\0\1.Laptrinh\BTLHocSau
 ```
 
 Mọi lệnh sau đây chạy **tại thư mục gốc repo** (nơi có `README.md`, `src/`, `app.py`).
+
+> Clone **không** kèm `data/`, `outputs/runs/` (checkpoint), `outputs/demo_images/` hay `.venv`.
+> Xem bảng “có sẵn / còn thiếu” ở **mục 0.1** để biết cần thêm gì.
 
 ---
 
