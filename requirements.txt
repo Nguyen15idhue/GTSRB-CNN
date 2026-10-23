@@ -19,3 +19,4 @@ streamlit==1.66.1
 
 pytest==8.4.2
 python-docx==1.2.0  # xuất báo cáo .docx
+playwright==1.56.0  # test E2E giao diện (cần: python -m playwright install chromium)

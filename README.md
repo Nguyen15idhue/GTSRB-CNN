@@ -82,6 +82,9 @@ python -m src.evaluate --run outputs/runs/final_s42 --split test --confirm-freez
 python -m src.summarize --figure
 python -m src.error_analysis --run outputs/runs/final_s42
 streamlit run app.py
+
+# kiểm thử giao diện end-to-end (Playwright, cần Chromium: python -m playwright install chromium)
+python tests/e2e_app.py
 ```
 
 - **Test đã được đánh giá đúng 1 lần** trong repo này (`test_runs.log` có 1 dòng). Chạy lại sẽ
@@ -111,7 +114,8 @@ app.py          demo Streamlit
 ## 7. Tái lập kết quả
 
 - Seed cố định 42/123/2024; config đã đóng băng; split lưu JSON; `env.json` mỗi run ghi phiên bản.
-- Kiểm nhanh: `python -m pytest tests -q` (11 test, ~3 s).
+- Kiểm nhanh: `python -m pytest tests -q` (11 test, ~3 s) và `python tests/e2e_app.py` (9 kịch bản UI, ~40 s).
+- Screenshot UI thật: `outputs/figures/11_ui_*.png` (Chromium headless, Playwright).
 - Kiểm tái lập eval: chạy `src.evaluate --split val` trên checkpoint có sẵn, so với
   `multiseed.json` — phải khớp (sai khác < 0,2 điểm %).
 - Clean-room (môi trường mới): xem `outputs/results/cleanroom.json` và mục 9.6 của

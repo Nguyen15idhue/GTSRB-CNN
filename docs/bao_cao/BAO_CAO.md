@@ -420,9 +420,19 @@ một nét cộng moiré do resize (2/12). Các quan sát này lấy từ việc
 - `src/predict.py` dùng đúng `src.data.preprocess` (không viết lại) và checkpoint cuối `final_s42`.
 - AppTest: **0 exception**, có footer cảnh báo (`phase8_check.json`).
 
-![Hình 6.1. Ảnh minh chứng 5 kịch bản demo (không phải screenshot UI)](outputs/figures/08_scenarios.png)
+![Hình 6.1. Giao diện Streamlit chạy thật (Playwright, Chromium headless): trang chủ, kết quả đúng, từ chối ảnh không biển, lỗi file hỏng](outputs/figures/11_ui_overview.png)
 
-*Hình 6.1. Ảnh minh chứng 5 kịch bản demo (không phải screenshot UI)*
+*Hình 6.1. Giao diện Streamlit chạy thật (Playwright, Chromium headless): trang chủ, kết quả đúng, từ chối ảnh không biển, lỗi file hỏng*
+
+Giao diện được kiểm thử **end-to-end bằng Playwright** (`tests/e2e_app.py`): tự khởi động Streamlit,
+upload ảnh thật, kiểm tra top-3, cảnh báo "không xác định", 3 loại lỗi, tab thông tin, ảnh mẫu và
+trường hợp thiếu checkpoint. Kết quả **9/9 PASS**; thời gian từ upload đến khi hiện kết quả
+**median 0,354 s** (2 lần đo, gồm upload + Streamlit rerun + render). Ảnh chụp:
+`outputs/figures/11_ui_*.png`.
+
+![Hình 6.2. Ảnh minh chứng 5 kịch bản demo (ảnh ghép từ kết quả chạy thật, không phải screenshot UI)](outputs/figures/08_scenarios.png)
+
+*Hình 6.2. Ảnh minh chứng 5 kịch bản demo (ảnh ghép từ kết quả chạy thật, không phải screenshot UI)*
 
 | Kịch bản | Kết quả | Conf | Bị từ chối |
 |---|---|---|---|
@@ -472,8 +482,8 @@ p95 7.80 ms. **Chưa tính** upload mạng và render UI — không gọi
    multi-seed chỉ đo biến thiên huấn luyện trên val.
 6. **mean/std** tính trên train của split random nhưng dùng cho mô hình cuối (split stratified-group) —
    lệch nhỏ, đã ghi nhận; nếu làm lại nên tính trên train của split cuối.
-7. **Chưa có screenshot UI và video demo** (môi trường không có GUI/browser automation); ảnh minh chứng
-   là hình ghép từ chính kết quả chạy thật.
+7. **UI đã có screenshot thật** (Playwright + Chromium headless, 9/9 kịch bản), nhưng **chưa có video demo**
+   và chưa thử trên trình duyệt khác ngoài Chromium.
 8. Giai đoạn 11–12 (slide, đóng gói/nộp) **chưa thực hiện** theo yêu cầu.
 
 ### 6.4. Hướng phát triển

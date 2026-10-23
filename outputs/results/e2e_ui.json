@@ -1,0 +1,72 @@
+{
+  "generated_at": "2026-10-23T18:42:01",
+  "base_url": "http://127.0.0.1:8765",
+  "browser": "chromium (playwright)",
+  "latency_ui_seconds": {
+    "median": 0.366,
+    "max": 0.366,
+    "n": 2,
+    "scope": "từ lúc set_input_files đến khi kết quả hiển thị (gồm upload + Streamlit rerun + render)"
+  },
+  "screenshots": [
+    "11_ui_01_home.png",
+    "11_ui_02_result_test.png",
+    "11_ui_03_result_kr30.png",
+    "11_ui_04_unknown.png",
+    "11_ui_05_error_fake.png",
+    "11_ui_06_error_size.png",
+    "11_ui_07_about.png",
+    "11_ui_08_sample.png",
+    "11_ui_09_missing_checkpoint.png",
+    "11_ui_overview.png"
+  ],
+  "passed": 9,
+  "total": 9,
+  "checks": [
+    {
+      "check": "home_footer_sidebar",
+      "passed": true,
+      "detail": "tiêu đề, sidebar (test accuracy) và footer hiển thị"
+    },
+    {
+      "check": "upload_anh_test",
+      "passed": true,
+      "detail": "top-3 hiển thị (3 thanh), dòng '1. Cấm xe trên 3,5 tấn': True"
+    },
+    {
+      "check": "upload_bien_han_30",
+      "passed": true,
+      "detail": "top-1 = Giới hạn tốc độ 30 km/h"
+    },
+    {
+      "check": "tu_choi_anh_khong_bien",
+      "passed": true,
+      "detail": "hiển thị cảnh báo 'Không xác định'"
+    },
+    {
+      "check": "loi_file_hong",
+      "passed": true,
+      "detail": "báo 'Không đọc được ảnh: …'"
+    },
+    {
+      "check": "loi_qua_20mb",
+      "passed": true,
+      "detail": "báo 'Ảnh quá lớn … Giới hạn 20 MB'"
+    },
+    {
+      "check": "tab_ve_mo_hinh",
+      "passed": true,
+      "detail": "bảng test hiển thị 98.56 % / 0.9799"
+    },
+    {
+      "check": "chon_anh_mau",
+      "passed": true,
+      "detail": "chọn ảnh mẫu → hiện kết quả lớp 1"
+    },
+    {
+      "check": "thieu_checkpoint",
+      "passed": true,
+      "detail": "báo 'Không tìm thấy checkpoint …'"
+    }
+  ]
+}

@@ -284,6 +284,9 @@ python -m src.evaluate --run outputs/runs/final_s42 --split test --confirm-freez
 # Tổng hợp + demo
 python -m src.summarize
 streamlit run app.py
+
+# Test giao diện (Playwright, cần cài chromium)
+python tests/e2e_app.py
 ```
 
 ---

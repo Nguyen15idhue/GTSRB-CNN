@@ -1187,7 +1187,7 @@ Làm đúng ba điểm trên sẽ biến demo từ "trình diễn may rủi" th�
 > | Ngưỡng τ | **0,9462** (phân vị 5 % max-prob trên val; acceptance in-dist 94,99 %) — **không** chỉnh theo ảnh demo |
 > | Thời gian phản hồi | **end-to-end trong Python**: median **5,78 ms**, p95 7,80 ms, max 12,2 ms (20 lần, sau warm-up); riêng model 3,02 ms. **Không bao gồm** upload mạng + Streamlit render → chưa phải thời gian người dùng chờ |
 > | Trạng thái | ☑ Đạt ☐ Đạt có điều kiện ☐ Chưa đạt |
-> | Ghi chú | • App dùng đúng `src.data.preprocess` (import, không viết lại) và checkpoint cuối `final_s42`; τ đọc từ `threshold.json`. AppTest chạy app không exception, có footer cảnh báo.<br>• **Chưa có screenshot trình duyệt**: môi trường không có browser automation; thay bằng ảnh minh chứng `08_scenarios.png` + `08_external_contact.png` (ghi rõ **không phải** screenshot UI) và kết quả từng kịch bản trong `demo_scenarios.csv`. Cần chụp 5 ảnh màn hình khi trình bày trên máy có GUI.<br>• **τ không bảo vệ tuyệt đối**: 1/4 ảnh không biển vẫn bị nhận nhầm với confidence rất cao → phải nêu trong báo cáo/slide, không tuyên bố "lọc được ảnh không biển".<br>• Không sửa ảnh demo cho đến khi đúng; các ca sai được giữ nguyên và phân tích (kịch bản 3, 4). |
+> | Ghi chú | • App dùng đúng `src.data.preprocess` (import, không viết lại) và checkpoint cuối `final_s42`; τ đọc từ `threshold.json`. AppTest chạy app không exception, có footer cảnh báo.<br>• **Đã có screenshot UI thật** bằng Playwright + Chromium headless (`outputs/figures/11_ui_*.png`, xem 8.9); vẫn chưa có video demo.<br>• **τ không bảo vệ tuyệt đối**: 1/4 ảnh không biển vẫn bị nhận nhầm với confidence rất cao → phải nêu trong báo cáo/slide, không tuyên bố "lọc được ảnh không biển".<br>• Không sửa ảnh demo cho đến khi đúng; các ca sai được giữ nguyên và phân tích (kịch bản 3, 4). |
 >
 > ### 8.6.1. Nhật ký thực hiện (todos)
 >
@@ -1224,7 +1224,31 @@ Làm đúng ba điểm trên sẽ biến demo từ "trình diễn may rủi" th�
 >
 > **(g) Bộ test tự động:** thêm `tests/test_pipeline.py` (11 test: preprocess, split random, split stratified_group, macro-F1 43 lớp, checkpoint + forward, validate upload, predictions/report integrity, log test 1 lần, threshold trên val, manifest + license, class_names). Chạy `python -m pytest tests -q` → **11 passed** (~3 s). Đã thêm `pytest==8.4.2` vào `requirements.txt`.
 >
-> **(h) Chưa làm:** Giai đoạn 9–12 (clean-room, README, báo cáo, slide, đóng gói/nộp) vẫn **☐** — xem bảng tiến độ. Đây là phần còn thiếu lớn nhất trước khi nghiệm thu.
+> **(h) Kiểm thử GUI bằng Playwright (bổ sung):** xem mục 8.9.
+
+### 8.9. Kiểm thử giao diện bằng Playwright
+
+> **Mục tiêu:** kiểm tra GUI Streamlit **chạy thật** (không chỉ đọc code): upload ảnh, top-3, cảnh báo "không xác định", 3 loại lỗi, tab thông tin, ảnh mẫu, thiếu checkpoint; lưu screenshot làm bằng chứng cho báo cáo.
+>
+> **Cách chạy:** `python tests/e2e_app.py` — script tự khởi động Streamlit ở cổng 8765 (headless), chạy Chromium headless của Playwright, chụp ảnh và ghi `outputs/results/e2e_ui.json`; tự tắt server kể cả khi lỗi.
+>
+> | # | Kịch bản | Kết quả |
+> |---|---|---|
+> | 1 | Trang chủ: tiêu đề, sidebar (test accuracy/macro-F1/top-3, τ), footer cảnh báo | PASS |
+> | 2 | Upload ảnh test GTSRB → "Cấm xe trên 3,5 tấn", đủ 3 dòng top-3 | PASS |
+> | 3 | Upload biển Hàn 30 (crop) → "Giới hạn tốc độ 30 km/h" | PASS |
+> | 4 | Upload ảnh đường không biển → cảnh báo "Không xác định" + lớp gần nhất | PASS |
+> | 5 | File `.txt` đổi đuôi `.jpg` → "Không đọc được ảnh: …", không crash | PASS |
+> | 6 | File 21 MB → "Ảnh quá lớn … Giới hạn 20 MB", không treo | PASS |
+> | 7 | Tab "Về mô hình" → bảng test 98,56 % / 0,9799, thông tin τ | PASS |
+> | 8 | Chọn ảnh mẫu từ selectbox → kết quả lớp 1 | PASS |
+> | 9 | Thiếu checkpoint (`GTSRB_RUN_DIR` trỏ thư mục không tồn tại) → "Không tìm thấy checkpoint" | PASS |
+>
+> **Kết quả:** **9/9 PASS**. Thời gian từ upload đến khi hiện kết quả: **median 0,354 s** (2 lần đo; gồm upload + Streamlit rerun + render — khác với latency model-only đã báo ở 6.1). Screenshot: `outputs/figures/11_ui_01_home.png` … `11_ui_09_missing_checkpoint.png`, bản ghép `11_ui_overview.png` dùng trong báo cáo (Hình 6.1). Chromium 141.0.7390.37.
+>
+> **Hạn chế:** chỉ test trên Chromium headless, chưa test Firefox/WebKit; chưa có video demo (Giai đoạn 11).
+
+> **(i) Chưa làm:** Giai đoạn 11–12 (clean-room, README, báo cáo, slide, đóng gói/nộp) vẫn **☐** — xem bảng tiến độ. Đây là phần còn thiếu lớn nhất trước khi nghiệm thu.
 
 ### 8.7. Ghi chú / lưu ý
 
@@ -1318,6 +1342,7 @@ Bắt buộc có:
 > | Ghi chú | Clean-room **không chạy lại test** (test đã dùng 1 lần). Smoke train trong `.venv_test`: 2 epoch, 30,3 s, val acc 0,985971 (split random — chỉ kiểm hạ tầng, không dùng báo cáo). AppTest: **0 exception**. Golden test 20 ảnh: lệch xác suất lớn nhất **0,000e+00** (ngưỡng 1e-3). Chi tiết: `outputs/results/cleanroom.json`, `golden_compare.json`. |
 >
 > ### 9.6.1. Nhật ký thực hiện (todos)
+
 >
 > | # | Todo | Trạng thái | Bằng chứng |
 > |---|---|---|---|
@@ -1410,15 +1435,17 @@ Báo cáo không phải bản mô tả code. Mỗi chương phải trả lời m
 > |---|---|
 > | Ngày hoàn thành | 23/10/2026 |
 > | Số trang | **Chưa đo chính xác** (máy không có Word/LibreOffice để render); ước lượng **20–24 trang A4** từ 192 đoạn, 19 bảng, 20 hình. Khi mở bằng Word, số trang thực tế hiển thị ở footer |
-> | Số hình / số bảng | **20 hình** (20 tệp, Hình 2.1–6.2) / **19 bảng** (Bảng 1.1–6.1, A.1, B.1) |
-> | Chương còn yếu | **Ch5.5 (OOD)** — mỗi nhóm chỉ 2–4 ảnh, CI rất rộng; **Ch6** — chưa có screenshot UI/video (môi trường không có GUI) |
+> | Số hình / số bảng | **21 hình** (Hình 2.1–6.2, trong đó Hình 6.1 là screenshot UI Playwright) / **19 bảng** (Bảng 1.1–6.1, A.1, B.1) |
+> | Chương còn yếu | **Ch5.5 (OOD)** — mỗi nhóm chỉ 2–4 ảnh, CI rất rộng; **Ch6** — đã có screenshot UI thật nhưng chưa có video demo |
 > | Trạng thái | ☑ Đạt ☐ Đạt có điều kiện ☐ Chưa đạt |
 > | Ghi chú | Báo cáo sinh **từ artifact** bằng `docs/bao_cao/build_report.py` (không gõ tay số), xuất DOCX bằng `md_to_docx.py`. 6 chương đúng cấu trúc; 6 tài liệu tham khảo; phần hạn chế nêu 8 điểm; 12 mẫu sai có cột quan sát/giả thuyết tách riêng. **Chưa làm GĐ11–12** (slide/video/đóng gói/nộp) theo yêu cầu. |
 >
 > ### 10.6.1. Nhật ký thực hiện (todos)
+
 >
 > | # | Todo | Trạng thái | Bằng chứng |
 > |---|---|---|---|
+> | 10.0 | UI: nâng cấp app (2 tab, sidebar, ảnh mẫu, env override) + test Playwright 9/9 | ☑ | `app.py`, `tests/e2e_app.py`, `outputs/results/e2e_ui.json`, `figures/11_ui_*.png` |
 > | 10.1 | Vẽ 6 hình còn thiếu (curves 4 run, top-10 bar, confusion full, multi-seed, kiến trúc, pipeline) | ☑ | `outputs/figures/10_*.png` |
 > | 10.2 | Sinh báo cáo 6 chương từ artifact (không gõ tay số) | ☑ | `docs/bao_cao/BAO_CAO.md` (568 dòng) |
 > | 10.3 | Xuất DOCX, kiểm bảng/hình/caption, đánh số liên tục | ☑ | `docs/bao_cao/BAO_CAO.docx` (6,76 MB; 19 bảng, 20 hình) |
