@@ -1,6 +1,7 @@
 # Python
 .venv/
 .venv_test/
+.venv_demo/
 __pycache__/
 *.py[cod]
 *.egg-info/
@@ -30,3 +31,7 @@ desktop.ini
 *.log
 !outputs/results/*.log
 tmp/
+
+# Bộ demo đóng gói (chứa checkpoint) — không commit
+outputs/GTSRB_demo_bundle/
+outputs/GTSRB_demo_bundle.zip

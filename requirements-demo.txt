@@ -1,8 +1,9 @@
-# Chỉ thư viện cần cho suy luận/demo (không cần torch cu128? vẫn cần torch để chạy model)
-# Cài torch đúng index trước, sau đó: pip install -r requirements-demo.txt
+# Chỉ thư viện cần cho suy luận/demo — KHÔNG cần dataset, KHÔNG cần GPU.
+# torch bản CPU trên PyPI là đủ (demo 1 ảnh rất nhanh). Nếu muốn GPU:
+#   pip install torch==2.11.0 torchvision==0.26.0 --index-url https://download.pytorch.org/whl/cu128
 numpy==2.5.2
 pillow==12.3.0
 pyyaml==6.0.3
+matplotlib==3.11.2
 streamlit==1.66.1
 torch==2.11.0
-torchvision==0.26.0

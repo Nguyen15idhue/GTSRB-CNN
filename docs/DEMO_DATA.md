@@ -70,6 +70,17 @@ print(len(val_paths))
 
 ---
 
+## 2.1. Không cần dữ liệu: dùng bundle demo
+
+Nếu chỉ cần demo trên máy khác, không mang theo `data/`:
+
+```powershell
+python tests/package_demo.py     # → outputs/GTSRB_demo_bundle.zip (~15 MB)
+```
+
+Bundle chứa model, báo cáo DOCX, 16 ảnh demo, 5 ảnh mẫu và `requirements-demo.txt`
+(chỉ cần torch CPU). Xem mục 8.1 của `docs/HUONG_DAN_CHAY_MAY_MOI.md`.
+
 ## 3. Xuất ảnh demo (PNG) từ GTSRB
 
 App chỉ nhận JPG/JPEG/PNG, còn GTSRB là `.ppm` → dùng script có sẵn:

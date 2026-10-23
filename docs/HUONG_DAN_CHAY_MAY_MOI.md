@@ -13,7 +13,8 @@ khoảng **30–45 phút** là có demo + kết quả. Không cần biết trư�
 | Mục tiêu | Cần làm | Thời gian |
 |---|---|---|
 | Chỉ **đọc kết quả** | mở `docs/bao_cao/BAO_CAO.docx` | 0 phút |
-| **Xem demo** (upload ảnh) | cài đặt + data + **train 1 seed** + `streamlit run app.py` | ~15 phút |
+| **Chỉ demo, không train** | giải nén bundle + cài `requirements-demo.txt` + `streamlit run app.py` | **~5 phút** |
+| **Xem demo từ mã nguồn** | cài đặt + data + **train 1 seed** + `streamlit run app.py` | ~15 phút |
 | **Tái lập đầy đủ** | cài đặt + data + 3 seed + đánh giá + báo cáo | ~30–45 phút |
 
 > Repo **không chứa checkpoint** (`best.pt` bị gitignore). Vì vậy máy mới muốn demo phải
@@ -245,6 +246,44 @@ python tests/e2e_app.py                   # 9 kịch bản, ~40 giây, kèm scre
 
 ---
 
+### 8.1. Chỉ demo trên máy mới — KHÔNG cần train, KHÔNG cần data
+
+Bundle đã đóng gói sẵn model + báo cáo + ảnh mẫu (**A+**). Tạo bundle trên máy đang có model:
+
+```powershell
+python tests/package_demo.py
+# → outputs/GTSRB_demo_bundle.zip  (~15 MB)
+```
+
+Mang file zip sang máy mới, giải nén, rồi:
+
+```powershell
+py -3.12 -m venv .venv
+.\.venv\Scripts\Activate.ps1
+pip install -r requirements-demo.txt      # torch CPU, ~1 GB, KHÔNG cần GPU
+streamlit run app.py                      # mở http://localhost:8501
+```
+
+Bundle gồm: `app.py`, `src/`, `best.pt` (8,8 MB), `threshold.json`, `test_report.json`,
+`multiseed.json`, `configs/class_names.json`, **`docs/bao_cao/BAO_CAO.docx`**,
+**16 ảnh demo** (`outputs/demo_images/*.png` + `demo_manifest.csv`),
+5 ảnh mẫu của app (`external_test/` + 2 ảnh test `.ppm`), `HUONG_DAN.txt`.
+
+Kỳ vọng (đã kiểm trong venv CPU sạch, không data):
+
+| Mục | Kết quả |
+|---|---|
+| Sidebar | accuracy 98,56 % · macro-F1 0,9799 · top-3 99,64 % · τ 0,9462 |
+| Mẫu biển 16 / 50 km/h / STOP | đúng lớp 16 / 2 / 14, conf ~1,00 |
+| Biển Hàn 30 (crop) | đúng lớp 1, conf 0,95 |
+| Ảnh đường không biển | “Không xác định” |
+| Biển Việt Nam | “Không xác định” hoặc sai (giới hạn 43 lớp Đức) |
+| Báo cáo | mở `docs/bao_cao/BAO_CAO.docx` |
+| Tốc độ (CPU) | model ~1,2 ms/ảnh; upload → kết quả thường < 1 giây |
+
+**Không làm được trong bundle:** `src.data`, `src.train`, `evaluate --split val/test`
+(thiếu dataset/cache). Nếu cần tái lập số liệu, dùng mã nguồn đầy đủ (mục 5–9).
+
 ## 9. Đánh giá test — CHỈ MỘT LẦN
 
 > Repo này **đã đánh giá test đúng 1 lần** và lưu kết quả trong `outputs/results/`.
@@ -371,6 +410,7 @@ streamlit run app.py
 - [ ] `python -m src.data --verify` → 12/12 PASS
 - [ ] `python -m pytest tests -q` → 11 passed
 - [ ] `outputs/runs/final_s42/best.pt` tồn tại
+- [ ] (nếu dùng bundle) `streamlit run app.py` mở được và sidebar hiện 98,56 %
 - [ ] `streamlit run app.py` mở được `http://localhost:8501`
 - [ ] `outputs/results/test_report.json` có accuracy **0,9856**, macro-F1 **0,9799**
 - [ ] Mở được `docs/bao_cao/BAO_CAO.docx`

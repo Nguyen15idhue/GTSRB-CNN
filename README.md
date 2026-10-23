@@ -26,6 +26,10 @@ Xem hướng dẫn đầy đủ, copy–paste được: **`docs/HUONG_DAN_CHAY_M
 (cài Python/PyTorch CUDA → tải dữ liệu → train → demo → test), kèm bảng lỗi thường gặp
 và thời gian tham khảo. Bản ngắn: mục 3–5 dưới đây.
 
+**Chỉ cần demo, không train, không data:** chạy `python tests/package_demo.py` trên máy đang có model,
+mang `outputs/GTSRB_demo_bundle.zip` (~15 MB, gồm model + báo cáo DOCX + 16 ảnh demo) sang máy mới,
+giải nén rồi `pip install -r requirements-demo.txt` và `streamlit run app.py` (xem mục 8.1 của hướng dẫn).
+
 ## 2. Yêu cầu hệ thống
 
 - Windows 10/11 + PowerShell, Python **3.12 64-bit**.
