@@ -1,0 +1,22 @@
+# Ứng viên chọn mô hình trên val sạch (Giai đoạn 6) — KHÔNG phải config cuối.
+# E4 (CNN-C + GAP) chạy trên split_stratified_group, seed 42.
+experiment:
+  id: cand_e4_sgroup
+  seed: 42
+  notes: "Ứng viên E4 trên split_stratified_group (val sạch track, đủ 43 lớp)"
+
+data:
+  split: stratified_group
+
+model:
+  name: cnn_c
+  widths: [32, 64, 128, 256]
+  use_bn: true
+  dropout: 0.4
+  gap: true
+
+augmentation:
+  enabled: true
+
+train:
+  weight_decay: 0.0001

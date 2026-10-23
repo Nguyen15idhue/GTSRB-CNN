@@ -963,6 +963,8 @@ def make_splits(
     ``mode='random'``: stratified theo nhãn (train_test_split).
     ``mode='group'``: GroupShuffleSplit theo ``track`` để val không chứa frame
     cùng track với train (đo mức lạc quan do rò rỉ frame).
+    ``mode='stratified_group'``: track rời nhau **và** mỗi lớp đều có mặt ở val
+    (dùng cho Giai đoạn 6 khi cần val sạch mà vẫn đủ 43 lớp).
     """
     from sklearn.model_selection import GroupShuffleSplit, train_test_split
 
@@ -975,6 +977,29 @@ def make_splits(
     elif mode == "group":
         splitter = GroupShuffleSplit(n_splits=1, test_size=val_ratio, random_state=seed)
         train_idx, val_idx = next(splitter.split(indices, groups=np.asarray(tracks)))
+    elif mode == "stratified_group":
+        # Nhóm theo track nhưng bảo đảm MỖI lớp đều có mặt ở val:
+        # lớp c có k_c = max(1, round(val_ratio * số track của lớp)) track vào val,
+        # phần còn lại vào train. Track không bao giờ xuất hiện ở cả hai tập.
+        rng = np.random.default_rng(seed)
+        track_array = np.asarray(tracks)
+        val_tracks: list[str] = []
+        for class_id in range(NUM_CLASSES):
+            class_tracks = sorted(set(track_array[labels == class_id]))
+            if len(class_tracks) < 2:
+                LOG.warning(
+                    "Lớp %d chỉ có %d track → không thể chia đôi, dồn hết vào train",
+                    class_id,
+                    len(class_tracks),
+                )
+                continue
+            k = min(max(1, int(round(val_ratio * len(class_tracks)))), len(class_tracks) - 1)
+            chosen = sorted(rng.choice(class_tracks, size=k, replace=False).tolist())
+            val_tracks.extend(chosen)
+        in_val = np.isin(track_array, np.asarray(val_tracks))
+        train_idx, val_idx = indices[~in_val], indices[in_val]
+        if len(val_idx) == 0 or len(train_idx) == 0:
+            raise RuntimeError("stratified_group tạo ra tập rỗng — kiểm tra dữ liệu/track")
     else:
         raise ValueError(f"mode phải là 'random' hoặc 'group', nhận được {mode!r}")
     return {
@@ -1007,7 +1032,12 @@ def _split_summary(labels: np.ndarray, tracks: Sequence[str], split: dict[str, l
         "n_val": int(len(val_idx)),
         "classes_train": len([c for c in train_counts.values() if c > 0]),
         "classes_val": len([c for c in val_counts.values() if c > 0]),
+        "classes_missing_train": [c for c, v in train_counts.items() if v == 0],
         "classes_missing_val": [c for c, v in val_counts.items() if v == 0],
+        "min_class_train": {
+            "class_id": int(min(train_counts, key=lambda k: train_counts[k])),
+            "count": int(min(train_counts.values())),
+        },
         "min_class_val": {
             "class_id": int(min(val_counts, key=lambda k: val_counts[k])),
             "count": int(min(val_counts.values())),

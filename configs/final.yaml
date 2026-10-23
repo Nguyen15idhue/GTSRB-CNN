@@ -1,0 +1,41 @@
+# =============================================================================
+# FINAL CONFIG — ĐÓNG BĂNG ngày 23/10/2026 (Giai đoạn 6)
+# -----------------------------------------------------------------------------
+# Mô hình cuối: E3 — CNN-B (3 khối conv 32/64/128 + BN + dropout 0,3 + WD 1e-4)
+#               + augmentation nhẹ, 2.201.931 tham số.
+# Split: stratified_group (track train/val rời nhau, val đủ 43/43 lớp)
+#        -> 31.371 train / 7.830 val (seed 42); test 12.630 ảnh giữ nguyên.
+#
+# Lý do chọn (số thật, run tham chiếu):
+#   - Chọn lại trên VAL SẠCH vì val random của Giai đoạn 5 bị rò rỉ frame
+#     (95,22 % ảnh val có frame train cách ±1; xem 5.8).
+#   - cand_e3_sgroup_s42 : val acc 0,983525 | macro-F1 0,970613 (2.201.931 params)
+#   - cand_e4_sgroup_s42 : val acc 0,976373 | macro-F1 0,954453 (399.947 params)
+#   - E3 hơn E4 1,62 điểm % macro-F1 (> 0,3 điểm %) nên chọn E3 theo tiêu chí
+#     val macro-F1; quy tắc "ưu tiên ít tham số" chỉ áp dụng khi chênh < 0,3 điểm %.
+#   - Không dùng test để chọn mô hình dưới bất kỳ hình thức nào.
+#
+# Multi-seed: 42, 123, 2024 (chạy SAU khi commit freeze).
+# Không sửa file này sau khi đã chạy test (nếu buộc phải sửa -> test_final_v2.json).
+# =============================================================================
+experiment:
+  id: final
+  seed: 42
+  notes: "FINAL: CNN-B + BN + dropout 0.3 + WD 1e-4 + aug, split stratified_group (chọn trên val sạch)"
+
+data:
+  split: stratified_group
+
+model:
+  name: cnn_b
+  widths: [32, 64, 128]
+  use_bn: true
+  dropout: 0.3
+  gap: false
+  fc_hidden: 256
+
+augmentation:
+  enabled: true
+
+train:
+  weight_decay: 0.0001

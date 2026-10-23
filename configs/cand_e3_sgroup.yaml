@@ -1,0 +1,23 @@
+# Ứng viên chọn mô hình trên val sạch (Giai đoạn 6) — KHÔNG phải config cuối.
+# E3 (CNN-B + aug) chạy trên split_stratified_group, seed 42.
+experiment:
+  id: cand_e3_sgroup
+  seed: 42
+  notes: "Ứng viên E3 trên split_stratified_group (val sạch track, đủ 43 lớp)"
+
+data:
+  split: stratified_group
+
+model:
+  name: cnn_b
+  widths: [32, 64, 128]
+  use_bn: true
+  dropout: 0.3
+  gap: false
+  fc_hidden: 256
+
+augmentation:
+  enabled: true
+
+train:
+  weight_decay: 0.0001

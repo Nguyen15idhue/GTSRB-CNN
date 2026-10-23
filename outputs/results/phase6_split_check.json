@@ -1,0 +1,99 @@
+{
+  "phase": "6.1",
+  "generated_at": "2026-10-23",
+  "split_file": "outputs\\results\\split_stratified_group.json",
+  "seed": 42,
+  "val_ratio": 0.2,
+  "n_train": 31371,
+  "n_val": 7830,
+  "n_tracks_train": 1046,
+  "n_tracks_val": 261,
+  "val_class_support": {
+    "0": 30,
+    "1": 450,
+    "2": 450,
+    "3": 270,
+    "4": 390,
+    "5": 360,
+    "6": 90,
+    "7": 300,
+    "8": 270,
+    "9": 300,
+    "10": 390,
+    "11": 270,
+    "12": 420,
+    "13": 420,
+    "14": 150,
+    "15": 120,
+    "16": 90,
+    "17": 210,
+    "18": 240,
+    "19": 30,
+    "20": 60,
+    "21": 60,
+    "22": 90,
+    "23": 90,
+    "24": 60,
+    "25": 300,
+    "26": 120,
+    "27": 60,
+    "28": 120,
+    "29": 60,
+    "30": 90,
+    "31": 150,
+    "32": 60,
+    "33": 150,
+    "34": 90,
+    "35": 240,
+    "36": 90,
+    "37": 30,
+    "38": 420,
+    "39": 60,
+    "40": 60,
+    "41": 60,
+    "42": 60
+  },
+  "min_val_support": [
+    30,
+    0
+  ],
+  "passed": 7,
+  "total": 7,
+  "checks": [
+    {
+      "check": "tong_anh",
+      "passed": true,
+      "detail": "31371 + 7830 = 39201 (pool 39.201)"
+    },
+    {
+      "check": "giao_index",
+      "passed": true,
+      "detail": "giao index train/val = 0"
+    },
+    {
+      "check": "giao_track",
+      "passed": true,
+      "detail": "track train 1046 / val 261 / giao 0"
+    },
+    {
+      "check": "du_43_lop",
+      "passed": true,
+      "detail": "val đủ 43/43 lớp; val thiếu []; lớp ít mẫu nhất ở val: (30, 0)"
+    },
+    {
+      "check": "ty_le_val",
+      "passed": true,
+      "detail": "val chiếm 0.1997 (mục tiêu 0,20)"
+    },
+    {
+      "check": "lech_ty_le_lop",
+      "passed": true,
+      "detail": "lệch tỷ lệ lớp lớn nhất = 0.001976 (ngưỡng 0,01)"
+    },
+    {
+      "check": "khong_ro_ri_frame",
+      "passed": true,
+      "detail": "val có frame train ±1: 0/7830; ±5: 0/7830 (kỳ vọng 0 vì track rời nhau)"
+    }
+  ]
+}

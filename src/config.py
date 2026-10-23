@@ -65,6 +65,8 @@ STATS_PATH = RESULTS_DIR / "data_stats.json"
 SPLIT_FILES = {
     "random": RESULTS_DIR / "split_random.json",
     "group": RESULTS_DIR / "split_group.json",
+    # Split chính cho Giai đoạn 6: track rời nhau + mỗi lớp đều có mặt ở val.
+    "stratified_group": RESULTS_DIR / "split_stratified_group.json",
 }
 
 # Hằng số cốt lõi của bài toán.
@@ -78,7 +80,7 @@ PUBLISHED_TEST_COUNT = 12_630
 
 REQUIRED_SECTIONS = ("experiment", "data", "model", "train", "output")
 VALID_MODELS = ("cnn_a", "cnn_b", "cnn_c")
-VALID_SPLITS = ("random", "group")
+VALID_SPLITS = tuple(SPLIT_FILES)
 VALID_OPTIMIZERS = ("adamw", "adam", "sgd")
 VALID_SCHEDULERS = ("cosine", "none")
 VALID_CLASS_WEIGHTS = ("none", "inv_sqrt_freq")
