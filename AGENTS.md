@@ -242,6 +242,7 @@ Nguồn sự thật nằm trong `docs/kehoach/`:
 | `Cac_buoc_thuc_hien_GTSRB_CNN.md` | 13 giai đoạn thi hành + checklist test |
 | `Phan_tich_demo_tren_may_yeu.md` | Đóng gói và demo trên máy cấu hình thấp |
 | `docs/DEMO_DATA.md` | Số ảnh từng tập, vị trí ảnh val, cách xuất thêm ảnh demo |
+| `docs/HUONG_DAN_CHAY_MAY_MOI.md` | Hướng dẫn chạy từ máy trắng (cài đặt → data → train → demo → test) |
 | `*.docx` | Bản kế hoạch ban đầu, chỉ để tham khảo |
 
 **Quy tắc**

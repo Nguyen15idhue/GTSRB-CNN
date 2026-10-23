@@ -1,5 +1,10 @@
 # PHÂN TÍCH: HUẤN LUYỆN TRÊN MÁY MẠNH — DEMO TRÊN MÁY YẾU HƠN
 
+> **Tài liệu thay thế để chạy thực tế:** `docs/HUONG_DAN_CHAY_MAY_MOI.md` — hướng dẫn từng bước
+> từ máy trắng (cài đặt → dữ liệu → train → demo → test), dễ làm theo hơn tài liệu phân tích dưới đây.
+> Tài liệu này giữ lại để tham khảo phân tích đóng gói/demo trên máy yếu.
+
+
 | Thông tin | Giá trị |
 |---|---|
 | Môn học | Học sâu — 12INF028 |
