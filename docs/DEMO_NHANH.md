@@ -4,6 +4,8 @@ Bản ngắn: **giải nén → cài thư viện → chạy Streamlit → demo**
 
 ## 1. Cần mang theo
 
+> Nếu bạn muốn dùng **git clone** thay vì bundle: xem `docs/CHAY_NHANH_SAU_CLONE.md`.
+
 Một file: **`GTSRB_demo_bundle.zip`** (~15 MB) — xin từ máy có model, hoặc tạo bằng
 `python tests/package_demo.py`. Trong đó đã có model, báo cáo và ảnh demo.
 
