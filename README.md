@@ -138,6 +138,26 @@ Nhấn Ctrl+C để dừng. Repo đã có `.streamlit/config.toml` tắt telemet
 email = ""
 ```
 
+### Ảnh để demo lấy ở đâu
+
+| Nguồn | Đường dẫn | Số lượng | Dùng cho |
+|---|---|---|---|
+| Ảnh mẫu trong app | ô "Hoặc chọn ảnh mẫu" | 5 | demo nhanh, không cần file |
+| Bộ xuất sẵn | `outputs/demo_images/` (PNG) + `demo_manifest.csv` | 16 | upload trực tiếp, có nhãn |
+| Validation sạch | theo `split_stratified_group.json` (val) | 7.830 | demo / kiểm tra |
+| Test chính thức | `data/gtsrb/GTSRB/Final_Test/Images/*.ppm` + `GT-final_test.csv` | 12.630 | demo ảnh "chưa từng train" |
+| Ảnh ngoài phân phối | `external_test/` + `manifest.csv` | 11 | demo từ chối/OOD |
+
+Tạo lại bộ ảnh demo (PNG, mỗi lớp 1 ảnh, kèm nhãn):
+
+```powershell
+python tests/export_demo_images.py --split val  --n 8 --out outputs/demo_images
+python tests/export_demo_images.py --split test --n 8 --out outputs/demo_images
+```
+
+> Ảnh val/test chỉ dùng để **demo**, không dùng để chọn lại mô hình hay chỉnh ngưỡng.
+> `outputs/demo_images/` bị gitignore (không commit ảnh dữ liệu).
+
 ### Biển Việt Nam / ngoài 43 lớp
 
 Mô hình chỉ có 43 lớp biển Đức. Biển Việt Nam (cấm dừng/đỗ, cấm rẽ, biển chữ…) **không có lớp tương ứng** nên app sẽ trả "không xác định" hoặc đoán sai. Đây là hành vi đúng theo phạm vi, không phải lỗi app. Muốn nhận diện biển Việt Nam cần bộ dữ liệu và mô hình riêng.

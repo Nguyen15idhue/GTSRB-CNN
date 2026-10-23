@@ -9,6 +9,8 @@ __pycache__/
 # Dữ liệu và artifact lớn (không commit)
 data/
 outputs/runs/
+# ảnh GTSRB xuất ra để demo, không commit
+outputs/demo_images/
 *.pt
 *.pth
 *.npy

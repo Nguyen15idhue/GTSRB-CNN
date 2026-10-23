@@ -72,6 +72,10 @@ def sidebar(run_dir: Path, tau: float) -> None:
                    "không phải bộ phát hiện OOD.")
         st.divider()
         st.caption("Ảnh nên crop quanh biển. Ảnh cảnh rộng có biển nhỏ thường bị từ chối hoặc sai.")
+        st.caption(
+            "Ảnh demo có sẵn: `outputs/demo_images/` — 16 ảnh PNG kèm nhãn trong "
+            "`demo_manifest.csv` (tạo bằng `python tests/export_demo_images.py`)."
+        )
 
 
 def render_prediction(prediction: dict[str, Any], tau: float) -> None:

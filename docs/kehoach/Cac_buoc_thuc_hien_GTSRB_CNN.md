@@ -1246,7 +1246,9 @@ Làm đúng ba điểm trên sẽ biến demo từ "trình diễn may rủi" th�
 >
 > **Kết quả:** **9/9 PASS**. Thời gian từ upload đến khi hiện kết quả: **median 0,354 s** (2 lần đo; gồm upload + Streamlit rerun + render — khác với latency model-only đã báo ở 6.1). Screenshot: `outputs/figures/11_ui_01_home.png` … `11_ui_09_missing_checkpoint.png`, bản ghép `11_ui_overview.png` dùng trong báo cáo (Hình 6.1). Chromium 141.0.7390.37.
 >
-> **Hạn chế:** chỉ test trên Chromium headless, chưa test Firefox/WebKit; chưa có video demo (Giai đoạn 11).\n>\n> **Ghi nhận từ người dùng:** thử biển Việt Nam (cấm dừng/đỗ) → app trả “không xác định” (conf 0,275) — đúng hành vi ngoài phạm vi; đã bổ sung cảnh báo phạm vi, expander giải thích và 2 ảnh mẫu GTSRB (50 km/h, STOP) để thử đúng cách.
+> **Hạn chế:** chỉ test trên Chromium headless, chưa test Firefox/WebKit; chưa có video demo (Giai đoạn 11).
+>
+> **Ảnh demo:** `python tests/export_demo_images.py --split val|test --n 8` xuất PNG + `demo_manifest.csv` vào `outputs/demo_images/` (gitignore); app cũng có 5 ảnh mẫu chọn sẵn.\n>\n> **Ghi nhận từ người dùng:** thử biển Việt Nam (cấm dừng/đỗ) → app trả “không xác định” (conf 0,275) — đúng hành vi ngoài phạm vi; đã bổ sung cảnh báo phạm vi, expander giải thích và 2 ảnh mẫu GTSRB (50 km/h, STOP) để thử đúng cách.
 
 > **(i) Chưa làm:** Giai đoạn 11–12 (clean-room, README, báo cáo, slide, đóng gói/nộp) vẫn **☐** — xem bảng tiến độ. Đây là phần còn thiếu lớn nhất trước khi nghiệm thu.
 
