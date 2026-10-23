@@ -23,7 +23,8 @@ kèm baseline, ablation, đánh giá test **một lần**, phân tích lỗi và
 ## 1.1. Chạy trên máy mới (từ số 0)
 
 Bản ngắn 1 trang (chỉ demo, 5 phút): **`docs/DEMO_NHANH.md`** — dùng bundle có sẵn.
-Bản ngắn cho **git clone** (không train): **`docs/CHAY_NHANH_SAU_CLONE.md`**.
+Bản ngắn cho **git clone** (không train): **`docs/CHAY_NHANH_SAU_CLONE.md`** — repo đã kèm checkpoint
+`checkpoints/final_s42/best.pt` nên clone xong chỉ cần cài `requirements-demo.txt` rồi chạy.
 Hướng dẫn đầy đủ, copy–paste được: **`docs/HUONG_DAN_CHAY_MAY_MOI.md`**
 (cài Python/PyTorch CUDA → tải dữ liệu → train → demo → test), kèm bảng lỗi thường gặp
 và thời gian tham khảo. Bản ngắn: mục 3–5 dưới đây.

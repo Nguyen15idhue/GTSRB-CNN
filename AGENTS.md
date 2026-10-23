@@ -227,6 +227,7 @@ epoch,lr,train_loss,train_acc,val_loss,val_acc,val_macro_f1,epoch_time_s,gpu_mem
 - Ví dụ: `feat: add GTSRB dataloader with cache`, `exp: run e3 with augmentation`.
 - **Chỉ commit/push khi được yêu cầu rõ ràng.**
 - Không commit: `data/`, `.venv/`, `outputs/runs/`, `*.pt`, `*.npy`, `.env`.
+  **Ngoại lệ có chủ đích:** `checkpoints/final_s42/best.pt` và `checkpoints/GTSRB_demo_bundle.zip` (~24 MB) được commit để `git clone` chạy demo ngay; không thêm checkpoint/zip nào khác.
 - Không force push, không rewrite lịch sử đã push.
 - Trước khi commit: chạy smoke test liên quan.
 

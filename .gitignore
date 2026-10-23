@@ -35,3 +35,7 @@ tmp/
 # Bộ demo đóng gói (chứa checkpoint) — không commit
 outputs/GTSRB_demo_bundle/
 outputs/GTSRB_demo_bundle.zip
+
+# Ngoại lệ: checkpoint demo được commit để clone chạy ngay
+!checkpoints/**/*.pt
+!checkpoints/**/*.zip

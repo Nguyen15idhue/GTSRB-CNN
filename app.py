@@ -23,7 +23,15 @@ from PIL import Image
 from src.config import PROJECT_ROOT
 from src.predict import Predictor, load_tau, validate_image_bytes
 
-RUN_DIR = Path(os.environ.get("GTSRB_RUN_DIR") or PROJECT_ROOT / "outputs" / "runs" / "final_s42")
+_DEFAULT_RUNS = (
+    PROJECT_ROOT / "outputs" / "runs" / "final_s42",
+    PROJECT_ROOT / "checkpoints" / "final_s42",
+)
+RUN_DIR = (
+    Path(os.environ["GTSRB_RUN_DIR"])
+    if os.environ.get("GTSRB_RUN_DIR")
+    else next((path for path in _DEFAULT_RUNS if (path / "best.pt").is_file()), _DEFAULT_RUNS[0])
+)
 THRESHOLD_PATH = PROJECT_ROOT / "outputs" / "results" / "threshold.json"
 REPORT_PATH = PROJECT_ROOT / "outputs" / "results" / "test_report.json"
 MULTISEED_PATH = PROJECT_ROOT / "outputs" / "results" / "multiseed.json"

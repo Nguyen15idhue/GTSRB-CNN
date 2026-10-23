@@ -32,27 +32,27 @@ khoảng **30–45 phút** là có demo + kết quả. Không cần biết trư�
 | Có sẵn trong repo | Thiếu — phải tự thêm |
 |---|---|
 | `src/`, `app.py`, `configs/` (kể cả `final.yaml`), `tests/` | `.venv` + thư viện Python |
-| `.streamlit/config.toml`, `requirements.txt`, `requirements-demo.txt` | `data/` GTSRB (1,4 GB) |
-| `docs/bao_cao/BAO_CAO.docx` (mở đọc ngay) | `outputs/runs/*/best.pt` (checkpoint, 8,8 MB) |
+| **`checkpoints/final_s42/best.pt`** + `checkpoints/GTSRB_demo_bundle.zip` | — |
+| `.streamlit/config.toml`, `requirements.txt`, `requirements-demo.txt` | `data/` GTSRB (1,4 GB) — chỉ cần nếu train |
+| `docs/bao_cao/BAO_CAO.docx` (mở đọc ngay) | `outputs/runs/*/best.pt` — chỉ cần nếu tự train |
 | `outputs/results/`: `test_report.json`, `test_final.json`, `summary.csv`, `multiseed.json`, `threshold.json`, `predictions_test_final.csv` | `outputs/demo_images/` (tuỳ chọn) |
 | `external_test/` 11 ảnh + manifest, `outputs/figures/` | Playwright Chromium (tuỳ chọn, nếu test UI) |
 
 > Bị gitignore: `data/`, `outputs/runs/`, `outputs/demo_images/`, `outputs/GTSRB_demo_bundle.zip`, `.venv*`.
-> Dung lượng clone: ~68 MB (kể cả `.git`); ~29 MB nội dung.
+> Dung lượng clone: **~75 MB** (kể cả `.git`), trong đó ~24 MB là checkpoint + bundle.
 
 ### Ba mức cài đặt
 
 **A. Chỉ đọc báo cáo — không cần cài gì:** mở `docs/bao_cao/BAO_CAO.docx`.
 
-**B. Chỉ demo (không train, không data) — ~5 phút.** Cần Python 3.12 + **copy `best.pt`** (từ máy cũ
-hoặc từ `GTSRB_demo_bundle.zip`; không có trong git):
+**B. Chỉ demo (không train, không data) — ~5 phút.** Chỉ cần Python 3.12; repo đã có checkpoint
+`checkpoints/final_s42/best.pt`, app tự dùng:
 
 ```powershell
 py -3.12 -m venv .venv
 .\.venv\Scripts\Activate.ps1
 pip install -r requirements-demo.txt          # torch CPU, ~1 GB, không cần GPU
-# đặt checkpoint tại: outputs\runs\final_s42\best.pt
-# (hoặc nơi khác + set GTSRB_RUN_DIR trỏ tới thư mục có best.pt)
+# không cần copy checkpoint; nếu muốn dùng file khác: set GTSRB_RUN_DIR
 streamlit run app.py
 ```
 
@@ -89,11 +89,11 @@ streamlit run app.py
 ### Tóm tắt một dòng
 
 - **Clone + đọc báo cáo:** không cần cài gì.
-- **Clone + demo:** Python + `requirements-demo.txt` + **copy `best.pt`**.
+- **Clone + demo:** Python + `requirements-demo.txt` (repo đã kèm checkpoint).
 - **Clone + train/eval:** Python + torch cu128 + requirements + `--download --prepare`.
 
-> Muốn “clone xong chạy Streamlit luôn” mà không copy checkpoint: dùng `GTSRB_demo_bundle.zip`
-> (mục 8.1) hoặc đính kèm `best.pt` vào GitHub Release — **không** commit checkpoint vào git.
+> Repo đã commit sẵn checkpoint + bundle trong `checkpoints/` (theo yêu cầu) để clone xong chạy ngay;
+> đây là ngoại lệ có chủ đích, không thêm file nhị phân nào khác.
 
 ---
 
