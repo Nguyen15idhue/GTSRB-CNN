@@ -502,7 +502,7 @@ ch6 = f"""## Chương 6 — Demo và kết luận
 
 {image(FIG / '11_ui_overview.png', 'Hình 6.1. Giao diện Streamlit chạy thật (Playwright, Chromium headless): trang chủ, kết quả đúng, từ chối ảnh không biển, lỗi file hỏng')}
 
-Giao diện được kiểm thử **end-to-end bằng Playwright** (`tests/e2e_app.py`): tự khởi động Streamlit,
+App hiển thị **cảnh báo phạm vi** ngay đầu trang: chỉ 43 lớp biển Đức; biển Việt Nam (ví dụ cấm dừng/đỗ) không có lớp tương ứng nên sẽ bị trả “không xác định” hoặc đoán sai — có expander giải thích riêng. Giao diện được kiểm thử **end-to-end bằng Playwright** (`tests/e2e_app.py`): tự khởi động Streamlit,
 upload ảnh thật, kiểm tra top-3, cảnh báo "không xác định", 3 loại lỗi, tab thông tin, ảnh mẫu và
 trường hợp thiếu checkpoint. Kết quả **9/9 PASS**; thời gian từ upload đến khi hiện kết quả
 **median 0,354 s** (2 lần đo, gồm upload + Streamlit rerun + render). Ảnh chụp:
@@ -554,7 +554,7 @@ ch6 += f"""
    `stratified_group`, nhưng split này vẫn là thiết kế riêng, chưa được chuẩn hóa trong tài liệu GTSRB.
 3. **Sai số ngoài phân phối còn lớn**: biển nước ngoài/biển chữ có thể bị gán nhãn Đức với confidence cao;
    τ không phải bộ phát hiện OOD (1/4 ảnh không biển lọt).
-4. **Chỉ 43 lớp biển Đức**, ảnh 64×64; không xử lý cảnh có nhiều biển hoặc biển quá nhỏ.
+4. **Chỉ 43 lớp biển Đức**, ảnh 64×64; không xử lý cảnh có nhiều biển hoặc biển quá nhỏ. Thử với biển Việt Nam (cấm dừng/đỗ) cho thấy app trả “không xác định” hoặc đoán sai — đúng như giới hạn này.
 5. **Một lần test duy nhất** đúng kỷ luật, nhưng nghĩa là không có ước lượng độ bất định của chính test;
    multi-seed chỉ đo biến thiên huấn luyện trên val.
 6. **mean/std** tính trên train của split random nhưng dùng cho mô hình cuối (split stratified-group) —

@@ -32,7 +32,9 @@ FOOTER = (
     "— mô hình có thể sai, đặc biệt với ảnh ngoài phân phối."
 )
 SAMPLES = {
-    "Ảnh test GTSRB (biển 16)": "external_test/ext_01_gtsrb_test_00000.png",
+    "Ảnh test GTSRB — biển 16 (cấm xe >3,5 t)": "external_test/ext_01_gtsrb_test_00000.png",
+    "Ảnh test GTSRB — biển 50 km/h": "data/gtsrb/GTSRB/Final_Test/Images/00034.ppm",
+    "Ảnh test GTSRB — biển STOP": "data/gtsrb/GTSRB/Final_Test/Images/00093.ppm",
     "Biển Hàn Quốc 30 km/h (đã crop)": "external_test/ext_03_kr_speed30_crop.jpg",
     "Cảnh đường không có biển": "external_test/ext_09_road_hills.jpg",
 }
@@ -77,7 +79,8 @@ def render_prediction(prediction: dict[str, Any], tau: float) -> None:
     if prediction["unknown"]:
         st.warning(
             f"**Không xác định** — độ tin cậy cao nhất {prediction['max_prob']:.3f} "
-            f"< τ = {tau:.3f}. Ảnh có thể không chứa biển báo GTSRB hoặc quá mờ/tối."
+            f"< τ = {tau:.3f}. Ảnh có thể là biển **ngoài 43 lớp GTSRB** (ví dụ biển Việt Nam), "
+            "hoặc quá mờ/tối, hoặc crop chưa sát biển."
         )
         st.caption(f"Lớp gần nhất nếu buộc phải chọn: **{top['name_vi']}** ({top['prob'] * 100:.1f} %).")
     else:
@@ -97,9 +100,10 @@ def tab_predict(predictor: Predictor, tau: float) -> None:
     uploaded = st.file_uploader(
         "Tải ảnh biển báo (JPG/JPEG/PNG, ≤ 20 MB)",
         type=["jpg", "jpeg", "png"],
-        help="Nên crop quanh biển báo. Ảnh lớn hơn 20 MB sẽ bị chặn.",
+        help="Crop sát quanh biển, tránh watermark/chữ/QR. Ảnh lớn hơn 20 MB sẽ bị chặn.",
     )
-    sample_name = st.selectbox("Hoặc chọn ảnh mẫu có sẵn", ["(không dùng ảnh mẫu)"] + list(SAMPLES))
+    available = {key: value for key, value in SAMPLES.items() if (PROJECT_ROOT / value).is_file()}
+    sample_name = st.selectbox("Hoặc chọn ảnh mẫu có sẵn", ["(không dùng ảnh mẫu)"] + list(available))
     image: Image.Image | None = None
     source = ""
 
@@ -110,8 +114,8 @@ def tab_predict(predictor: Predictor, tau: float) -> None:
         except ValueError as exc:
             st.error(f"Không đọc được ảnh: {exc}")
             return
-    elif sample_name in SAMPLES:
-        path = PROJECT_ROOT / SAMPLES[sample_name]
+    elif sample_name in available:
+        path = PROJECT_ROOT / available[sample_name]
         if path.is_file():
             image = Image.open(path).convert("RGB")
             source = path.name
@@ -158,6 +162,14 @@ def tab_about(tau: float) -> None:
         f"Ngưỡng τ = **{tau:.4f}** là cơ chế từ chối theo confidence. Trong thử nghiệm OOD, "
         "1/4 ảnh không có biển vẫn bị nhận nhầm với confidence cao — không nên xem τ là bộ lọc OOD."
     )
+    with st.expander("Vì sao biển Việt Nam không phân loại được?"):
+        st.markdown(
+            "GTSRB chỉ có **43 lớp biển Đức** (giới hạn tốc độ, cấm vượt, ưu tiên, cảnh báo…). "
+            "Biển Việt Nam như 'cấm dừng/đỗ', 'cấm rẽ trái' hay biển chữ không nằm trong 43 lớp này, "
+            "nên không có nhãn đúng để dự đoán — kể cả khi nhìn giống biển Đức. "
+            "Khi đó app nên trả 'không xác định'; nếu vẫn đoán, đó là **domain shift** đã nêu ở Chương 5 "
+            "của báo cáo. Muốn nhận diện biển Việt Nam cần dữ liệu và mô hình riêng, không phải bài này."
+        )
     with st.expander("43 lớp và hạn chế"):
         st.markdown(
             "Mô hình chỉ biết 43 lớp biển Đức. Biển nước khác, ảnh quá mờ/tối, biển quá nhỏ hoặc "
@@ -170,6 +182,11 @@ def main() -> None:
     st.set_page_config(page_title="GTSRB CNN — demo", page_icon="🚸", layout="wide")
     st.title("Phân loại biển báo giao thông Đức (GTSRB)")
     st.caption("CNN tự xây dựng · 43 lớp · ảnh 64×64 · demo học thuật")
+    st.info(
+        "Mô hình chỉ biết **43 lớp biển ĐỨC (GTSRB)**. Biển Việt Nam hoặc thiết kế khác "
+        "**không có lớp tương ứng** nên sẽ bị trả 'không xác định' hoặc đoán sai — "
+        "đây là giới hạn đã biết, không phải lỗi app. Hãy thử ảnh mẫu GTSRB bên dưới."
+    )
 
     if not (RUN_DIR / "best.pt").is_file():
         st.error(

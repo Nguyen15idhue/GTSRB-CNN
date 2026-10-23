@@ -151,18 +151,19 @@ def main() -> int:
             # 1) Trang chủ + footer + sidebar
             open_app(page)
             screenshot(page, "01_home")
+            banner = page.get_by_text("43 lớp biển ĐỨC", exact=False).count() > 0
             check(
                 "home_footer_sidebar",
                 page.get_by_text("Test accuracy", exact=False).count() > 0
-                and page.get_by_text("không dùng cho quyết định giao thông thực tế", exact=False).count() > 0,
-                "tiêu đề, sidebar (test accuracy) và footer hiển thị",
+                and page.get_by_text("không dùng cho quyết định giao thông thực tế", exact=False).count() > 0
+                and banner,
+                "tiêu đề, sidebar (test accuracy), footer và cảnh báo phạm vi 43 lớp Đức",
             )
 
             # 2) Ảnh test GTSRB → lớp 16
             started = upload(page, ROOT / "external_test/ext_01_gtsrb_test_00000.png")
-            wait_result(page)
+            expect(page.get_by_text("1. Cấm xe trên 3,5 tấn", exact=False).first).to_be_visible(timeout=30000)
             latencies.append(time.perf_counter() - started)
-            expect(page.get_by_text("Cấm xe trên 3,5 tấn", exact=False).first).to_be_visible()
             page.wait_for_timeout(400)
             bars = page.locator('[role="progressbar"]')
             top1 = page.get_by_text("1. Cấm xe trên 3,5 tấn", exact=False).count() > 0
@@ -173,9 +174,8 @@ def main() -> int:
             # 3) Biển Hàn Quốc 30 (crop) → lớp 1
             open_app(page)
             started = upload(page, ROOT / "external_test/ext_03_kr_speed30_crop.jpg")
-            wait_result(page)
+            expect(page.get_by_text("1. Giới hạn tốc độ 30 km/h", exact=False).first).to_be_visible(timeout=30000)
             latencies.append(time.perf_counter() - started)
-            expect(page.get_by_text("Giới hạn tốc độ 30 km/h", exact=False).first).to_be_visible()
             check("upload_bien_han_30", True, "top-1 = Giới hạn tốc độ 30 km/h")
             screenshot(page, "03_result_kr30")
 

@@ -1,10 +1,10 @@
 {
-  "generated_at": "2026-10-23T18:47:06",
+  "generated_at": "2026-10-23T18:53:25",
   "base_url": "http://127.0.0.1:8765",
   "browser": "chromium (playwright)",
   "latency_ui_seconds": {
-    "median": 0.369,
-    "max": 0.369,
+    "median": 0.395,
+    "max": 0.395,
     "n": 2,
     "scope": "từ lúc set_input_files đến khi kết quả hiển thị (gồm upload + Streamlit rerun + render)"
   },
@@ -26,7 +26,7 @@
     {
       "check": "home_footer_sidebar",
       "passed": true,
-      "detail": "tiêu đề, sidebar (test accuracy) và footer hiển thị"
+      "detail": "tiêu đề, sidebar (test accuracy), footer và cảnh báo phạm vi 43 lớp Đức"
     },
     {
       "check": "upload_anh_test",

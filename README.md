@@ -138,6 +138,10 @@ Nhấn Ctrl+C để dừng. Repo đã có `.streamlit/config.toml` tắt telemet
 email = ""
 ```
 
+### Biển Việt Nam / ngoài 43 lớp
+
+Mô hình chỉ có 43 lớp biển Đức. Biển Việt Nam (cấm dừng/đỗ, cấm rẽ, biển chữ…) **không có lớp tương ứng** nên app sẽ trả "không xác định" hoặc đoán sai. Đây là hành vi đúng theo phạm vi, không phải lỗi app. Muốn nhận diện biển Việt Nam cần bộ dữ liệu và mô hình riêng.
+
 ## 8. Hạn chế và cảnh báo sử dụng
 
 - Mô hình chỉ biết **43 lớp biển Đức**. Ảnh biển nước khác (Mỹ/Hàn/Philippines) là **domain
