@@ -1,0 +1,53 @@
+{
+  "phase": 7,
+  "generated_at": "2026-10-23",
+  "passed": 9,
+  "total": 9,
+  "checks": [
+    {
+      "check": "per_class_support_12630",
+      "passed": true,
+      "detail": "43 lớp, tổng support = 12630"
+    },
+    {
+      "check": "confusion_png",
+      "passed": true,
+      "detail": "confusion_matrix.png 59 KB; zoom 15 lớp 57 KB (đã mở kiểm tra)"
+    },
+    {
+      "check": "top10_khong_cheo",
+      "passed": true,
+      "detail": "10 cặp, không có (i,i)"
+    },
+    {
+      "check": "moi_cap_du_3_anh",
+      "passed": true,
+      "detail": "n_examples = ['3', '3', '3', '3', '3', '3', '3', '3', '3', '3']"
+    },
+    {
+      "check": "tertile_3x3",
+      "passed": true,
+      "detail": "9 dòng = 3 biến × 3 nhóm, đủ error_rate"
+    },
+    {
+      "check": "12_mau_dung_nhan",
+      "passed": true,
+      "detail": "12 mẫu, path tồn tại và true_id khớp predictions.csv = True"
+    },
+    {
+      "check": "quan_sat_khac_gia_thuyet",
+      "passed": true,
+      "detail": "12/12 mẫu có 2 cột khác nhau, đều không rỗng"
+    },
+    {
+      "check": "ood_>=3_khong_bien",
+      "passed": true,
+      "detail": "11 ảnh OOD; 4 ảnh không biển, 3 bị τ từ chối; các ảnh còn lại dự đoán: [('ext_08_road_autumn.jpg', 'Nhường đường', '0.99595')]"
+    },
+    {
+      "check": "tau_tren_val",
+      "passed": true,
+      "detail": "τ=0.9462 chọn trên val stratified_group (final_s42), KHÔNG dùng test/demo; acceptance=0.9499"
+    }
+  ]
+}
