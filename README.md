@@ -122,6 +122,22 @@ app.py          demo Streamlit
   `docs/kehoach/Cac_buoc_thuc_hien_GTSRB_CNN.md`.
 - **Không** tái tạo test nếu không thực sự cần: test chỉ có giá trị khi chỉ dùng một lần.
 
+### Lần đầu chạy Streamlit bị hỏi Email
+
+Streamlit hỏi email ở lần chạy đầu để đăng ký nhận tin. **Nhấn Enter để bỏ trống** — sau đó màn hình sẽ hiện:
+
+```
+Local URL: http://localhost:8501
+```
+
+Nhấn Ctrl+C để dừng. Repo đã có `.streamlit/config.toml` tắt telemetry; nếu vẫn bị hỏi, tạo
+`~/.streamlit/credentials.toml` với nội dung:
+
+```toml
+[general]
+email = ""
+```
+
 ## 8. Hạn chế và cảnh báo sử dụng
 
 - Mô hình chỉ biết **43 lớp biển Đức**. Ảnh biển nước khác (Mỹ/Hàn/Philippines) là **domain

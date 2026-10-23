@@ -1,0 +1,7 @@
+# Cấu hình Streamlit cho repo này
+[browser]
+gatherUsageStats = false
+
+[server]
+headless = false
+port = 8501

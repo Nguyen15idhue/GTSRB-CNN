@@ -1,10 +1,10 @@
 {
-  "generated_at": "2026-10-23T18:42:01",
+  "generated_at": "2026-10-23T18:47:06",
   "base_url": "http://127.0.0.1:8765",
   "browser": "chromium (playwright)",
   "latency_ui_seconds": {
-    "median": 0.366,
-    "max": 0.366,
+    "median": 0.369,
+    "max": 0.369,
     "n": 2,
     "scope": "từ lúc set_input_files đến khi kết quả hiển thị (gồm upload + Streamlit rerun + render)"
   },

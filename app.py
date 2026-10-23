@@ -124,7 +124,7 @@ def tab_predict(predictor: Predictor, tau: float) -> None:
 
     left, right = st.columns([1, 1.2], gap="large")
     with left:
-        st.image(image, caption=f"Ảnh đầu vào: {source}", use_container_width=True)
+        st.image(image, caption=f"Ảnh đầu vào: {source}", width="stretch")
     with right:
         prediction = predictor.predict(image, k=3, tau=tau)
         render_prediction(prediction, tau)
@@ -152,7 +152,7 @@ def tab_about(tau: float) -> None:
                 ],
             },
             hide_index=True,
-            use_container_width=True,
+            width="stretch",
         )
     st.info(
         f"Ngưỡng τ = **{tau:.4f}** là cơ chế từ chối theo confidence. Trong thử nghiệm OOD, "
