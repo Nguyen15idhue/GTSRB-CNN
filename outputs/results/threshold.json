@@ -1,0 +1,8 @@
+{
+  "tau": 0.9461585,
+  "percentile": 5.0,
+  "acceptance_in_distribution": 0.9499361430395913,
+  "n_val": 7830,
+  "chosen_on": "val stratified_group (final_s42), KHÔNG dùng test/demo",
+  "method": "τ = phân vị 5% của max-prob trên val; reject nếu max-prob < τ"
+}

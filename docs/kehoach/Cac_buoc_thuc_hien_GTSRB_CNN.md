@@ -47,7 +47,7 @@
 | 4 | Baseline | D3 | G2 | ☑ | `outputs/runs/e0a_majority/metrics.json`, `outputs/runs/e0b_hog_svc/{metrics.json,model.joblib}`, `outputs/results/phase4_check.json` |
 | 5 | CNN & thí nghiệm chính | D4–D6 | G2 | ☑ | `outputs/runs/e1_cnna_s42` … `e7_classweight_s42`, `outputs/runs/diag_e3_group_s42` (chẩn đoán), `outputs/results/summary.csv`, `phase5_check.json`, `leak_delta.json`, `outputs/figures/05_experiment_comparison.png`, 7 config `configs/e*.yaml` |
 | 6 | Chốt mô hình, multi-seed, test 1 lần | D7 | G3 | ☑ | `configs/final.yaml` (commit `8f61c5a`), `outputs/results/split_stratified_group.json`, `phase6_split_check.json`, `multiseed.json`, `test_report.json`, `test_final.json`, `test_runs.log`, `phase6_check.json`, runs `final_s42/s123/s2024` |
-| 7 | Đánh giá sâu & phân tích lỗi | D8–D9 | G4 | ☐ | |
+| 7 | Đánh giá sâu & phân tích lỗi | D8–D9 | G4 | ☑ | `outputs/results/{per_class_test.csv,top_confusions_test.csv,error_rates_tertiles.csv,error_samples_table.csv,ood_results.csv,threshold.json,error_report.json}`, `outputs/figures/07_*.png`, `src/error_analysis.py`, `external_test/` |
 | 8 | Demo dữ liệu mới | D10 | G4 | ☐ | |
 | 9 | Tái lập & đóng gói | D11 | G5 | ☐ | |
 | 10 | Báo cáo | D12–D13 | G5 | ☐ | |
@@ -942,7 +942,7 @@ python -m src.evaluate --run outputs/runs/<final>_s42 --split test --confirm-fre
 > | hash checkpoint | `9c4dd0d677d655e25f36ab2b29f6d8c73e7754056b2ba93c398030b85cbcbe33` |
 > | commit hash | `8f61c5a6cc20b08291cf8bb89e13a9208ab804ad` (freeze) |
 > | Trạng thái | ☑ Đạt ☐ Đạt có điều kiện ☐ Chưa đạt |
-> | Ghi chú | • **Không tune trên test**: test chỉ chạy **1 lần** sau commit freeze (`test_runs.log` có đúng 1 dòng), chạy lại bị từ chối trước khi ghi file.<br>• **Test > val**: không phải lỗi metric — accuracy tính lại từ `predictions.csv` khớp từng bit (0,985590); nguyên nhân là **phân phối**: ảnh test GTSRB được cắt sát biển, độ phân giải lớn hơn, ít ảnh biển nhỏ/mờ; val stratified-group còn chứa track khó (biển nhỏ, ngược sáng). Số định lượng ở Giai đoạn 7 (error rate theo tertile).<br>• Không có lớp nào vắng ở test (43/43), nên macro-F1/43 = macro-F1 trên lớp có mặt.<br>• `test_final.json` và `test_report.json` cùng nội dung; đã bổ sung `top3_accuracy` bằng cách tính lại từ cột `top3` của `predictions.csv` (cùng lần chạy test, **không chạy lại model**) — ghi rõ trong `postprocess_note`. |
+> | Ghi chú | • **Không tune trên test**: test chỉ chạy **1 lần** sau commit freeze (`test_runs.log` có đúng 1 dòng), chạy lại bị từ chối trước khi ghi file.<br>• **Test > val**: đã kiểm tra lại metric — accuracy tính lại từ `predictions.csv` khớp từng bit (0,985590), nên **không phải lỗi tính**. Chênh lệch nhỏ (+0,47 điểm % acc so với mean 3 seed; +0,21 điểm % so với seed 42), cỡ **1,5 lần std giữa seed** (0,31 điểm %), và phân phối ảnh gần như trùng nhau (median ROI 0,5639 vs 0,5625; blur 0,0023 vs 0,0022; brightness 0,338 vs 0,325) → **không có bằng chứng** về khác biệt hệ thống; chỉ ghi nhận, không suy diễn nguyên nhân.<br>• Không có lớp nào vắng ở test (43/43), nên macro-F1/43 = macro-F1 trên lớp có mặt.<br>• `test_final.json` và `test_report.json` cùng nội dung; đã bổ sung `top3_accuracy` bằng cách tính lại từ cột `top3` của `predictions.csv` (cùng lần chạy test, **không chạy lại model**) — ghi rõ trong `postprocess_note`. |
 >
 > ### 6.6.1. Nhật ký thực hiện (todos)
 >
@@ -1028,15 +1028,17 @@ Có đủ bảng/hình cho Chương 4–5: per-class report, confusion matrix, t
 
 ### 7.5. Checklist test
 
-- [ ] Bảng per-class có `support` cộng lại = 12.630.
-- [ ] `confusion_matrix.png` mở được, nhãn trục đọc được.
-- [ ] Top 10 cặp nhầm không chứa cặp `(i, i)`.
-- [ ] Mỗi cặp nhầm có ≥ 3 ảnh ví dụ (nếu có).
-- [ ] 3 biểu đồ error rate theo tertile có trục và số liệu.
-- [ ] 10 ảnh sai: mở từng ảnh, xác nhận nhãn thật đúng theo `predictions.csv`.
-- [ ] Trong bảng 10 mẫu, cột "quan sát" khác cột "giả thuyết".
-- [ ] OOD: có ít nhất 3 ảnh không có biển báo, ghi rõ model dự đoán gì.
-- [ ] Đã thử ngưỡng τ và ghi acceptance/rejection rate.
+- [x] Bảng per-class có `support` cộng lại = 12.630. → 43 dòng, tổng support **12.630** (`per_class_test.csv`)
+- [x] `confusion_matrix.png` mở được, nhãn trục đọc được. → `outputs/runs/final_s42/eval_test/confusion_matrix.png` (43×43, chuẩn hóa theo hàng) + bản zoom `figures/07_confusion_zoom15.png` đã mở kiểm tra
+- [x] Top 10 cặp nhầm không chứa cặp `(i, i)`. → 10 cặp, **không có** `(i, i)` (`top_confusions_test.csv`)
+- [x] Mỗi cặp nhầm có ≥ 3 ảnh ví dụ (nếu có). → **10/10 cặp đều có 3 ảnh** (`n_examples = 3`), lưới `07_top_pairs.png`
+- [x] 3 biểu đồ error rate theo tertile có trục và số liệu. → `07_error_rates.png`: 3 subplot có nhãn trục + % trên cột; số trong `error_rates_tertiles.csv`
+- [x] 10 ảnh sai: mở từng ảnh, xác nhận nhãn thật đúng theo `predictions.csv`. → đã mở lưới `07_error_samples.png` (12 ảnh), đối chiếu path + `true_id` với `predictions.csv`
+- [x] Trong bảng 10 mẫu, cột "quan sát" khác cột "giả thuyết". → `error_samples_table.csv`: 12 dòng, 2 cột riêng `quan_sat_duoc` / `gia_thuyet`
+- [x] OOD: có ít nhất 3 ảnh không có biển báo, ghi rõ model dự đoán gì. → **4 ảnh** không biển: 3 bị từ chối, 1 bị nhận nhầm "Nhường đường" (conf 1,00) — ghi rõ trong `ood_results.csv`
+- [x] Đã thử ngưỡng τ và ghi acceptance/rejection rate. → τ = **0,9462** (phân vị 5 % của max-prob trên val) → acceptance in-dist **94,99 %**, rejection ảnh không biển **75 %** (3/4)
+
+**Kết quả:** 9/9 mục PASS.
 
 ### 7.6. Kết quả thực hiện
 
@@ -1044,17 +1046,46 @@ Có đủ bảng/hình cho Chương 4–5: per-class report, confusion matrix, t
 >
 > | Hạng mục | Giá trị thực tế |
 > |---|---|
-> | Số lớp có F1 < 0,90 | |
-> | Lớp F1 thấp nhất (ID, F1, support) | |
-> | Top 1 cặp nhầm (số lượng) | |
-> | Error rate nhóm mờ nhất vs nét nhất | |
-> | Error rate nhóm tối nhất vs sáng nhất | |
-> | Error rate nhóm biển nhỏ nhất vs lớn nhất | |
-> | Số mẫu sai đã phân tích | |
-> | OOD: số ảnh / số dự đoán đúng | |
-> | Ngưỡng τ / acceptance in-dist / rejection OOD | |
-> | Trạng thái | ☐ Đạt ☐ Đạt có điều kiện ☐ Chưa đạt |
-> | Ghi chú | |
+> | Số lớp có F1 < 0,90 | **1** lớp (trên 43) |
+> | Lớp F1 thấp nhất (ID, F1, support) | **27 — Người đi bộ (Pedestrians), F1 0,846, support 60**; kế tiếp: 30 (0,915), 23 (0,937), 22 (0,947), 39 (0,954) |
+> | Top 1 cặp nhầm (số lượng) | **27 → 11** (Người đi bộ → Đường ưu tiên tại giao lộ tới): **15 ảnh**; kế tiếp 2→1 (12), 8→5 (11), 22→25 (10), 12→13 (10) |
+> | Error rate nhóm mờ nhất vs nét nhất | **2,21 %** vs **1,09 %** (gấp **2,16×**); point-biserial r = −0,016, p = 0,068 → **chưa đủ ý nghĩa thống kê** ở mức 5 % |
+> | Error rate nhóm tối nhất vs sáng nhất | **1,76 %** vs **0,88 %** (gấp **2,00×**); r = +0,035, p = 9,3e-5 → có ý nghĩa |
+> | Error rate nhóm biển nhỏ nhất vs lớn nhất | **2,28 %** vs **0,79 %** (gấp **2,89×**); r = +0,066, p = 1,8e-13 → ý nghĩa mạnh nhất |
+> | Số mẫu sai đã phân tích | **12** (4 nhóm nguyên nhân × 3, ưu tiên confidence cao) — `error_samples_table.csv` + `figures/07_error_samples.png` |
+> | OOD: số ảnh / số dự đoán đúng | **11 ảnh**: 1 ảnh test GTSRB + 2 biển tốc độ (Mỹ, Hàn) + 4 biển chữ Philippines + 4 đường không biển / **top-1 đúng 3/3** ảnh có nhãn kỳ vọng (16, 0, 1) — nhưng ảnh biển Mỹ nhỏ (conf 0,67) **bị τ từ chối**, tức chỉ 2/3 vừa đúng vừa được chấp nhận |
+> | Ngưỡng τ / acceptance in-dist / rejection OOD | **τ = 0,9462** (phân vị 5 % max-prob trên val) / **94,99 %** (7.438/7.830) / **75 %** (3/4 ảnh không biển bị từ chối; **1 ảnh đường bị nhận nhầm "Nhường đường" với conf 1,00**) |
+> | Trạng thái | ☑ Đạt ☐ Đạt có điều kiện ☐ Chưa đạt |
+> | Ghi chú | • **Định lượng theo nguyên nhân**: biển nhỏ là yếu tố liên quan lỗi mạnh nhất (2,89×), rồi độ sáng (2,00×); độ mờ có xu hướng 2,16× nhưng p = 0,068 nên chỉ ghi là **xu hướng**, không kết luận. Đây là **quan sát**, không phải quan hệ nhân quả.<br>• 4 cơ chế lỗi lặp lại được thấy khi mở ảnh: (1) **cháy sáng** làm mất viền đỏ của biển "đường ưu tiên" → nhầm "nhường đường" (4/12 mẫu); (2) **mờ** làm mất thanh trắng của "cấm đi vào" → nhầm "dừng lại" (2/12); (3) **thiếu sáng** làm mất hướng mũi tên → nhầm trái/phải (2/12); (4) **chữ số 50/30** khác nhau một nét, cộng moiré do resize (2/12).<br>• Với lớp 27 (F1 0,846) cần đối chiếu support: chỉ 60 ảnh test → 1 ảnh sai làm F1 giảm ~0,03, nên **không** kết luận "model kém" mà chỉ ghi nhận cụm nhầm 27→11.<br>• **OOD**: ảnh biển nước ngoài (Mỹ/Hàn) vẫn được nhận đúng nhãn tương ứng, nhưng **biển chữ Philippines** bị gán nhãn Đức với conf 0,95–0,99 → đúng bản chất domain shift.<br>• **τ không bảo vệ tuyệt đối**: 1/4 ảnh đường bị nhận nhầm với conf 1,00 → phải nói rõ trong demo/báo cáo.<br>• E8 (ROI crop) là mục "nếu kịp" nên **không làm**, ghi nhận để dành hướng phát triển. |
+>
+> ### 7.6.1. Nhật ký thực hiện (todos)
+>
+> | # | Todo | Trạng thái | Bằng chứng |
+> |---|---|---|---|
+> | 7.1 | `src/error_analysis.py`: per-class, confusion + zoom 15 lớp yếu, top-10 cặp kèm ảnh | ☑ | `per_class_test.csv`, `07_per_class_f1.png`, `07_confusion_zoom15.png`, `07_top_pairs.png` |
+> | 7.2 | Error rate theo tertile blur/brightness/ROI + tương quan | ☑ | `error_rates_tertiles.csv`, `07_error_rates.png` |
+> | 7.3 | Chọn 12 mẫu sai, crop ROI, viết quan sát/giả thuyết sau khi xem ảnh | ☑ | `error_samples_table.csv`, `07_error_samples.png` |
+> | 7.4 | Thu 11 ảnh CC0/PD + manifest, OOD eval, chọn τ trên val | ☑ | `external_test/`, `manifest.csv`, `ood_results.csv`, `threshold.json`, `07_ood.png` |
+> | 7.5 | Checklist 7.5 + điền 7.6 + commit | ☑ | 9/9 PASS |
+>
+> **Tổng kết: 5/5 todo đạt.** Lệnh tái tạo: `python -m src.error_analysis --run outputs/runs/final_s42` (sau khi đã có test report).
+>
+> **Bảng 12 mẫu sai** (rút gọn; nội dung đầy đủ ở `outputs/results/error_samples_table.csv`):
+>
+> | # | Nhãn thật → dự đoán | Conf | Nhóm | Quan sát được | Giả thuyết |
+> |---|---|---|---|---|---|
+> | 1 | 37 → 35 | 0,994 | E-A mờ | biển xanh nhòe, mũi tên trái không đọc được | mất chi tiết mũi tên → chọn lớp phổ biến trong nhóm mũi tên |
+> | 2 | 30 → 11 | 0,990 | E-B tối | ảnh đêm, chỉ thấy viền tam giác | thiếu sáng mất hình bên trong, khớp viền tam giác |
+> | 3 | 12 → 13 | 0,998 | E-C biển nhỏ | hình thoi trắng cháy sáng, mất viền đỏ | overexposure làm mất màu/viền |
+> | 4 | 12 → 13 | 1,000 | E-E giống nhau | nét nhưng cháy sáng | lỗi do phân phối, không do mờ |
+> | 5 | 17 → 14 | 0,975 | E-A mờ | thanh trắng gần biến mất, còn đĩa đỏ | mất thanh trắng → giống biển dừng |
+> | 6 | 39 → 33 | 0,987 | E-B tối | mũi tên sáng mờ, hướng không rõ | mất hướng → nhầm trái/phải |
+> | 7 | 12 → 13 | 0,996 | E-C | biển cháy sáng | cùng cơ chế mẫu 3 |
+> | 8 | 2 → 1 | 0,999 | E-E | số "50" mờ trong tối | nét 5/3 khác nhau một nét |
+> | 9 | 17 → 14 | 0,958 | E-A | nhòe, thanh trắng gần mất | cùng cơ chế mẫu 5 |
+> | 10 | 39 → 33 | 0,937 | E-B | đêm, mũi tên mờ | cùng cơ chế mẫu 6 |
+> | 11 | 12 → 13 | 0,996 | E-C | cháy sáng | cùng cơ chế mẫu 3/4/7 |
+> | 12 | 2 → 1 | 0,998 | E-E | moiré rõ, chữ bị răng cưa | alias do resize 64×64 |
 
 ### 7.7. Ghi chú / lưu ý
 

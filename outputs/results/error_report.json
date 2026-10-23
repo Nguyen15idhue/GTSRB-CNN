@@ -1,0 +1,639 @@
+{
+  "run_id": "final_s42",
+  "threshold": {
+    "tau": 0.9461585,
+    "percentile": 5.0,
+    "acceptance_in_distribution": 0.9499361430395913,
+    "n_val": 7830,
+    "chosen_on": "val stratified_group (final_s42), KHÔNG dùng test/demo",
+    "method": "τ = phân vị 5% của max-prob trên val; reject nếu max-prob < τ"
+  },
+  "n_test": 12630,
+  "accuracy": 0.9855898653998416,
+  "macro_f1_43": 0.9798935304586205,
+  "top3_accuracy": 0.996437054631829,
+  "n_classes_f1_below_090": 1,
+  "weakest15": [
+    {
+      "class_id": 27,
+      "precision": 1.0,
+      "recall": 0.733333,
+      "f1": 0.846154,
+      "support": 60
+    },
+    {
+      "class_id": 30,
+      "precision": 0.970149,
+      "recall": 0.866667,
+      "f1": 0.915493,
+      "support": 150
+    },
+    {
+      "class_id": 23,
+      "precision": 0.928105,
+      "recall": 0.946667,
+      "f1": 0.937294,
+      "support": 150
+    },
+    {
+      "class_id": 22,
+      "precision": 1.0,
+      "recall": 0.9,
+      "f1": 0.947368,
+      "support": 120
+    },
+    {
+      "class_id": 39,
+      "precision": 0.988095,
+      "recall": 0.922222,
+      "f1": 0.954023,
+      "support": 90
+    },
+    {
+      "class_id": 20,
+      "precision": 0.918367,
+      "recall": 1.0,
+      "f1": 0.957447,
+      "support": 90
+    },
+    {
+      "class_id": 19,
+      "precision": 0.9375,
+      "recall": 1.0,
+      "f1": 0.967742,
+      "support": 60
+    },
+    {
+      "class_id": 11,
+      "precision": 0.939597,
+      "recall": 1.0,
+      "f1": 0.968858,
+      "support": 420
+    },
+    {
+      "class_id": 5,
+      "precision": 0.966981,
+      "recall": 0.97619,
+      "f1": 0.971564,
+      "support": 630
+    },
+    {
+      "class_id": 29,
+      "precision": 0.988506,
+      "recall": 0.955556,
+      "f1": 0.971751,
+      "support": 90
+    },
+    {
+      "class_id": 8,
+      "precision": 0.990783,
+      "recall": 0.955556,
+      "f1": 0.972851,
+      "support": 450
+    },
+    {
+      "class_id": 3,
+      "precision": 0.969231,
+      "recall": 0.98,
+      "f1": 0.974586,
+      "support": 450
+    },
+    {
+      "class_id": 18,
+      "precision": 0.992063,
+      "recall": 0.961538,
+      "f1": 0.976562,
+      "support": 390
+    },
+    {
+      "class_id": 33,
+      "precision": 0.967593,
+      "recall": 0.995238,
+      "f1": 0.981221,
+      "support": 210
+    },
+    {
+      "class_id": 37,
+      "precision": 1.0,
+      "recall": 0.966667,
+      "f1": 0.983051,
+      "support": 60
+    }
+  ],
+  "top_confusions": [
+    {
+      "true": 27,
+      "pred": 11,
+      "count": 15,
+      "n_examples": 3
+    },
+    {
+      "true": 2,
+      "pred": 1,
+      "count": 12,
+      "n_examples": 3
+    },
+    {
+      "true": 8,
+      "pred": 5,
+      "count": 11,
+      "n_examples": 3
+    },
+    {
+      "true": 22,
+      "pred": 25,
+      "count": 10,
+      "n_examples": 3
+    },
+    {
+      "true": 12,
+      "pred": 13,
+      "count": 10,
+      "n_examples": 3
+    },
+    {
+      "true": 8,
+      "pred": 3,
+      "count": 9,
+      "n_examples": 3
+    },
+    {
+      "true": 39,
+      "pred": 33,
+      "count": 7,
+      "n_examples": 3
+    },
+    {
+      "true": 5,
+      "pred": 7,
+      "count": 7,
+      "n_examples": 3
+    },
+    {
+      "true": 3,
+      "pred": 5,
+      "count": 7,
+      "n_examples": 3
+    },
+    {
+      "true": 30,
+      "pred": 11,
+      "count": 6,
+      "n_examples": 3
+    }
+  ],
+  "tertiles": {
+    "table": [
+      {
+        "variable": "blur_laplacian",
+        "group": 0,
+        "n": 4214,
+        "error_rate": 0.022069,
+        "bound_low": 0.001026,
+        "bound_high": 0.004752
+      },
+      {
+        "variable": "blur_laplacian",
+        "group": 1,
+        "n": 4206,
+        "error_rate": 0.010223,
+        "bound_low": 0.001026,
+        "bound_high": 0.004752
+      },
+      {
+        "variable": "blur_laplacian",
+        "group": 2,
+        "n": 4210,
+        "error_rate": 0.010926,
+        "bound_low": 0.001026,
+        "bound_high": 0.004752
+      },
+      {
+        "variable": "brightness_mean",
+        "group": 0,
+        "n": 4210,
+        "error_rate": 0.017577,
+        "bound_low": 0.251431,
+        "bound_high": 0.452758
+      },
+      {
+        "variable": "brightness_mean",
+        "group": 1,
+        "n": 4210,
+        "error_rate": 0.016865,
+        "bound_low": 0.251431,
+        "bound_high": 0.452758
+      },
+      {
+        "variable": "brightness_mean",
+        "group": 2,
+        "n": 4210,
+        "error_rate": 0.008789,
+        "bound_low": 0.251431,
+        "bound_high": 0.452758
+      },
+      {
+        "variable": "roi_area_ratio",
+        "group": 0,
+        "n": 4214,
+        "error_rate": 0.022781,
+        "bound_low": 0.504848,
+        "bound_high": 0.627451
+      },
+      {
+        "variable": "roi_area_ratio",
+        "group": 1,
+        "n": 4231,
+        "error_rate": 0.012527,
+        "bound_low": 0.504848,
+        "bound_high": 0.627451
+      },
+      {
+        "variable": "roi_area_ratio",
+        "group": 2,
+        "n": 4185,
+        "error_rate": 0.007885,
+        "bound_low": 0.504848,
+        "bound_high": 0.627451
+      }
+    ],
+    "summary": {
+      "blur_laplacian": {
+        "bounds": [
+          0.001026,
+          0.004752333333333336
+        ],
+        "n": [
+          4214,
+          4206,
+          4210
+        ],
+        "error_rate": [
+          0.022069292833412413,
+          0.010223490252020961,
+          0.01092636579572448
+        ],
+        "ratio_worst_best": 2.158684782728657
+      },
+      "brightness_mean": {
+        "bounds": [
+          0.2514306666666667,
+          0.45275766666666667
+        ],
+        "n": [
+          4210,
+          4210,
+          4210
+        ],
+        "error_rate": [
+          0.017577197149643675,
+          0.016864608076009535,
+          0.008788598574821838
+        ],
+        "ratio_worst_best": 2.0
+      },
+      "roi_area_ratio": {
+        "bounds": [
+          0.504848,
+          0.627451
+        ],
+        "n": [
+          4214,
+          4231,
+          4185
+        ],
+        "error_rate": [
+          0.022781205505458035,
+          0.012526589458756843,
+          0.007885304659498216
+        ],
+        "ratio_worst_best": 2.8890710618285387
+      }
+    },
+    "correlations": {
+      "blur_laplacian": {
+        "r": -0.0163,
+        "p_value": 0.0678
+      },
+      "brightness_mean": {
+        "r": 0.0348,
+        "p_value": 9.25e-05
+      },
+      "roi_area_ratio": {
+        "r": 0.0655,
+        "p_value": 1.78e-13
+      }
+    }
+  },
+  "samples": [
+    {
+      "path": "data/gtsrb/GTSRB/Final_Test/Images/04658.ppm",
+      "true_id": 37,
+      "true_name": "Đi thẳng hoặc rẽ trái",
+      "pred_id": 35,
+      "pred_name": "Chỉ đi thẳng",
+      "prob_pred": 0.994057,
+      "margin": 0.989816,
+      "blur_laplacian": 0.000136,
+      "brightness_mean": 0.282965,
+      "roi_area_ratio": 0.400445,
+      "bucket": "E-A mờ"
+    },
+    {
+      "path": "data/gtsrb/GTSRB/Final_Test/Images/06603.ppm",
+      "true_id": 30,
+      "true_name": "Cảnh báo băng tuyết",
+      "pred_id": 11,
+      "pred_name": "Đường ưu tiên tại giao lộ tới",
+      "prob_pred": 0.990384,
+      "margin": 0.98083,
+      "blur_laplacian": 0.000318,
+      "brightness_mean": 0.14494,
+      "roi_area_ratio": 0.406213,
+      "bucket": "E-B tối"
+    },
+    {
+      "path": "data/gtsrb/GTSRB/Final_Test/Images/08308.ppm",
+      "true_id": 12,
+      "true_name": "Đường ưu tiên",
+      "pred_id": 13,
+      "pred_name": "Nhường đường",
+      "prob_pred": 0.997802,
+      "margin": 0.996698,
+      "blur_laplacian": 0.002518,
+      "brightness_mean": 0.586367,
+      "roi_area_ratio": 0.422692,
+      "bucket": "E-C biển nhỏ"
+    },
+    {
+      "path": "data/gtsrb/GTSRB/Final_Test/Images/05529.ppm",
+      "true_id": 12,
+      "true_name": "Đường ưu tiên",
+      "pred_id": 13,
+      "pred_name": "Nhường đường",
+      "prob_pred": 0.999868,
+      "margin": 0.999759,
+      "blur_laplacian": 0.002959,
+      "brightness_mean": 0.580268,
+      "roi_area_ratio": 0.437716,
+      "bucket": "E-E lớp giống nhau"
+    },
+    {
+      "path": "data/gtsrb/GTSRB/Final_Test/Images/00204.ppm",
+      "true_id": 17,
+      "true_name": "Cấm đi vào",
+      "pred_id": 14,
+      "pred_name": "Dừng lại",
+      "prob_pred": 0.974619,
+      "margin": 0.952728,
+      "blur_laplacian": 7.5e-05,
+      "brightness_mean": 0.348298,
+      "roi_area_ratio": 0.393519,
+      "bucket": "E-A mờ"
+    },
+    {
+      "path": "data/gtsrb/GTSRB/Final_Test/Images/06862.ppm",
+      "true_id": 39,
+      "true_name": "Đi bên trái",
+      "pred_id": 33,
+      "pred_name": "Rẽ phải phía trước",
+      "prob_pred": 0.98727,
+      "margin": 0.975207,
+      "blur_laplacian": 0.000555,
+      "brightness_mean": 0.12666,
+      "roi_area_ratio": 0.679362,
+      "bucket": "E-B tối"
+    },
+    {
+      "path": "data/gtsrb/GTSRB/Final_Test/Images/03793.ppm",
+      "true_id": 12,
+      "true_name": "Đường ưu tiên",
+      "pred_id": 13,
+      "pred_name": "Nhường đường",
+      "prob_pred": 0.996285,
+      "margin": 0.993588,
+      "blur_laplacian": 0.002175,
+      "brightness_mean": 0.5763,
+      "roi_area_ratio": 0.423387,
+      "bucket": "E-C biển nhỏ"
+    },
+    {
+      "path": "data/gtsrb/GTSRB/Final_Test/Images/02494.ppm",
+      "true_id": 2,
+      "true_name": "Giới hạn tốc độ 50 km/h",
+      "pred_id": 1,
+      "pred_name": "Giới hạn tốc độ 30 km/h",
+      "prob_pred": 0.999349,
+      "margin": 0.998998,
+      "blur_laplacian": 0.000702,
+      "brightness_mean": 0.212368,
+      "roi_area_ratio": 0.568948,
+      "bucket": "E-E lớp giống nhau"
+    },
+    {
+      "path": "data/gtsrb/GTSRB/Final_Test/Images/09125.ppm",
+      "true_id": 17,
+      "true_name": "Cấm đi vào",
+      "pred_id": 14,
+      "pred_name": "Dừng lại",
+      "prob_pred": 0.957795,
+      "margin": 0.916745,
+      "blur_laplacian": 9.6e-05,
+      "brightness_mean": 0.359962,
+      "roi_area_ratio": 0.428571,
+      "bucket": "E-A mờ"
+    },
+    {
+      "path": "data/gtsrb/GTSRB/Final_Test/Images/10564.ppm",
+      "true_id": 39,
+      "true_name": "Đi bên trái",
+      "pred_id": 33,
+      "pred_name": "Rẽ phải phía trước",
+      "prob_pred": 0.937131,
+      "margin": 0.874852,
+      "blur_laplacian": 0.000749,
+      "brightness_mean": 0.134376,
+      "roi_area_ratio": 0.688406,
+      "bucket": "E-B tối"
+    },
+    {
+      "path": "data/gtsrb/GTSRB/Final_Test/Images/11543.ppm",
+      "true_id": 12,
+      "true_name": "Đường ưu tiên",
+      "pred_id": 13,
+      "pred_name": "Nhường đường",
+      "prob_pred": 0.995586,
+      "margin": 0.992361,
+      "blur_laplacian": 0.002534,
+      "brightness_mean": 0.58988,
+      "roi_area_ratio": 0.422222,
+      "bucket": "E-C biển nhỏ"
+    },
+    {
+      "path": "data/gtsrb/GTSRB/Final_Test/Images/01280.ppm",
+      "true_id": 2,
+      "true_name": "Giới hạn tốc độ 50 km/h",
+      "pred_id": 1,
+      "pred_name": "Giới hạn tốc độ 30 km/h",
+      "prob_pred": 0.997847,
+      "margin": 0.995783,
+      "blur_laplacian": 0.020367,
+      "brightness_mean": 0.360891,
+      "roi_area_ratio": 0.698682,
+      "bucket": "E-E lớp giống nhau"
+    }
+  ],
+  "ood": {
+    "n_images": 11,
+    "n_no_sign": 4,
+    "n_with_expected_label": 3,
+    "n_correct": 3,
+    "rejection_rate_no_sign": 0.75,
+    "acceptance_rate_on_signs": 0.5714285714285714,
+    "rows": [
+      {
+        "filename": "ext_01_gtsrb_test_00000.png",
+        "scenario": "1",
+        "expected_id": "16",
+        "pred_id": 16,
+        "pred_name": "Cấm xe trên 3,5 tấn",
+        "prob": 0.999997,
+        "top3": "16:1.000 | 7:0.000 | 9:0.000",
+        "correct": "yes",
+        "rejected": false,
+        "source": "GTSRB Final_Test/Images/00000.ppm (split test chính thức, KHÔNG dùng để train)",
+        "license": "GTSRB — nghiên cứu, xem điều kiện sử dụng"
+      },
+      {
+        "filename": "ext_02_us_speed20_scene.jpg",
+        "scenario": "3",
+        "expected_id": "0",
+        "pred_id": 0,
+        "pred_name": "Giới hạn tốc độ 20 km/h",
+        "prob": 0.673364,
+        "top3": "0:0.673 | 1:0.314 | 8:0.005",
+        "correct": "yes",
+        "rejected": true,
+        "source": "Wikimedia Commons — File:Speed Limit 20 sign on Commercial Drive, Southbridge, Massachusetts.jpg (https://commons.wikimedia.org/wiki/File:Speed_Limit_20_sign_on_Commercial_Drive,_Southbridge,_Massachusetts.jpg)",
+        "license": "CC0"
+      },
+      {
+        "filename": "ext_03_kr_speed30_crop.jpg",
+        "scenario": "2",
+        "expected_id": "1",
+        "pred_id": 1,
+        "pred_name": "Giới hạn tốc độ 30 km/h",
+        "prob": 0.949504,
+        "top3": "1:0.950 | 2:0.025 | 5:0.024",
+        "correct": "yes",
+        "rejected": false,
+        "source": "Wikimedia Commons — File:Korean Sign - Maximum Speed Limit 30kph 1.jpg (https://commons.wikimedia.org/wiki/File:Korean_Sign_-_Maximum_Speed_Limit_30kph_1.jpg)",
+        "license": "Public domain"
+      },
+      {
+        "filename": "ext_04_ph_toll_no_load.png",
+        "scenario": "2",
+        "expected_id": "",
+        "pred_id": 10,
+        "pred_name": "Cấm vượt cho xe trên 3,5 tấn",
+        "prob": 0.510786,
+        "top3": "10:0.511 | 13:0.247 | 9:0.231",
+        "correct": "n/a",
+        "rejected": true,
+        "source": "Wikimedia Commons — File:Metro Pacific Tollways Traffic Instruction Sign - No Sufficient Load, No Entry.png (https://commons.wikimedia.org/wiki/File:Metro_Pacific_Tollways_Traffic_Instruction_Sign_-_No_Sufficient_Load,_No_Entry.png)",
+        "license": "CC0"
+      },
+      {
+        "filename": "ext_05_ph_toll_etc.png",
+        "scenario": "2",
+        "expected_id": "",
+        "pred_id": 10,
+        "pred_name": "Cấm vượt cho xe trên 3,5 tấn",
+        "prob": 0.948195,
+        "top3": "10:0.948 | 9:0.052 | 23:0.000",
+        "correct": "n/a",
+        "rejected": false,
+        "source": "Wikimedia Commons — File:Metro Pacific Tollways Traffic Instruction Sign - No Valid ETC Device, No Entry.png (https://commons.wikimedia.org/wiki/File:Metro_Pacific_Tollways_Traffic_Instruction_Sign_-_No_Valid_ETC_Device,_No_Entry.png)",
+        "license": "CC0"
+      },
+      {
+        "filename": "ext_06_ph_toll_no_load_2.png",
+        "scenario": "2",
+        "expected_id": "",
+        "pred_id": 17,
+        "pred_name": "Cấm đi vào",
+        "prob": 0.993928,
+        "top3": "17:0.994 | 7:0.004 | 16:0.001",
+        "correct": "n/a",
+        "rejected": false,
+        "source": "Wikimedia Commons — File:SMC Tollways Traffic Instruction Sign - No Sufficient Load, No Entry.png (https://commons.wikimedia.org/wiki/File:SMC_Tollways_Traffic_Instruction_Sign_-_No_Sufficient_Load,_No_Entry.png)",
+        "license": "CC0"
+      },
+      {
+        "filename": "ext_07_ph_toll_etc_2.png",
+        "scenario": "2",
+        "expected_id": "",
+        "pred_id": 17,
+        "pred_name": "Cấm đi vào",
+        "prob": 0.877194,
+        "top3": "17:0.877 | 10:0.104 | 13:0.016",
+        "correct": "n/a",
+        "rejected": true,
+        "source": "Wikimedia Commons — File:SMC Tollways Traffic Instruction Sign - No Valid ETC Device, No Entry.png (https://commons.wikimedia.org/wiki/File:SMC_Tollways_Traffic_Instruction_Sign_-_No_Valid_ETC_Device,_No_Entry.png)",
+        "license": "CC0"
+      },
+      {
+        "filename": "ext_08_road_autumn.jpg",
+        "scenario": "4",
+        "expected_id": "",
+        "pred_id": 13,
+        "pred_name": "Nhường đường",
+        "prob": 0.99595,
+        "top3": "13:0.996 | 12:0.004 | 26:0.000",
+        "correct": "n/a",
+        "rejected": false,
+        "source": "Wikimedia Commons — File:Asphalt road in the autumn (Unsplash).jpg (https://commons.wikimedia.org/wiki/File:Asphalt_road_in_the_autumn_(Unsplash).jpg)",
+        "license": "CC0"
+      },
+      {
+        "filename": "ext_09_road_hills.jpg",
+        "scenario": "4",
+        "expected_id": "",
+        "pred_id": 34,
+        "pred_name": "Rẽ trái phía trước",
+        "prob": 0.607856,
+        "top3": "34:0.608 | 38:0.178 | 20:0.067",
+        "correct": "n/a",
+        "rejected": true,
+        "source": "Wikimedia Commons — File:Asphalt road under the hills (Unsplash).jpg (https://commons.wikimedia.org/wiki/File:Asphalt_road_under_the_hills_(Unsplash).jpg)",
+        "license": "CC0"
+      },
+      {
+        "filename": "ext_10_forest_road_bw.jpg",
+        "scenario": "4",
+        "expected_id": "",
+        "pred_id": 7,
+        "pred_name": "Giới hạn tốc độ 100 km/h",
+        "prob": 0.450209,
+        "top3": "7:0.450 | 11:0.339 | 42:0.076",
+        "correct": "n/a",
+        "rejected": true,
+        "source": "Wikimedia Commons — File:Forest road Slavne 2017 BW G9.jpg (https://commons.wikimedia.org/wiki/File:Forest_road_Slavne_2017_BW_G9.jpg)",
+        "license": "Public domain"
+      },
+      {
+        "filename": "ext_11_forest_road_snow.jpg",
+        "scenario": "4",
+        "expected_id": "",
+        "pred_id": 7,
+        "pred_name": "Giới hạn tốc độ 100 km/h",
+        "prob": 0.864089,
+        "top3": "7:0.864 | 6:0.068 | 5:0.022",
+        "correct": "n/a",
+        "rejected": true,
+        "source": "Wikimedia Commons — File:Forest road Slavne 2017 G8.jpg (https://commons.wikimedia.org/wiki/File:Forest_road_Slavne_2017_G8.jpg)",
+        "license": "Public domain"
+      }
+    ]
+  }
+}

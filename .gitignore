@@ -26,4 +26,5 @@ desktop.ini
 
 # Tạm
 *.log
+!outputs/results/*.log
 tmp/
