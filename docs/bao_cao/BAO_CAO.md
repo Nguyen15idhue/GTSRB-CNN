@@ -97,9 +97,25 @@ giao thông thực tế.**
 
 *Hình 2.2. Phân bố kích thước ảnh gốc*
 
-![Hình 2.3. Lưới 43 ảnh mẫu (mỗi lớp một ảnh, crop theo ROI)](outputs/figures/03_sample_grid.png)
+![Hình 2.3. Lưới 43 ảnh mẫu (mỗi lớp một ảnh; crop ROI chỉ để hiển thị, không phải input model)](outputs/figures/03_sample_grid.png)
 
-*Hình 2.3. Lưới 43 ảnh mẫu (mỗi lớp một ảnh, crop theo ROI)*
+*Hình 2.3. Lưới 43 ảnh mẫu (mỗi lớp một ảnh; crop ROI chỉ để hiển thị, không phải input model)*
+
+### 2.2.1. Bản chất ảnh đầu vào: frame video đã crop quanh biển
+
+GTSRB được xây từ các **video quay đường phố Đức**. Mỗi file `.ppm` là một **frame đã được trích và crop quanh biển báo**, không phải frame video đầy đủ và cũng không phải ảnh chỉ còn đúng hình biển. Ảnh vẫn chứa một phần nền (trời, đường, cột, xe...), nên kích thước rất nhỏ và biến thiên: trung vị **43×43**, min **25×25**, max **266×232**.
+
+- Tên file train có dạng `<track>_<frame>.ppm`: các frame cùng track là cùng một biển xuất hiện liên tiếp trong video, gần như giống nhau.
+- `GT-*.csv` cung cấp **ROI** — hộp bao quanh biển bên trong ảnh; ROI sát biển hơn vùng ảnh đã crop.
+- Test cũng là frame trích từ video và có ROI, nhưng tên file chỉ là số thứ tự nên **không có track ID**.
+
+Trong project này:
+
+- Input của model là **toàn bộ ảnh GTSRB** (đã crop quanh biển), chuyển RGB và resize 64×64; **không crop thêm theo ROI**.
+- ROI chỉ dùng để vẽ EDA/lưới ảnh mẫu, tính `roi_area_ratio` và phân tích lỗi.
+- Đây là bài toán **phân loại**, không phải phát hiện: model giả định ảnh đã chứa biển và chỉ dự đoán lớp 0–42. Crop ROI tự động là hướng mở rộng (E8), **chưa triển khai**.
+
+Hệ quả: vì các frame cùng track gần như trùng nhau, chia ngẫu nhiên theo ảnh sẽ khiến val chứa "anh em sinh đôi" của train; đây là cơ chế chính gây rò rỉ frame ở mục 2.4.
 
 ### 2.3. Ba cách chia tập
 
@@ -124,6 +140,8 @@ và báo cáo multi-seed.
 | Khoảng cách frame gần nhất | trung vị **1** | không có |
 
 *Bảng 2.3. Tỷ lệ ảnh val có frame train gần (rò rỉ)*
+Con số **1.306** ở Bảng 2.2 là **số track** bị chồng, **không phải 1.306 ảnh trùng**. Không có ảnh nào trùng index giữa train/val (`overlap_index = 0`); cái bị trùng là **chuỗi frame gần nhau** trong cùng track. Cụ thể **7.466/7.841 ảnh val (95,22 %)** có frame train cách ±1 và **100 %** trong ±5. Vì vậy val random không đo tổng quát hóa; mức ~99,6–99,97 % là do model nhận ra lại track, không phải năng lực thật.
+
 Bằng chứng độc lập bằng **1-NN** (ảnh xám 16×16, không huấn luyện): val random **90,50 %**;
 val random nhưng **cấm** láng giềng cùng track **36,50 %**; val group **31,00 %**. Nghĩa là val random
 bị "giải sẵn" bởi frame gần trùng. Hệ quả thực nghiệm: mọi mô hình đều đạt ~99,6–99,97 % trên val random
@@ -146,6 +164,7 @@ bị "giải sẵn" bởi frame gần trùng. Hệ quả thực nghiệm: mọi 
 
 ### 2.6. Tiền xử lý và augmentation
 
+- Input model là **toàn ảnh crop quanh biển** (mục 2.2.1), resize 64×64; **không crop ROI**. ROI chỉ dùng cho EDA và phân tích lỗi.
 - Một hàm duy nhất `src/data.py::preprocess` dùng cho train/eval/test/demo: RGB → resize 64×64 bilinear →
   `[0,1]` → chuẩn hóa bằng mean/std tính **trên train**:
   mean `[0,340408, 0,312365, 0,321632]`, std `[0,275148, 0,264242, 0,270747]` (`data_stats.json`).

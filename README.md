@@ -75,6 +75,8 @@ python -m src.data --verify              # checklist Giai đoạn 2 (12 mục)
   (không sinh lại mỗi run).
 - `mean/std` lấy từ `outputs/results/data_stats.json` (tính trên train của split random), dùng
   chung cho train/eval/demo để chỉ có **một** pipeline tiền xử lý.
+- Ảnh GTSRB là frame trích từ video, đã **crop quanh biển** (vẫn có nền); model dùng **toàn ảnh**
+  resize 64×64, **không crop theo ROI**. ROI chỉ dùng cho EDA và phân tích lỗi.
 
 ## 5. Train, đánh giá, demo
 

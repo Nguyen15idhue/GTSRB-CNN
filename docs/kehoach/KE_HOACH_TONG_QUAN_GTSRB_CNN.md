@@ -181,12 +181,14 @@ Các quyết định dưới đây **không thay đổi** trong suốt quá trì
 |---|---|---|
 | Ảnh có **kích thước thay đổi** (khoảng 15×15 đến 250×250) | Không thể stack batch nếu không resize | Resize trong transform; ghi histogram kích thước gốc |
 | Ảnh là **PPM**, torchvision trả `PIL.Image` RGB | Cần decode đúng | Kiểm tra mode ảnh, chuyển RGB |
-| Có **ROI (bounding box)** trong file CSV GT | Cho phép crop biển, tính diện tích biển | Dùng cho E8 và phân tích lỗi |
-| Ảnh trích từ **video**, frame liên tiếp gần trùng | Rò rỉ train/val nếu chia ngẫu nhiên | Xem mục 5.2 |
+| Có **ROI (bounding box)** trong file CSV GT | Cho phép crop biển, tính diện tích biển | Model chính dùng **toàn ảnh đã crop quanh biển**, **không crop ROI**; ROI dùng cho EDA/phân tích lỗi. E8 (so sánh full image vs ROI crop) chưa làm |
+| Ảnh trích từ **video**, frame liên tiếp gần trùng | Rò rỉ train/val nếu chia ngẫu nhiên | Xem mục 5.2; **1.306 track chồng, 0 ảnh trùng index** |
 | **Mất cân bằng lớp** (~180–2.250 ảnh/lớp, tỷ lệ ~12:1) | Accuracy bị chi phối bởi lớp nhiều | Macro-F1, per-class report, E7 |
 | **Không có tên lớp** trong torchvision | Dễ lệch nhãn khi demo | Tạo `configs/class_names.json` dùng chung |
 | Có **nhãn nhiễu/ảnh mơ hồ** (biển bị che, nhiều biển, quá tối) | Trần accuracy và lỗi khó tránh | Nêu trong Ch5, tách "lỗi model" và "lỗi dữ liệu" |
 | Nền ảnh có thể chứa người/xe | Vấn đề riêng tư khi đưa vào báo cáo | Crop quanh biển khi hiển thị |
+
+**Bản chất ảnh:** mỗi file GTSRB là một frame video đã **crop quanh biển** (vẫn có nền), không phải frame đầy đủ và không phải ảnh chỉ còn hình biển. Vì vậy input model là **toàn ảnh đã crop đó** resize 64×64, không crop thêm theo ROI.
 
 ### 4.4. Kiểm tra dữ liệu bắt buộc (D1)
 

@@ -376,6 +376,8 @@ Ba lý do phải làm cẩn thận:
 2. **Tốc độ**: decode PPM mỗi epoch rất chậm; resize một lần rồi giữ trong RAM giúp epoch nhanh gấp nhiều lần.
 3. **Rò rỉ**: GTSRB trích từ video, frame liên tiếp gần trùng. Chia theo track cho val sạch hơn; so sánh hai cách để **định lượng** mức lạc quan.
 
+> **Bản chất ảnh đầu vào:** mỗi file GTSRB là một frame video đã **crop quanh biển** (vẫn có nền), không phải frame đầy đủ và cũng không phải ảnh chỉ còn hình biển. ROI trong annotation sát biển hơn vùng crop. Project dùng **toàn bộ ảnh đã crop** resize 64×64, **không crop thêm theo ROI**; ROI chỉ dùng cho EDA/phân tích lỗi. Đây là bài toán phân loại, không phải phát hiện biển.
+
 ### 2.3. Việc cần làm
 
 **Bước 2.3.1 — Cache dữ liệu**
