@@ -107,11 +107,11 @@
 
 ### 2.2. Hyperparam
 
-- [ ] L1 (LR 1e-4, cách 10 lần so với 1e-3) × 3 seed; L3 = F15.
-- [ ] CW1 (inv_sqrt) × 3 seed.
-- [ ] I2 (input 96) × 3 seed.
-- [ ] Không so 10 epoch với 40 epoch.
-- [ ] Không chạy L2/L4/L5/P1/P2/W4/CW2/LS1/I1/BS1/BS2 (đã bỏ để giảm run).
+- [x] L1 (LR 1e-4, cách 10 lần so với 1e-3) × 3 seed; L3 = F15 — Δ −7,139 điểm.
+- [x] CW1 (inv_sqrt) × 3 seed — Δ −1,004 [−2,195; +0,261], không cải thiện.
+- [x] I2 (input 96) × 3 seed — Δ −3,448 [−5,463; −0,984], kém hơn 64.
+- [x] Không so 10 epoch với 40 epoch — mọi run tối đa 40 epoch, patience 7.
+- [x] Không chạy L2/L4/L5/P1/P2/W4/CW2/LS1/I1/BS1/BS2 (đã bỏ theo `MA_TRAN_RUN.csv`).
 
 ### 2.3. Augmentation
 

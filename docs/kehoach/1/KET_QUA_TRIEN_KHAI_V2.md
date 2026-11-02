@@ -157,5 +157,25 @@ Mốc so sánh D4 = F15 (93,946).
 - Pareto: D2 nằm trên frontier (F1 cao nhất, params thấp hơn D4); xem
   `outputs/figures/v2/03_pareto_params_f1.png` (bước 4.2).
 
+### 2.2. Hyperparam (L1, CW1, I2 × 3 seed)
+
+Nguồn: `outputs/results/v2/tables/hyperparam.md`. Mốc F15 = 93,946.
+
+| ID | Thay đổi | Acc (%) | Macro-F1 (%) | Δ vs F15 (điểm %) [CI] | Params |
+|---|---|---:|---:|---|---:|
+| L1 | LR 1e-4 | 91,888 ± 1,282 | 86,807 ± 1,615 | **−7,139** [−9,372; −3,353] | 2.201.931 |
+| CW1 | class weight inv_sqrt | 95,960 ± 0,606 | 92,943 ± 0,475 | −1,004 [−2,195; +0,261] | 2.201.931 |
+| I2 | input 96 | 94,213 ± 0,624 | 90,499 ± 1,429 | **−3,448** [−5,463; −0,984] | 4.823.371 |
+
+**Kết luận:**
+
+- **LR 1e-3 > 1e-4 rõ rệt** (−7,139 nếu dùng 1e-4): LR nhỏ không hội tụ trong 40 epoch.
+  Đây là so sánh cách 10 lần, đủ 40 epoch, không so 10 epoch.
+- **Class weight không cải thiện** (Δ −1,004; CI chứa 0) → bỏ; đây là exploratory,
+  chưa hiệu chỉnh.
+- **Input 96 kém hơn 64** (−3,448) và params tăng 2,2× → giữ 64.
+- Cache 96 dựng riêng ở `data/cache_96` (không ghi đè cache 64).
+
+
 
 
