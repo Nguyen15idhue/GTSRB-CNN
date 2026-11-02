@@ -158,7 +158,7 @@ Phát hiện: aug giúp khi chưa có regularization (F08−F00 = +2,563) nhưng
 | W1 | 16/32/64 | 90,686 ± 1,425 | −3,260 [−5,250; −0,735] | 1.083.579 |
 | W2 | 48/96/192 | 95,215 ± 1,230 | +1,268 [−0,585; +2,499] | 3.366.363 |
 
-- GAP 3 khối **underfit** (train acc 84,6%, val 74,2%) → không chọn; đây là kết
+- GAP 3 khối **underfit** (train acc 84,6% ở seed 42, val trung bình 74,2%) → không chọn; đây là kết
   quả âm hợp lệ.
 - 4 khối + flatten (D2) **tốt hơn** 3 khối, CI không chứa 0 → bác bỏ H4.
 - D3 tương đương D4 → chỉ dùng làm legacy, không kết luận cơ chế.

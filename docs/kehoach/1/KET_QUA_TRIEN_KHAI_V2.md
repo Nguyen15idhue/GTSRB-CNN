@@ -146,8 +146,8 @@ Mốc so sánh D4 = F15 (93,946).
 
 **Kết luận:**
 
-- **GAP trên 3 khối (D1) thất bại rõ**: chỉ 99k params, train acc 84,6%, val 74,2%
-  sau 40 epoch → **underfit**, không phải "GAP mất chi tiết" đơn thuần. Không chọn.
+- **GAP trên 3 khối (D1) thất bại rõ**: chỉ 99k params, train acc 84,6% (seed 42),
+  val trung bình 74,2% sau 40 epoch → **underfit**, không phải "GAP mất chi tiết" đơn thuần. Không chọn.
 - **4 khối + flatten (D2) tốt hơn 3 khối (D4) 3,212 điểm, CI không chứa 0** →
   bác bỏ giả thuyết H4 "3 khối ≥ 4 khối". D2 cũng ít params hơn D4 (1,45M so với 2,20M).
 - **D3 (E4 cũ) tương đương D4** trong CI → không dùng D3 để kết luận cơ chế
