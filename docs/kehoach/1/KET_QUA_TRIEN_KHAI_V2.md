@@ -222,6 +222,63 @@ Nguồn: `outputs/results/v2/candidates.json`, `log_select.txt`.
 - Đã sinh `configs/v2/x1.yaml`–`x3.yaml` (split = fold) và điền X1–X3 vào
   `docs/kehoach/1/MA_TRAN_RUN.csv`.
 
+## Phase 3 — Xác nhận OOF, freeze, lockbox
+
+### 3.1. OOF 3 fold × 3 seed
+
+Nguồn: `outputs/results/v2/oof_summary.json`, `oof_predictions.csv`,
+`oof_comparisons.csv`, `variance.json`, `log_oof.txt`.
+
+- 27/27 run fold hoàn tất (sau khi sửa bug fold override — xem ghi chú cuối mục).
+- `oof_predictions.csv`: **278.091 dòng = 30.899 ảnh × 3 seed × 3 config**; mỗi
+  cặp (config, seed) phủ đúng 30.899 ảnh dev đúng một lần, không trùng.
+- Macro-F1/43 trên OOF (mean ± sd qua 3 seed, CI cluster bootstrap B=2.000):
+
+| Config | Nguồn | OOF macro-F1 (%) | CI 95% (trung bình 3 seed) |
+|---|---|---:|---|
+| X1 | G2 (3 khối + color) | 96,297 ± 0,296 | [94,628; 97,020] |
+| **X2** | **D2 (4 khối + all)** | **97,040 ± 0,187** | **[95,051; 97,942]** |
+| X3 | F07 (control, không aug) | 95,059 ± 0,568 | [93,113; 95,930] |
+
+**So sánh cặp (paired cluster bootstrap):**
+
+| So sánh | Δ (điểm %) | 95% CI | Kết luận |
+|---|---:|---|---|
+| X1 − X2 | −0,743 | [−1,590; +0,274] | Chưa kết luận (CI chứa 0, vượt ±0,3) |
+| X1 − X3 | **+1,238** | [+0,586; +2,071] | X1 tốt hơn control |
+| X2 − X3 | **+1,981** | [+1,053; +2,961] | X2 tốt hơn control |
+
+**Phân rã phương sai (seed × fold):**
+
+| Thành phần | Giá trị | Tỷ lệ |
+|---|---:|---:|
+| var_seed | 4,42e−06 | 0,9% |
+| var_fold | 4,20e−04 | **91,0%** |
+| var_resid | 3,82e−05 | 8,3% |
+
+→ **Phương sai do fold chiếm 91%**, seed chỉ 0,9%. Kết luận: báo cáo theo fold là
+bắt buộc; multi-seed một mình không đủ (khớp cảnh báo mục 7.4 của kế hoạch).
+
+**Bug đã sửa (ghi lại để tái lập):** lần chạy OOF đầu, `run_training_v2` không ghi
+`fold` override vào `cfg` nên cả 3 fold dùng nhầm `fold_0`; `oof_predictions`
+phát hiện ảnh trùng và dừng. Đã sửa (`cfg["data"]["fold"] = used_fold`), xoá 18
+run sai, chạy lại fold 1–2. Không có run sai nào được dùng trong kết quả.
+
+### 3.2. Chọn winner và freeze
+
+- Theo luật 4.5: X2 có OOF cao nhất (97,040). X1 − X2 = −0,743 với CI chứa 0 →
+  **chưa kết luận**; tie-break (1) ít params hơn: X2 1.448.779 < X1 2.201.931
+  → **chọn X2 (D2: 4 khối 32/64/128/256, flatten, BN, dropout 0,3, WD 1e-4, aug all)**.
+- **Epoch cố định = 26** = median best epoch của 9 run OOF X2 (15, 19, 21, 22, 26, 31, 31, 32, 40).
+- Freeze: `outputs/results/v2/FREEZE.json`
+  - `final_config_sha256 = 2678af82b7fc85fb…`
+  - `split_sha256 = 640a1913e011b2ed…` (dev_all)
+  - `git_commit` ghi tại thời điểm freeze.
+- `configs/v2/final.yaml`: split `dev_all`, 30.899 ảnh, max_epochs 26, không early stop.
+- **Lockbox chưa mở** (`lockbox_opened: false`).
+- Winner card: `outputs/results/v2/winner_card.json`.
+
+
 
 
 

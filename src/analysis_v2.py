@@ -307,19 +307,21 @@ def oof_table(config_ids: Sequence[str], B: int = 2000) -> dict[str, Any]:
     # Paired Δ giữa các config (cùng seed, cùng track resample).
     comparisons = {}
     if len(config_ids) > 1:
-        ref = config_ids[0]
-        for other in config_ids[1:]:
-            deltas, lows, highs = [], [], []
-            for seed in SEEDS:
-                result = paired_bootstrap_delta(truth, predictions[other][seed], predictions[ref][seed], tracks, B=B, seed=seed)
-                deltas.append(result["delta"]); lows.append(result["ci_low"]); highs.append(result["ci_high"])
-            comparisons[f"{other}_vs_{ref}"] = {
-                "delta": float(np.mean(deltas)),
-                "ci_low": float(np.mean(lows)),
-                "ci_high": float(np.mean(highs)),
-                "per_seed": [{"seed": s, "delta": d, "ci_low": l, "ci_high": h}
-                             for s, d, l, h in zip(SEEDS, deltas, lows, highs)],
-            }
+        for i, config_a in enumerate(config_ids):
+            for config_b in config_ids[i + 1:]:
+                deltas, lows, highs = [], [], []
+                for seed in SEEDS:
+                    result = paired_bootstrap_delta(
+                        truth, predictions[config_a][seed], predictions[config_b][seed], tracks, B=B, seed=seed
+                    )
+                    deltas.append(result["delta"]); lows.append(result["ci_low"]); highs.append(result["ci_high"])
+                comparisons[f"{config_a}_vs_{config_b}"] = {
+                    "delta": float(np.mean(deltas)),
+                    "ci_low": float(np.mean(lows)),
+                    "ci_high": float(np.mean(highs)),
+                    "per_seed": [{"seed": s, "delta": d, "ci_low": l, "ci_high": h}
+                                 for s, d, l, h in zip(SEEDS, deltas, lows, highs)],
+                }
     # Variance decomposition: mỗi fold là một giá trị F1.
     records = []
     for config_id in config_ids:

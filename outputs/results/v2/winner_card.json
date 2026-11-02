@@ -1,0 +1,20 @@
+{
+  "winner": "X2",
+  "source_config": "d2",
+  "architecture": "4 khối conv 32/64/128/256, flatten, BN, dropout 0.3, WD 1e-4, aug all",
+  "params": 1448779,
+  "infer_ms_per_img": 0.9499,
+  "oof_macro_f1_mean": 0.970400,
+  "oof_macro_f1_sd": 0.001869,
+  "oof_ci_low": 0.950511,
+  "oof_ci_high": 0.979422,
+  "delta_vs_control_points": 1.981,
+  "delta_vs_control_ci": [1.053, 2.961],
+  "delta_vs_x1_points": -0.743,
+  "delta_vs_x1_ci": [-1.590, 0.274],
+  "epoch": 26,
+  "epoch_rule": "median best epoch của 9 run OOF",
+  "decision_rule": "X2 cao nhất; X1-X2 CI chứa 0 nên tương đương/chưa kết luận; tie-break ít params hơn (1.45M < 2.20M)",
+  "mechanism": "4 khối tăng receptive field so với 3 khối, trong khi flatten giữ chi tiết không gian; 1.45M params ít hơn CNN-B 2.20M nhưng OOF cao hơn control 1.98 điểm. GAP 3 khối (D1) underfit nặng nên không chọn GAP.",
+  "tradeoff": "Thời gian train lâu hơn (aug + 4 khối) và latency 0.95 ms/ảnh so với 0.73 ms của X1; đổi lại OOF cao hơn và ít params hơn X1."
+}

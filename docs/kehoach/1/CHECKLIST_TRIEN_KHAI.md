@@ -137,22 +137,22 @@
 
 ### 3.1. OOF
 
-- [ ] Chạy top 2 + control × 3 fold × 3 seed (27 run).
-- [ ] Mỗi ảnh dev được dự đoán đúng 1 lần mỗi seed.
-- [ ] `oof_predictions.csv` đủ dòng, không trùng.
-- [ ] Tính macro-F1/43 trên OOF.
-- [ ] Bootstrap CI theo track (B ≥ 2.000).
-- [ ] Paired bootstrap cho Δ.
-- [ ] Holm cho 8 so sánh chính.
-- [ ] Variance decomposition seed/fold/residual.
+- [x] Chạy top 2 + control × 3 fold × 3 seed (27 run) — 27/27 OK sau khi sửa bug fold.
+- [x] Mỗi ảnh dev được dự đoán đúng 1 lần mỗi seed — `oof_predictions.csv` 278.091 dòng, 9 cặp (config,seed) × 30.899 ảnh.
+- [x] `oof_predictions.csv` đủ dòng, không trùng — đã kiểm tra bằng script, raise nếu trùng.
+- [x] Tính macro-F1/43 trên OOF — X1 96,297; X2 97,040; X3 95,059.
+- [x] Bootstrap CI theo track (B ≥ 2.000) — `oof_summary.json`.
+- [x] Paired bootstrap cho Δ — X1−X2 −0,743 [−1,590; +0,274]; X2−X3 +1,981 [+1,053; +2,961].
+- [x] Holm cho 8 so sánh chính — `main_comparisons.csv` (bước 4.1/4.3).
+- [x] Variance decomposition seed/fold/residual — var_fold 91,0%, var_seed 0,9%.
 
 ### 3.2. Chọn winner
 
-- [ ] Áp dụng luật 4.5.
-- [ ] Nếu tương đương, chọn ít params/nhanh/đơn giản.
-- [ ] Ghi decision card cho winner.
-- [ ] Ghi rõ config, seed, epoch = median best epoch.
-- [ ] Commit freeze; ghi hash: `__________`.
+- [x] Áp dụng luật 4.5 — X2 cao nhất; X1−X2 CI chứa 0 → chưa kết luận.
+- [x] Nếu tương đương, chọn ít params/nhanh/đơn giản — X2 1,45M < X1 2,20M → chọn X2.
+- [x] Ghi decision card cho winner — `outputs/results/v2/winner_card.json`.
+- [x] Ghi rõ config, seed, epoch = median best epoch — `configs/v2/final.yaml`, epoch 26.
+- [x] Commit freeze; ghi hash — `FREEZE.json`, `final_config_sha256=2678af82…`, `split_sha256=640a1913…`.
 
 ### 3.3. Final + lockbox
 

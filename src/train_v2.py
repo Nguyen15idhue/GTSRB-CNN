@@ -190,6 +190,8 @@ def run_training_v2(
     cfg = load_yaml(config_path)
     used_seed = int(cfg["experiment"].get("seed", 42) if seed is None else seed)
     split_name, used_fold = resolve_split(cfg, fold)
+    # Ghi fold đã dùng vào cfg để make_loaders_v2 đọc đúng fold (bug 3.1 đã sửa).
+    cfg["data"]["fold"] = used_fold
     device = device or get_device()
     name = run_id_v2(cfg, used_seed, used_fold)
     out_dir = RUNS_DIR / name
