@@ -315,9 +315,9 @@ dụng khi chênh < 0,3 điểm %, nên không chọn E4 dù chỉ bằng 18 % t
 | Commit freeze | `8f61c5a6cc` |
 
 *Bảng 4.5. Kết quả test (đánh giá đúng một lần)*
-![Hình 4.4. Confusion matrix test 43×43 (chuẩn hóa theo hàng)](outputs/figures/10_confusion_full.png)
+![Hình 4.4. Confusion matrix test 43×43 (màu: tỷ lệ theo hàng; số trong ô: số ảnh)](outputs/figures/10_confusion_full_counts.png)
 
-*Hình 4.4. Confusion matrix test 43×43 (chuẩn hóa theo hàng)*
+*Hình 4.4. Confusion matrix test 43×43 (màu: tỷ lệ theo hàng; số trong ô: số ảnh)*
 
 **Chênh val–test:** test **cao hơn** mean val 0,47 điểm % accuracy và 1,45 điểm % macro-F1. Đã kiểm tra
 lại: accuracy/F1/top-3 tính lại từ `predictions.csv` khớp từng bit, nhãn khớp `GT-final_test.csv`,
@@ -339,9 +339,9 @@ support 60**. Với support nhỏ, 1 ảnh sai làm F1 giảm ~0,03, nên không
 
 ### 5.2. Confusion và cặp nhầm
 
-![Hình 5.2. Zoom 15 lớp F1 thấp nhất (chuẩn hóa theo hàng)](outputs/figures/07_confusion_zoom15.png)
+![Hình 5.2. Zoom 15 lớp F1 thấp nhất (màu: tỷ lệ theo hàng; số trong ô: số ảnh)](outputs/figures/10_confusion_zoom15_counts.png)
 
-*Hình 5.2. Zoom 15 lớp F1 thấp nhất (chuẩn hóa theo hàng)*
+*Hình 5.2. Zoom 15 lớp F1 thấp nhất (màu: tỷ lệ theo hàng; số trong ô: số ảnh)*
 
 | Hạng | Cặp (thật → dự đoán) | Số ảnh |
 |---|---|---|
