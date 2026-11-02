@@ -129,4 +129,33 @@ khác biệt do (a) screening chỉ train 24.719 ảnh (cũ 31.360), (b) split s
 khó hơn, (c) aug làm giảm clean accuracy ở ngân sách 40 epoch. Ghi nhận, **không đổi
 luật**, kết luận cuối lấy từ OOF/final (`gate_check_f15.json`).
 
+## Phase 2 — Kiến trúc, hyperparam, augmentation
+
+### 2.1. Kiến trúc (D1, D2, D3, W1, W2 × 3 seed)
+
+Nguồn: `outputs/results/v2/tables/architecture.md`, `summary.csv`.
+Mốc so sánh D4 = F15 (93,946).
+
+| ID | Thay đổi so với D4 | Acc (%) | Macro-F1 (%) | Δ vs D4 (điểm %) [CI] | Params |
+|---|---|---:|---:|---|---:|
+| D1 | thêm GAP, 3 khối | 74,234 ± 0,592 | 59,188 ± 0,764 | **−34,758** [−36,181; −22,916] | 99.019 |
+| D2 | 4 khối, flatten | 98,004 ± 0,297 | **97,158 ± 0,610** | **+3,212** [+0,036; +4,440] | 1.448.779 |
+| D3 | 4 khối + GAP + DO 0,4 (E4 cũ) | 96,575 ± 0,580 | 93,105 ± 0,906 | −0,841 [−2,724; +0,757] | 399.947 |
+| W1 | width 16/32/64 | 94,876 ± 0,916 | 90,686 ± 1,425 | −3,260 [−5,250; −0,735] | 1.083.579 |
+| W2 | width 48/96/192 | 97,104 ± 0,368 | 95,215 ± 1,230 | +1,268 [−0,585; +2,499] | 3.366.363 |
+
+**Kết luận:**
+
+- **GAP trên 3 khối (D1) thất bại rõ**: chỉ 99k params, train acc 84,6%, val 74,2%
+  sau 40 epoch → **underfit**, không phải "GAP mất chi tiết" đơn thuần. Không chọn.
+- **4 khối + flatten (D2) tốt hơn 3 khối (D4) 3,212 điểm, CI không chứa 0** →
+  bác bỏ giả thuyết H4 "3 khối ≥ 4 khối". D2 cũng ít params hơn D4 (1,45M so với 2,20M).
+- **D3 (E4 cũ) tương đương D4** trong CI → không dùng D3 để kết luận cơ chế
+  (D3 đổi cả depth/GAP/dropout 0,4); D3 chỉ là legacy mapping.
+- **Width nhỏ (W1) kém rõ**; width lớn (W2) +1,268 nhưng CI chứa 0 → **chưa kết luận**,
+  và params tăng 1,5×.
+- Pareto: D2 nằm trên frontier (F1 cao nhất, params thấp hơn D4); xem
+  `outputs/figures/v2/03_pareto_params_f1.png` (bước 4.2).
+
+
 

@@ -259,10 +259,16 @@ def oof_predictions(config_id: str) -> dict[int, dict[str, Any]]:
             if not path.is_file():
                 raise FileNotFoundError(path)
             index, truth, pred = read_predictions(path)
+            with path.open(newline="", encoding="utf-8") as fh:
+                prob_rows = {int(row["image_index"]): row for row in csv.DictReader(fh)}
             for i, t, p in zip(index, truth, pred):
                 if int(i) in merged:
                     raise RuntimeError(f"OOF trùng ảnh {i} ở {config_id} seed {seed}")
-                merged[int(i)] = {"true": int(t), "pred": int(p), "fold": fold}
+                merged[int(i)] = {
+                    "true": int(t), "pred": int(p), "fold": fold,
+                    "prob_true": float(prob_rows[int(i)]["prob_true"]),
+                    "prob_pred": float(prob_rows[int(i)]["prob_pred"]),
+                }
         expected = set(get_indices("dev_all")["train"])
         if set(merged) != expected:
             raise RuntimeError(

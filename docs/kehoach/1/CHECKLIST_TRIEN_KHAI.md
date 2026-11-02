@@ -98,12 +98,12 @@
 
 ### 2.1. Kiến trúc
 
-- [ ] D1, D2, D3 × 3 seed.
-- [ ] W1, W2 × 3 seed.
-- [ ] Bảng params vs macro-F1 (Pareto).
-- [ ] So sánh D1 vs D4 (GAP), D2 vs D4 (depth), W1/W2 vs D4 (width).
-- [ ] D3 chỉ map E4 cũ; không dùng D3 để kết luận cơ chế.
-- [ ] Kết luận GAP/depth/width.
+- [x] D1, D2, D3 × 3 seed — 9/9 run, đủ artifact.
+- [x] W1, W2 × 3 seed — 6/6 run.
+- [x] Bảng params vs macro-F1 (Pareto) — `tables/architecture.md`.
+- [x] So sánh D1 vs D4 (GAP): −34,758 điểm; D2 vs D4 (depth): +3,212 [+0,036; +4,440]; W1/W2 vs D4: −3,260 / +1,268 (CI chứa 0).
+- [x] D3 chỉ map E4 cũ; không dùng D3 để kết luận cơ chế.
+- [x] Kết luận GAP/depth/width: GAP 3 khối underfit; 4 khối tốt hơn 3 khối; width nhỏ kém, width lớn chưa kết luận.
 
 ### 2.2. Hyperparam
 
