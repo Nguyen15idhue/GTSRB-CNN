@@ -1,0 +1,11 @@
+{
+  "criterion": "MAD < 5 trên ảnh 64x64 (uint8), chỉ xét cùng nhãn khác track",
+  "n_candidate_pairs": 3809816,
+  "n_merged_pairs": 39603,
+  "n_cross_lockbox_dev": 0,
+  "n_within_lockbox": 16217,
+  "n_within_dev": 23386,
+  "test_images_matching_train": 0,
+  "test_overlap_examples": [],
+  "hash": "sha256 nội dung file (MD5 trùng ⇒ SHA-256 trùng)"
+}

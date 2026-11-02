@@ -1,0 +1,41 @@
+experiment:
+  id: w2
+  protocol: v2_clean
+  block: D_architecture
+  seed: 42
+  notes: Width lớn 48/96/192
+data:
+  split: screening
+  fold: null
+  image_size: 64
+  num_classes: 43
+  num_workers: 4
+model:
+  name: smallcnn_3blk
+  widths:
+  - 48
+  - 96
+  - 192
+  use_bn: true
+  dropout: 0.3
+  gap: false
+  fc_hidden: 256
+augmentation:
+  enabled: true
+  profile: all
+train:
+  optimizer: adamw
+  lr: 0.001
+  weight_decay: 0.0001
+  batch_size: 128
+  max_epochs: 40
+  patience: 7
+  scheduler: cosine
+  warmup_epochs: 0
+  class_weight: none
+  label_smoothing: 0.0
+  amp: true
+  monitor: val_macro_f1
+  deterministic: true
+output:
+  dir: outputs/runs

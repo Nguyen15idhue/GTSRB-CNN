@@ -1,0 +1,8 @@
+﻿Phase 0.2 — split v2
+pool=39201 sign_groups=1183 tracks=1307
+lockbox=8302 (277 track, 238 group) seed 2024
+dev=30899 (1030 track)
+screening=24719/6180 seed 42
+folds=19949/10950, 20729/10170, 21120/9779 seed 42
+checks C1-C12: 15/15 PASS
+manifest=outputs/splits/v2/manifest.json
