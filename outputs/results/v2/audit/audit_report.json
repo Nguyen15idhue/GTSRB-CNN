@@ -1,0 +1,145 @@
+{
+  "protocol": "v2_clean",
+  "manifest_sha256": "a0f1db973ae12381361acd8815e6a31ddeeb4468119085fe62f54adc48bcb651",
+  "passed": true,
+  "n_checks": 15,
+  "n_passed": 15,
+  "checks": [
+    {
+      "check": "C1",
+      "name": "Track overlap lockbox/dev",
+      "value": 0,
+      "criterion": "= 0",
+      "passed": true
+    },
+    {
+      "check": "C2",
+      "name": "Sign-group overlap lockbox/dev",
+      "value": 0,
+      "criterion": "= 0",
+      "passed": true
+    },
+    {
+      "check": "C3",
+      "name": "Lockbox đủ lớp",
+      "value": 43,
+      "criterion": "= 43",
+      "passed": true
+    },
+    {
+      "check": "C4",
+      "name": "Dev đủ lớp",
+      "value": 43,
+      "criterion": "= 43",
+      "passed": true
+    },
+    {
+      "check": "C5",
+      "name": "Screening val đủ lớp",
+      "value": 43,
+      "criterion": "= 43",
+      "passed": true
+    },
+    {
+      "check": "C6",
+      "name": "Mỗi fold đủ lớp",
+      "value": [
+        43,
+        43,
+        43
+      ],
+      "criterion": "= 43",
+      "passed": true
+    },
+    {
+      "check": "C7",
+      "name": "Overlap screening train/val",
+      "value": 0,
+      "criterion": "= 0",
+      "passed": true
+    },
+    {
+      "check": "C8",
+      "name": "Overlap track từng fold",
+      "value": [
+        0,
+        0,
+        0
+      ],
+      "criterion": "= 0",
+      "passed": true
+    },
+    {
+      "check": "C9",
+      "name": "Test nằm trong train/lockbox",
+      "value": 0,
+      "criterion": "= 0",
+      "passed": true
+    },
+    {
+      "check": "C10",
+      "name": "Lockbox gần trùng train (MAD < 5)",
+      "value": 0,
+      "criterion": "= 0",
+      "passed": true
+    },
+    {
+      "check": "C11",
+      "name": "Hash trùng trong pool",
+      "value": 0,
+      "criterion": "= 0",
+      "passed": true
+    },
+    {
+      "check": "C12",
+      "name": "Track/lớp nhỏ nhất trong dev",
+      "value": 6,
+      "criterion": ">= 2",
+      "passed": true
+    },
+    {
+      "check": "HASH",
+      "name": "Hash file split khớp manifest",
+      "value": "khớp",
+      "criterion": "khớp toàn bộ",
+      "passed": true
+    },
+    {
+      "check": "MEANSTD",
+      "name": "mean/std khớp manifest",
+      "value": {
+        "mean_abs_diff": 0.0,
+        "std_abs_diff": 0.0
+      },
+      "criterion": "< 1e-5",
+      "passed": true
+    },
+    {
+      "check": "COUNT",
+      "name": "Số ảnh manifest khớp file split",
+      "value": true,
+      "criterion": "khớp",
+      "passed": true
+    }
+  ],
+  "split_sizes": {
+    "lockbox": 8302,
+    "dev": 30899,
+    "screening_train": 24719,
+    "screening_val": 6180,
+    "folds": [
+      {
+        "train": 19949,
+        "val": 10950
+      },
+      {
+        "train": 20729,
+        "val": 10170
+      },
+      {
+        "train": 21120,
+        "val": 9779
+      }
+    ]
+  }
+}

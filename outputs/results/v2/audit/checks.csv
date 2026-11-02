@@ -1,0 +1,16 @@
+check,name,value,criterion,passed
+C1,Track overlap lockbox/dev,0,= 0,True
+C2,Sign-group overlap lockbox/dev,0,= 0,True
+C3,Lockbox đủ lớp,43,= 43,True
+C4,Dev đủ lớp,43,= 43,True
+C5,Screening val đủ lớp,43,= 43,True
+C6,Mỗi fold đủ lớp,"[43, 43, 43]",= 43,True
+C7,Overlap screening train/val,0,= 0,True
+C8,Overlap track từng fold,"[0, 0, 0]",= 0,True
+C9,Test nằm trong train/lockbox,0,= 0,True
+C10,Lockbox gần trùng train (MAD < 5),0,= 0,True
+C11,Hash trùng trong pool,0,= 0,True
+C12,Track/lớp nhỏ nhất trong dev,6,>= 2,True
+HASH,Hash file split khớp manifest,khớp,khớp toàn bộ,True
+MEANSTD,mean/std khớp manifest,"{'mean_abs_diff': 0.0, 'std_abs_diff': 0.0}",< 1e-5,True
+COUNT,Số ảnh manifest khớp file split,True,khớp,True

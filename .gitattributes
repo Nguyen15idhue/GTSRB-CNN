@@ -1,0 +1,4 @@
+# Giữ nguyên byte cho artifact có hash: không đổi LF → CRLF khi checkout.
+# Nếu checkout đổi line ending, SHA-256 trong manifest sẽ không còn khớp.
+outputs/splits/v2/*.json -text
+outputs/splits/v2/*.sha256 -text
