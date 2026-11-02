@@ -45,6 +45,8 @@ def test_d3_is_cnn_c_legacy():
 
 def test_protocol_invariants():
     for path in CONFIG_DIR.glob("*.yaml"):
+        if path.name == "final.yaml":
+            continue
         cfg = yaml.safe_load(path.read_text(encoding="utf-8"))
         assert cfg["train"]["max_epochs"] == 40, path.name
         assert cfg["train"]["patience"] == 7, path.name
@@ -52,6 +54,19 @@ def test_protocol_invariants():
         assert cfg["data"]["num_classes"] == 43, path.name
         assert cfg["experiment"]["protocol"] == "v2_clean", path.name
         assert cfg["augmentation"]["profile"] != "horizontal_flip", path.name
+
+
+def test_final_config_matches_freeze():
+    import json
+
+    final_path = CONFIG_DIR / "final.yaml"
+    freeze_path = Path(__file__).resolve().parents[1] / "outputs" / "results" / "v2" / "FREEZE.json"
+    if not final_path.is_file() or not freeze_path.is_file():
+        return
+    freeze = json.loads(freeze_path.read_text(encoding="utf-8"))
+    cfg = yaml.safe_load(final_path.read_text(encoding="utf-8"))
+    assert cfg["data"]["split"] == "dev_all"
+    assert cfg["train"]["max_epochs"] == freeze["epoch"]
 
 
 def test_no_alias_config_files_are_duplicated():

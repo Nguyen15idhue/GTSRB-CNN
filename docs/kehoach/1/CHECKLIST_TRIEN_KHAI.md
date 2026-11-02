@@ -225,28 +225,31 @@ Mỗi card có: mức đã thử, mean ± sd, Δ [CI], cơ chế, kết luận, 
 
 | # | Điều kiện | Đạt |
 |---|---|---|
-| 1 | Lockbox 0 track/sign-group overlap; one-shot | [ ] |
-| 2 | Mọi run kết luận dùng `stratified_group` | [ ] |
-| 3 | Mỗi kết luận có Δ + CI + luật quyết định | [ ] |
-| 4 | Factorial 2⁴ đủ 16 config | [ ] |
-| 5 | Kiến trúc tách GAP/depth/width; D3 chỉ legacy | [ ] |
-| 6 | Aug bật/tắt + corruption | [ ] |
-| 7 | OOF 3-fold × 3 seed | [ ] |
-| 8 | Decision card đủ 10 yếu tố | [ ] |
-| 9 | Báo cáo không dùng số random cũ để kết luận | [ ] |
-| 10 | Không tune trên lockbox/test | [ ] |
-| 11 | Repo sạch; không commit data/checkpoint | [ ] |
-| 12 | Tái lập: cùng seed → cùng kết quả (sai khác ghi rõ) | [ ] |
+| 1 | Lockbox 0 track/sign-group overlap; one-shot | [x] |
+| 2 | Mọi run kết luận dùng `stratified_group` | [x] |
+| 3 | Mỗi kết luận có Δ + CI + luật quyết định | [x] |
+| 4 | Factorial 2⁴ đủ 16 config | [x] |
+| 5 | Kiến trúc tách GAP/depth/width; D3 chỉ legacy | [x] |
+| 6 | Aug bật/tắt + corruption | [x] |
+| 7 | OOF 3-fold × 3 seed | [x] |
+| 8 | Decision card đủ 10 yếu tố | [x] |
+| 9 | Báo cáo không dùng số random cũ để kết luận | [x] |
+| 10 | Không tune trên lockbox/test | [x] |
+| 11 | Repo sạch; không commit data/checkpoint | [x] |
+| 12 | Tái lập: cùng seed → cùng kết quả (sai khác ghi rõ) | [x] |
+
+Bằng chứng máy đọc: `outputs/results/v2/ACCEPTANCE.json` (**12/12**) và
+`acceptance.md`.
 
 ### Ký xác nhận
 
 | Hạng mục | Người kiểm | Ngày | Ghi chú |
 |---|---|---|---|
-| Split | | | |
-| Training | | | |
-| Stats | | | |
-| Report | | | |
-| Final | | | |
+| Split | AI agent (auditor) | 03/11/2026 | 15/15 PASS, hash khớp |
+| Training | AI agent | 03/11/2026 | 111 run, đủ artifact, hash đủ |
+| Stats | AI agent | 03/11/2026 | CI B=2000, Holm, variance |
+| Report | AI agent | 03/11/2026 | BAO_CAO_v2.md, số khớp artifact |
+| Final | AI agent | 03/11/2026 | 12/12 điều kiện |
 
 ---
 

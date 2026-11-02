@@ -1,0 +1,159 @@
+{
+  "protocol": "v2_clean",
+  "generated_at": "2026-11-03",
+  "n_checks": 12,
+  "n_passed": 12,
+  "passed": true,
+  "checks": [
+    {
+      "code": 1,
+      "name": "Lockbox 0 track/sign-group overlap; one-shot",
+      "passed": true,
+      "value": {
+        "overlap_track": 0,
+        "overlap_sign_group": 0,
+        "n_lockbox": 8302
+      },
+      "evidence": "audit_report.json C1/C2 + lockbox_access.log"
+    },
+    {
+      "code": 2,
+      "name": "Mọi run kết luận dùng split sign-group (v2_clean)",
+      "passed": true,
+      "value": {
+        "protocols": [
+          "v2_clean"
+        ],
+        "split_prefixes": [
+          "dev",
+          "fold",
+          "screening"
+        ]
+      },
+      "evidence": "summary.csv"
+    },
+    {
+      "code": 3,
+      "name": "Mỗi kết luận có Δ + CI + luật quyết định",
+      "passed": true,
+      "value": {
+        "n_main_comparisons": 8,
+        "holm_done": true
+      },
+      "evidence": "main_comparisons.csv, decision_cards.csv"
+    },
+    {
+      "code": 4,
+      "name": "Factorial 2⁴ đủ 16 config",
+      "passed": true,
+      "value": {
+        "n_runs": 48,
+        "all_complete": true
+      },
+      "evidence": "phase12_artifacts.json"
+    },
+    {
+      "code": 5,
+      "name": "Kiến trúc tách GAP/depth/width; D3 chỉ legacy",
+      "passed": true,
+      "value": {
+        "configs": [
+          "d1",
+          "d2",
+          "d3",
+          "w1",
+          "w2"
+        ],
+        "d3_role": "legacy"
+      },
+      "evidence": "tables/architecture.md"
+    },
+    {
+      "code": 6,
+      "name": "Aug bật/tắt + corruption 6×3",
+      "passed": true,
+      "value": {
+        "n_rows": 108,
+        "n_types": 6,
+        "n_severities": 3
+      },
+      "evidence": "corruption.csv, tables/augmentation.md"
+    },
+    {
+      "code": 7,
+      "name": "OOF 3 fold × 3 seed",
+      "passed": true,
+      "value": {
+        "rows": 278091,
+        "expected": 278091
+      },
+      "evidence": "oof_predictions.csv, variance.json"
+    },
+    {
+      "code": 8,
+      "name": "Decision card đủ 10 yếu tố",
+      "passed": true,
+      "value": {
+        "n_cards": 10,
+        "factors": [
+          "BN",
+          "Dropout",
+          "Weight decay",
+          "Augmentation",
+          "GAP",
+          "Depth",
+          "Width",
+          "LR",
+          "Class weight",
+          "Input size"
+        ]
+      },
+      "evidence": "decision_cards.csv"
+    },
+    {
+      "code": 9,
+      "name": "Báo cáo không dùng số random cũ để kết luận",
+      "passed": true,
+      "value": {
+        "legacy_rows": 9,
+        "random_in_summary": 0
+      },
+      "evidence": "legacy/README.md, BAO_CAO_v2.md Phụ lục A"
+    },
+    {
+      "code": 10,
+      "name": "Không tune trên lockbox/test",
+      "passed": true,
+      "value": {
+        "freeze_before_open": true,
+        "epoch": 26,
+        "frozen_at": "2026-11-03 03:57:32"
+      },
+      "evidence": "FREEZE.json, lockbox_access.log"
+    },
+    {
+      "code": 11,
+      "name": "Repo sạch; không commit data/checkpoint",
+      "passed": true,
+      "value": {
+        "forbidden": [],
+        "tracked_pt": [
+          "checkpoints/final_s42/best.pt"
+        ]
+      },
+      "evidence": "git ls-files"
+    },
+    {
+      "code": 12,
+      "name": "Tái lập: cùng seed → cùng kết quả",
+      "passed": true,
+      "value": {
+        "train_loss": 0.0,
+        "val_loss": 0.0,
+        "val_acc": 0.0,
+        "val_macro_f1": 0.0
+      },
+      "evidence": "reproducibility.json, log_repro.txt"
+    }
+  ]
+}

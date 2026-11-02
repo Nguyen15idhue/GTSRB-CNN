@@ -33,6 +33,44 @@ và thời gian tham khảo. Bản ngắn: mục 3–5 dưới đây.
 mang `outputs/GTSRB_demo_bundle.zip` (~15 MB, gồm model + báo cáo DOCX + 16 ảnh demo) sang máy mới,
 giải nén rồi `pip install -r requirements-demo.txt` và `streamlit run app.py` (xem mục 8.1 của hướng dẫn).
 
+## 1.2. Thực nghiệm v2 (03/11/2026) — số độc lập, đã thay thế kết luận cũ
+
+Phiên bản v2 chia lại dữ liệu theo **sign-group**, thêm **lockbox 8.302 ảnh** mở
+một lần, chọn mô hình bằng **OOF 3 fold × 3 seed**, và báo cáo đầy đủ trong
+**`docs/bao_cao/BAO_CAO_v2.md`**. Số cũ ở mục 1 chỉ còn giá trị lịch sử.
+
+| Hạng mục | Giá trị v2 | Nguồn |
+|---|---|---|
+| Split | lockbox **8.302** / dev **30.899**; screening 24.719/6.180; 3 fold | `outputs/splits/v2/manifest.json` |
+| Winner | **D2** — 4 khối 32/64/128/256, flatten, BN, dropout 0,3, WD 1e-4, aug all; 1.448.779 params | `FREEZE.json`, `configs/v2/final.yaml` |
+| OOF 31k ảnh | macro-F1 **0,970400 ± 0,001869** (X2) | `oof_summary.json` |
+| **Lockbox (một lần)** | accuracy **0,988758 ± 0,001010** · macro-F1 **0,975981 ± 0,006246** · top-3 0,998474 | `lockbox_result.json` |
+| Official test raw | accuracy 0,986989 · macro-F1 0,980398 (12.630) | `official_test_v2.json` |
+| Official test clean | accuracy 0,988692 · macro-F1 0,982499 (11.879; 751 ảnh gần trùng) | `official_test_v2.json` |
+| Kết luận yếu tố | BN **+3,72**, dropout **+5,96**, GAP 3 khối **−34,76**, depth **+3,21**, LR 1e-4 **−7,14**, WD/aug/width "chưa kết luận" (điểm %) | `main_comparisons.csv` |
+| Phương sai | fold **91,0%**, seed 0,9% | `variance.json` |
+| Nghiệm thu | **12/12** điều kiện | `ACCEPTANCE.json`, `acceptance.md` |
+
+Lệnh chạy lại v2 (sau khi có `data/`):
+
+```powershell
+python -m src.split_v2 --build
+python -m src.audit_v2
+python scripts/run_matrix.py --block F_factorial --seeds 42,123,2024
+python scripts/run_matrix.py --configs d1,d2,d3,w1,w2 --seeds 42,123,2024
+python scripts/run_matrix.py --configs l1,cw1,i2 --seeds 42,123,2024
+python scripts/run_matrix.py --configs g1,g2,g3 --seeds 42,123,2024
+python scripts/select_candidates.py          # X1–X3
+python scripts/run_matrix.py --configs x1,x2,x3 --seeds 42,123,2024 --folds 0,1,2
+python scripts/run_oof_analysis.py --configs x1,x2,x3
+python scripts/freeze_v2.py --winner x2 --source d2 --reason "..."
+python scripts/run_matrix.py --configs final --seeds 42,123,2024
+python -m src.final_eval_v2 --mode lockbox --runs outputs/runs/v2_final_s42,outputs/runs/v2_final_s123,outputs/runs/v2_final_s2024
+python -m src.final_eval_v2 --mode test --runs outputs/runs/v2_final_s42,outputs/runs/v2_final_s123,outputs/runs/v2_final_s2024
+python scripts/run_phase4.py
+python scripts/acceptance_v2.py
+```
+
 ## 2. Yêu cầu hệ thống
 
 - Windows 10/11 + PowerShell, Python **3.12 64-bit**.

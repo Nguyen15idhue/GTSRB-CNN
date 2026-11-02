@@ -42,6 +42,8 @@ def collect_runs() -> list[dict[str, Any]]:
         meta_path = folder / "meta.json"
         if not meta_path.is_file():
             continue
+        if folder.name.startswith("v2_repro"):
+            continue  # run kiểm tra tái lập, không phải run thí nghiệm
         meta = json.loads(meta_path.read_text(encoding="utf-8"))
         meta["_dir"] = str(folder)
         runs.append(meta)

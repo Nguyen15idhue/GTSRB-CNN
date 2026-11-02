@@ -8,8 +8,8 @@ Hướng dẫn cho AI agent (và người) khi làm việc trong repo này.
 | Dự án | Bài tập lớn Học sâu 12INF028 — Phân loại biển báo GTSRB bằng CNN |
 | Ngôn ngữ tài liệu | Tiếng Việt |
 | Ngôn ngữ code | Tên biến/hàm bằng tiếng Anh; comment/docstring tiếng Việt được phép |
-| Cập nhật lần cuối | 23/10/2026 |
-| Trạng thái repo | **Giai đoạn 10 hoàn tất (23/10/2026)**: GĐ1–10 xong. GĐ6 chốt E3 trên `split_stratified_group`, multi-seed, **test 1 lần: acc 0,985590 · macro-F1 0,979894** (xác minh 14/14). GĐ9: clean-room `.venv_test` (CUDA (12,0), val khớp tuyệt đối, golden test 0,000e+00, pytest 11). GĐ10: `docs/bao_cao/BAO_CAO.{md,docx}` (6 chương, 19 bảng, 20 hình). **GĐ11–12 chưa làm** (slide/video/đóng gói/nộp) theo yêu cầu. |
+| Cập nhật lần cuối | 03/11/2026 |
+| Trạng thái repo | **Thực nghiệm v2 hoàn tất (03/11/2026)**: 18/18 bước, split 3 tầng theo sign-group, lockbox one-shot (acc 0,988758 · macro-F1 0,975981), OOF 3 fold × 3 seed (0,970400), nghiệm thu 12/12. Báo cáo: `docs/bao_cao/BAO_CAO_v2.md`; nhật ký: `docs/kehoach/1/KET_QUA_TRIEN_KHAI_V2.md`. GĐ11–12 (slide/video/nộp) chưa làm. |
 
 ---
 

@@ -393,6 +393,38 @@ Nguồn: `outputs/results/v2/decision_cards.csv`.
 | Class weight | none / inv_sqrt | −1,00 [−2,11; +0,26] | Bỏ | exploratory, chưa hiệu chỉnh |
 | Input size | 64 / 96 | −3,45 [−5,52; −0,93] | **Giữ 64** | 96 tăng 2,2× params, chậm hơn |
 
+## Phase 5 — Nghiệm thu cuối
+
+Nguồn: `outputs/results/v2/ACCEPTANCE.json`, `acceptance.md`, `reproducibility.json`.
+
+**12/12 điều kiện đạt:**
+
+| # | Điều kiện | Giá trị |
+|---|---|---|
+| 1 | Lockbox 0 track/sign-group overlap; one-shot | 0 / 0; 8.302 ảnh; log có |
+| 2 | Mọi run kết luận dùng split sign-group | protocol `v2_clean`, không có random |
+| 3 | Δ + CI + luật quyết định | 8 so sánh chính + Holm |
+| 4 | Factorial 2⁴ đủ 16 config | 48 run |
+| 5 | Tách GAP/depth/width; D3 legacy | D1/D2/W1/W2 + F15 |
+| 6 | Aug bật/tắt + corruption | 108 dòng (6×3) |
+| 7 | OOF 3 fold × 3 seed | 278.091 dòng |
+| 8 | Decision card 10 yếu tố | 10 card |
+| 9 | Không dùng số random cũ | legacy tách riêng |
+| 10 | Không tune lockbox/test | freeze trước, log mở |
+| 11 | Repo sạch | không data/*.npy; chỉ checkpoint demo được phép |
+| 12 | Tái lập cùng seed | sai khác **0,0** trên 4 metric |
+
+**Rủi ro còn lại:**
+
+- Lockbox 8.302 ảnh / 277 track → CI rộng hơn official test; không so trực tiếp.
+- Official test vẫn không track-disjoint; clean 11.879 theo audit riêng (751 ảnh).
+- Occlusion là điểm yếu lớn (17,6–26,4% accuracy).
+- Screening 24.719 ảnh < final 30.899 → kết luận screening chỉ để chọn.
+- Một số so sánh (WD, width, aug) **chưa kết luận**, không được trình bày là "tốt".
+- Sự cố mở lockbox 2 lần do bug ghi file đã ghi log; config/model/hash không đổi,
+  kết quả lần 2 trùng khớp tuyệt đối lần 1.
+
+
 
 
 

@@ -1,0 +1,17 @@
+{
+  "seed": 42,
+  "epochs": 3,
+  "runs": [
+    "v2_reproa_s42",
+    "v2_reprob_s42"
+  ],
+  "max_abs_diff": {
+    "train_loss": 0.0,
+    "val_loss": 0.0,
+    "val_acc": 0.0,
+    "val_macro_f1": 0.0
+  },
+  "tolerance": 1e-06,
+  "passed": true,
+  "note": "Cùng seed/split/config; khác experiment.id không ảnh hưởng quá trình học."
+}
