@@ -7,7 +7,7 @@
 |---|---|
 | Người thực hiện | Kỹ sư ML chính kiêm auditor tái lập (AI agent) |
 | Ngày bắt đầu | 02/11/2026 |
-| Commit pre-registration | điền ở mục 0.1 sau khi commit |
+| Commit pre-registration | `18a785d` |
 | Trạng thái | Đang làm |
 
 ---
@@ -27,41 +27,45 @@
 
 ### 0.2. Chia split
 
-- [ ] Bổ sung `src/split_v2.py` (hoặc mở rộng `src/data.py`) theo mục 3.4.
-- [ ] Sinh lockbox 20% track, seed 2024.
-- [ ] Sinh dev 80%.
-- [ ] Sinh screening 80/20 trong dev, seed 42.
-- [ ] Sinh 3 fold trong dev, seed 42.
-- [ ] Ghi `outputs/splits/v2/manifest.json`.
-- [ ] Ghi hash từng file split.
-- [ ] Ghi mean/std theo từng split.
+- [x] Bổ sung `src/split_v2.py` (hoặc mở rộng `src/data.py`) theo mục 3.4.
+- [x] Sinh lockbox 20% track, seed 2024 → **8.302 ảnh / 277 track / 238 sign-group**.
+- [x] Sinh dev 80% → **30.899 ảnh / 1.030 track**.
+- [x] Sinh screening 80/20 trong dev, seed 42 → **24.719 / 6.180**.
+- [x] Sinh 3 fold trong dev, seed 42 → **(19.949/10.950), (20.729/10.170), (21.120/9.779)**.
+- [x] Ghi `outputs/splits/v2/manifest.json`.
+- [x] Ghi hash từng file split.
+- [x] Ghi mean/std theo từng split.
+
+> Số thực tế khác bảng dự kiến của kế hoạch vì đơn vị nhóm là **sign-group**
+> (1.183 nhóm từ 1.307 track), không phải track. Manifest là nguồn số chính thức.
 
 ### 0.3. Kiểm tra split
 
 | # | Kiểm tra | Tiêu chí | Kết quả | Đạt |
 |---|---|---|---|---|
-| C1 | Track overlap lockbox/dev | 0 | | [ ] |
-| C2 | Sign-group overlap | 0 (nếu bật) | | [ ] |
-| C3 | Lockbox đủ lớp | 43/43 | | [ ] |
-| C4 | Dev đủ lớp | 43/43 | | [ ] |
-| C5 | Screening val đủ lớp | 43/43 | | [ ] |
-| C6 | Mỗi fold đủ lớp | 43/43 | | [ ] |
-| C7 | Overlap screening train/val | 0 | | [ ] |
-| C8 | Overlap từng fold | 0 | | [ ] |
-| C9 | Test không nằm trong train/lockbox | 0 | | [ ] |
-| C10 | Lockbox không có ảnh gần trùng train (MAD < 5) | 0 | | [ ] |
-| C11 | MD5 trùng trong train | 0 | | [ ] |
-| C12 | Số track/lớp nhỏ nhất trong dev | ≥ 2 | | [ ] |
+| C1 | Track overlap lockbox/dev | 0 | 0 | [x] |
+| C2 | Sign-group overlap | 0 (nếu bật) | 0 | [x] |
+| C3 | Lockbox đủ lớp | 43/43 | 43 | [x] |
+| C4 | Dev đủ lớp | 43/43 | 43 | [x] |
+| C5 | Screening val đủ lớp | 43/43 | 43 | [x] |
+| C6 | Mỗi fold đủ lớp | 43/43 | 43, 43, 43 | [x] |
+| C7 | Overlap screening train/val | 0 | 0 | [x] |
+| C8 | Overlap từng fold | 0 | 0, 0, 0 | [x] |
+| C9 | Test không nằm trong train/lockbox | 0 | 0 | [x] |
+| C10 | Lockbox không có ảnh gần trùng train (MAD < 5) | 0 | 0 | [x] |
+| C11 | MD5 trùng trong train | 0 | 0 | [x] |
+| C12 | Số track/lớp nhỏ nhất trong dev | ≥ 2 | 6 | [x] |
 
-**Điều kiện xong:** tất cả C1–C12 đạt; `manifest.json` có hash.
+**Điều kiện xong:** tất cả C1–C12 đạt; `manifest.json` có hash. → **ĐẠT 15/15**
+(`outputs/results/v2/audit/audit_report.json`, hash file split khớp, mean/std khớp 0,0e+00).
 
 ### 0.4. Test code
 
-- [ ] `tests/test_split_v2.py` pass.
-- [ ] Test forward `(2,3,64,64) → (2,43)` cho A/B/C.
-- [ ] Test macro-F1/43 khớp sklearn.
-- [ ] Test đọc manifest và mean/std.
-- [ ] Test `num_workers=2` trên Windows không treo.
+- [x] `tests/test_split_v2.py` pass → **10 passed in 11,80 s**.
+- [x] Test forward `(2,3,64,64) → (2,43)` cho A/B/C.
+- [x] Test macro-F1/43 khớp sklearn (sai khác < 1e-9).
+- [x] Test đọc manifest và mean/std (khớp lại từ cache, atol 1e-5).
+- [x] Test `num_workers=2` trên Windows không treo.
 
 ---
 
