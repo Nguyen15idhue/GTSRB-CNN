@@ -67,3 +67,28 @@ Tổng: **15/15 PASS**. Ghi chú: audit dùng SHA-256 nội dung file thay MD5
 - Bao gồm: forward A/B/C `(2,3,64,64)→(2,43)`, macro-F1/43 khớp sklearn
   (sai khác < 1e-9), đọc manifest/mean-std, `num_workers=2` trên Windows,
   3 fold phủ đúng toàn bộ dev một lần.
+
+## Phase 1 — Baseline + factorial 2⁴
+
+### 1.1. Baseline B1 (HOG + LinearSVC)
+
+Nguồn: `outputs/results/v2/baseline.json`, log `outputs/results/v2/log_b1.txt`.
+
+| Mục | Giá trị |
+|---|---:|
+| Train / val | 24.719 / 6.180 (screening) |
+| HOG feature dim | 1.764 |
+| C grid | 0,1; 1; 10 |
+| **C chọn (theo val macro-F1)** | **0,1** |
+| Val accuracy | 0,8727 |
+| **Val macro-F1/43** | **0,8600** |
+| Params (coef + intercept) | 75.895 |
+| Thời gian trích HOG | 40,72 s |
+| Thời gian fit (C=0,1) | 452,74 s |
+| Latency predict-only | 0,0074 ms/ảnh |
+
+- B0 majority (mốc dưới, cùng val): accuracy 0,0291 · macro-F1/43 0,0013.
+- Ghi chú: liblinear báo `ConvergenceWarning` ở cả 3 mức C; đã ghi nhận, **không**
+  tăng `max_iter` sau khi xem kết quả (tránh tune ngoài đăng ký).
+- Không refit trên dev, không đánh giá trên lockbox.
+

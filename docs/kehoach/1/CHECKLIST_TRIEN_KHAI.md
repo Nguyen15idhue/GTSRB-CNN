@@ -73,9 +73,9 @@
 
 ### 1.1. Baseline
 
-- [ ] B1 HOG + LinearSVC; C chọn trên screening val.
-- [ ] Ghi lại C tốt nhất và thời gian trích/fit.
-- [ ] Không chạy B0 majority / B1b refit (đã bỏ để giảm run).
+- [x] B1 HOG + LinearSVC; C chọn trên screening val → C = 0,1; val acc 0,8727; macro-F1/43 0,8600.
+- [x] Ghi lại C tốt nhất và thời gian trích/fit (HOG 40,72 s; fit 452,74 s; `baseline.json`).
+- [x] B0 majority chạy thêm làm mốc dưới theo yêu cầu bước 1.1 (acc 0,0291; F1 0,0013); **B1b refit bỏ** vì không có tập đánh giá nào ngoài lockbox.
 
 ### 1.2. Factorial
 
