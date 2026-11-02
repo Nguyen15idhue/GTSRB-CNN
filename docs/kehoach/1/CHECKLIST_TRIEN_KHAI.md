@@ -156,16 +156,16 @@
 
 ### 3.3. Final + lockbox
 
-- [ ] Train final trên toàn dev × 3 seed.
-- [ ] Không early stop trên lockbox.
-- [ ] Kiểm tra checkpoint load được, forward đúng.
-- [ ] Mở lockbox **một lần**; ghi log thời gian/lệnh.
-- [ ] `lockbox_result.json` có accuracy, macro-F1/43, per-class, confusion, top-3, ECE.
-- [ ] Official test raw 12.630.
-- [ ] Official test clean 12.499.
-- [ ] Không chỉnh gì sau khi xem lockbox.
+- [x] Train final trên toàn dev × 3 seed — 3/3, epoch 26, 30.899 ảnh.
+- [x] Không early stop trên lockbox — final dùng epoch cố định, không có val.
+- [x] Kiểm tra checkpoint load được, forward đúng — `final_ckpt_check.json` passed.
+- [x] Mở lockbox **một lần**; ghi log thời gian/lệnh — `lockbox_access.log` (kèm ghi chú sự cố ghi file lần 1).
+- [x] `lockbox_result.json` có accuracy, macro-F1/43, per-class, confusion, top-3, ECE — acc 0,988758; F1 0,975981.
+- [x] Official test raw 12.630 — acc 0,986989; F1 0,980398.
+- [x] Official test clean — 11.879 (audit repo này: 751 ảnh gần trùng); acc 0,988692; F1 0,982499.
+- [x] Không chỉnh gì sau khi xem lockbox.
 
-**Điều kiện xong:** có OOF + lockbox + official test; có freeze hash.
+**Điều kiện xong:** có OOF + lockbox + official test; có freeze hash. → **ĐẠT**
 
 ---
 

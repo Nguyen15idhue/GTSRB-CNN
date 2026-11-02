@@ -278,6 +278,48 @@ run sai, chạy lại fold 1–2. Không có run sai nào được dùng trong k
 - **Lockbox chưa mở** (`lockbox_opened: false`).
 - Winner card: `outputs/results/v2/winner_card.json`.
 
+### 3.3. Final trên dev + lockbox một lần + official test
+
+**Final:** 3 run `v2_final_s42/123/2024` trên **30.899 ảnh dev**, epoch cố định 26
+(median OOF), không early stop. `final_ckpt_check.json`: cả 3 checkpoint load được,
+forward `(2,3,64,64)→(2,43)`, `config_sha256` và `split_sha256` khớp `FREEZE.json`,
+params 1.448.779.
+
+**Lockbox (8.302 ảnh / 277 track, SHA `fd70ea2b…`), mở sau freeze:**
+
+| Seed | Accuracy | Macro-F1/43 |
+|---|---:|---:|
+| 42 | 0,987593 | 0,968770 |
+| 123 | 0,989400 | 0,979706 |
+| 2024 | 0,989280 | 0,979468 |
+| **Mean ± sd** | **0,988758 ± 0,001010** | **0,975981 ± 0,006246** |
+
+- Top-3: 0,998474 ± 0,000387.
+- ECE 15 bin: 0,005328 ± 0,000970; Brier: 0,017862 ± 0,002022.
+- File: `outputs/results/v2/lockbox_result.json`; log mở: `lockbox_access.log`.
+
+> **Sự cố mở lockbox (ghi trung thực):** lần chạy 04:10 đã tính đủ 3 seed nhưng
+> treo ở bước ghi kết quả do bug `track_map()` gọi lại 8.302 lần; **không file nào
+> được ghi và không số nào được dùng để chỉnh gì**. Config/model/hash giữ nguyên;
+> lần chạy 04:40 ghi kết quả, cho **đúng cùng số** (deterministic). Đã ghi cả hai
+> lần vào `lockbox_access.log`.
+
+**Official test (benchmark phụ, không tune):**
+
+| Tập | n | Accuracy | Macro-F1/43 |
+|---|---:|---:|---:|
+| Raw | 12.630 | 0,986989 ± 0,001625 | 0,980398 ± 0,004516 |
+| Clean (bỏ ảnh gần trùng) | 11.879 | 0,988692 ± 0,002359 | 0,982499 ± 0,005314 |
+
+- Audit lại test ↔ train (MAD < 5, cùng lớp, thumbnail + kiểm chứng full 64×64):
+  **751 ảnh test** có ít nhất một ảnh train gần trùng (24.554 cặp), clean = 11.879.
+- **Khác số cũ 131 ảnh/12.499** vì phương pháp sinh ứng viên khác (audit cũ chỉ
+  xét 17.214 cặp pHash; audit này quét đầy đủ trong từng lớp). Dùng số đo được
+  của repo này; báo cả raw để so sánh.
+- Clean **cao hơn** raw (98,869 so với 98,699) → ảnh gần trùng **không** thổi phồng
+  kết quả; nhưng official test vẫn **không track-disjoint**, chỉ là benchmark phụ.
+
+
 
 
 

@@ -157,6 +157,8 @@ def run_lockbox(
     payload = load_images(64)
     images, labels = payload["x"][indices], payload["y"][indices]
     mean, std = get_mean_std("dev_all")
+    mapping = track_map()
+    n_tracks = len({mapping[int(i)]["track_key"] for i in indices})
     reports = []
     for run in final_runs:
         report = evaluate_checkpoint(Path(run) / "best.pt", images, labels, mean, std, device)
@@ -169,7 +171,7 @@ def run_lockbox(
         "protocol": "v2_clean",
         "evaluated_on": "lockbox",
         "n_images": int(len(labels)),
-        "n_tracks": len({track_map()[int(i)]["track_key"] for i in indices}),
+        "n_tracks": n_tracks,
         "split_sha256": freeze["split_sha256"],
         "lockbox_sha256": load_manifest()["lockbox"]["sha256"],
         "freeze": freeze,
