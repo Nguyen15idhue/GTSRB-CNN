@@ -115,21 +115,21 @@
 
 ### 2.3. Augmentation
 
-- [ ] G1, G2, G3 × 3 seed; G0 = F07, G5 = F15.
-- [ ] Corruption 6 loại × 3 mức trên screening val.
-- [ ] Bảng clean + corruption.
-- [ ] Kết luận aug có cần, phần nào.
-- [ ] Không chạy G4/G6/G7/G8 (đã bỏ).
+- [x] G1, G2, G3 × 3 seed; G0 = F07, G5 = F15 — 9/9 run.
+- [x] Corruption 6 loại × 3 mức trên screening val — `corruption.csv` (108 dòng, 6 config).
+- [x] Bảng clean + corruption — `tables/augmentation.md`, mục 2.3 KET_QUA.
+- [x] Kết luận aug có cần, phần nào: all/affine hại; color trung tính; không đủ bằng chứng giữ vì robustness.
+- [x] Không chạy G4/G6/G7/G8 (đã bỏ theo `MA_TRAN_RUN.csv`).
 
 ### 2.4. Chọn top 2 + control
 
-- [ ] Sắp xếp theo mean macro-F1.
-- [ ] Lấy nhóm trong 0,3 điểm so với tốt nhất.
-- [ ] Chọn top 2 theo tie-break + 1 control (F07; nếu F07 đã trong top 2 thì F00).
-- [ ] Ghi lý do chọn **trước** khi chạy OOF.
-- [ ] Điền X1–X3 vào `MA_TRAN_RUN.csv`.
+- [x] Sắp xếp theo mean macro-F1 — `candidates.json.ranked`.
+- [x] Lấy nhóm trong 0,3 điểm so với tốt nhất — {G2, D2} (0,259 điểm).
+- [x] Chọn top 2 theo tie-break + 1 control (F07) — X1=G2, X2=D2, X3=F07.
+- [x] Ghi lý do chọn **trước** khi chạy OOF — `candidates.json`, `log_select.txt`.
+- [x] Điền X1–X3 vào `MA_TRAN_RUN.csv`.
 
-**Điều kiện xong:** có danh sách top 2 + control và lý do, có bảng D/H/G.
+**Điều kiện xong:** có danh sách top 2 + control và lý do, có bảng D/H/G. → **ĐẠT**
 
 ---
 

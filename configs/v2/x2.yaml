@@ -1,0 +1,44 @@
+experiment:
+  id: x2
+  protocol: v2_clean
+  block: X_confirmation
+  seed: 42
+  notes: 'OOF cho d2: f1=0.971584 (sd 0.006096), params=1448779, latency=0.9499 ms,
+    aug=all, best_epoch=16.3'
+  source_config: d2
+data:
+  split: fold
+  fold: 0
+  image_size: 64
+  num_classes: 43
+  num_workers: 4
+model:
+  name: smallcnn_4blk
+  widths:
+  - 32
+  - 64
+  - 128
+  - 256
+  use_bn: true
+  dropout: 0.3
+  gap: false
+  fc_hidden: 256
+augmentation:
+  enabled: true
+  profile: all
+train:
+  optimizer: adamw
+  lr: 0.001
+  weight_decay: 0.0001
+  batch_size: 128
+  max_epochs: 40
+  patience: 7
+  scheduler: cosine
+  warmup_epochs: 0
+  class_weight: none
+  label_smoothing: 0.0
+  amp: true
+  monitor: val_macro_f1
+  deterministic: true
+output:
+  dir: outputs/runs

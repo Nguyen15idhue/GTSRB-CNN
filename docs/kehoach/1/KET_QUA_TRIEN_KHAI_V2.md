@@ -176,6 +176,53 @@ Nguồn: `outputs/results/v2/tables/hyperparam.md`. Mốc F15 = 93,946.
 - **Input 96 kém hơn 64** (−3,448) và params tăng 2,2× → giữ 64.
 - Cache 96 dựng riêng ở `data/cache_96` (không ghi đè cache 64).
 
+### 2.3. Augmentation thành phần + corruption
+
+Nguồn: `outputs/results/v2/tables/augmentation.md`, `corruption.csv`, `log_corruption.txt`.
+G0 = F07 (không aug, 96,501); G5 = F15 (all, 93,946).
+
+| ID | Profile | Acc (%) | Macro-F1 (%) | Δ vs G0 (điểm %) [CI] |
+|---|---|---:|---:|---|
+| G1 | affine | 95,572 ± 0,190 | 92,251 ± 0,595 | **−4,250** [−6,972; −0,084] |
+| G2 | color | 97,767 ± 0,242 | **97,417 ± 0,340** | +0,917 [−0,141; +1,842] |
+| G3 | perspective | 96,375 ± 1,116 | 95,264 ± 1,988 | −1,237 [−2,706; +0,530] |
+
+**Corruption (accuracy trung bình 3 mức, screening val, seed 42):**
+
+| Config | Blur | Noise | Bright | Contrast | JPEG | Occlusion | TB |
+|---|---:|---:|---:|---:|---:|---:|---:|
+| F07 (G0) | 95,05 | 86,27 | 97,13 | 93,49 | 94,00 | 23,11 | 81,51 |
+| F15 (G5) | 93,73 | 81,00 | 96,19 | 92,77 | 91,22 | 26,43 | 80,22 |
+| G1 affine | 91,35 | 75,84 | 94,75 | 86,81 | 88,38 | 24,24 | 76,90 |
+| G2 color | 95,73 | 85,86 | 97,56 | 96,06 | 95,07 | 21,56 | **81,97** |
+| G3 perspective | 94,06 | 84,85 | 96,78 | 93,65 | 93,49 | 21,44 | 80,71 |
+| D2 (4 khối + all) | 93,88 | 83,59 | 97,10 | 92,92 | 92,78 | 17,63 | 79,65 |
+
+**Kết luận:**
+
+- **Aug "all" không có lợi**: clean −2,555 điểm so với F07 (F15) và corruption TB
+  thấp hơn (80,22 so với 81,51).
+- **Affine là thành phần gây hại** (−4,250 clean, −4,61 corruption TB so với G0).
+- **Color-only tốt nhất trong nhóm G**: clean +0,917 (CI chứa 0 → chưa kết luận
+  so với không aug), corruption TB +0,46 — dưới ngưỡng +0,5 nên **không đủ bằng
+  chứng để giữ aug vì robustness**.
+- **Occlusion làm sập mọi mô hình** (17,6–26,4%): đây là hạn chế thật, cần báo cáo,
+  không tô hồng.
+- Corruption dùng **6 loại × 3 mức** theo bảng 6.5 của kế hoạch (không phải 8 loại).
+
+### 2.4. Chọn top 2 + control (trước OOF)
+
+Nguồn: `outputs/results/v2/candidates.json`, `log_select.txt`.
+
+- Bảng xếp hạng đầy đủ 3 seed: G2 97,417; D2 97,158; F07 96,501; W2 95,215; …
+- Nhóm trong 0,3 điểm so với tốt nhất: **{G2, D2}** (0,259 điểm).
+- **Top 2: X1 = G2 (color)**, **X2 = D2 (4 khối, flatten, all)**.
+- **Control: X3 = F07** (không aug, 3 khối) — neo để đo tác dụng regularization.
+- Lý do ghi trước khi chạy OOF; `forced_second_candidate = false`.
+- Đã sinh `configs/v2/x1.yaml`–`x3.yaml` (split = fold) và điền X1–X3 vào
+  `docs/kehoach/1/MA_TRAN_RUN.csv`.
+
+
 
 
 

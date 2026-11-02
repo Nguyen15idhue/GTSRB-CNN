@@ -164,9 +164,15 @@ def _read_meta() -> list[dict[str, str]]:
 # ---------------------------------------------------------------------------
 
 
-def build_augmentation(profile: str, size: int = 64):
+def build_augmentation(
+    profile: str,
+    size: int = 64,
+    mean: Sequence[float] | None = None,
+    std: Sequence[float] | None = None,
+):
     """Transform train theo profile: none/affine/color/perspective/all (+ biến thể exploratory).
 
+    Luôn kết thúc bằng ``ToTensor`` + ``Normalize`` để trả tensor, không trả PIL.
     Cấm tuyệt đối flip và xoay 90/180 (đổi nghĩa biển báo).
     """
     from torchvision import transforms
@@ -197,7 +203,11 @@ def build_augmentation(profile: str, size: int = 64):
     if profile in mapping:
         ops = mapping[profile]
     _assert_no_flip(ops)
-    return transforms.Compose(ops) if ops else None
+    normalize_mean = list(mean) if mean is not None else [0.0, 0.0, 0.0]
+    normalize_std = list(std) if std is not None else [1.0, 1.0, 1.0]
+    return transforms.Compose(
+        [*ops, transforms.ToTensor(), transforms.Normalize(mean=normalize_mean, std=normalize_std)]
+    )
 
 
 def _assert_no_flip(ops: Sequence[Any]) -> None:
@@ -253,8 +263,13 @@ def make_loaders_v2(
     aug_cfg = cfg.get("augmentation", {})
     use_aug = bool(aug_cfg.get("enabled", False)) if augmentation is None else augmentation
     used_profile = str(aug_cfg.get("profile", "none")) if profile is None else profile
-    transform = build_augmentation(used_profile, size) if use_aug else None
+    transform = build_augmentation(used_profile, size, mean, std) if use_aug else None
     workers = int(data_cfg.get("num_workers", 4) if num_workers is None else num_workers)
+    # Số worker là hạ tầng, không phải yếu tố mô hình; cho phép override bằng biến
+    # môi trường để tăng tốc mà KHÔNG đổi config_sha256.
+    import os
+
+    workers = int(os.environ.get("V2_NUM_WORKERS", workers))
     batch = int(cfg["train"].get("batch_size", 128)) if batch_size is None else int(batch_size)
 
     train_ds = V2Dataset(payload["x"], payload["y"], indices["train"], transform=transform, mean=mean, std=std)

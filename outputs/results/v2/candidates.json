@@ -1,0 +1,293 @@
+{
+  "rule": "mean macro-F1 3 seed; nhóm trong 0.3 điểm % so với tốt nhất; tie-break params/latency/aug/epoch; control F07 (hoặc F00)",
+  "best_config": "g2",
+  "best_macro_f1": 0.9741730000000001,
+  "equivalent_group": [
+    "g2",
+    "d2"
+  ],
+  "top2": [
+    "g2",
+    "d2"
+  ],
+  "forced_second_candidate": false,
+  "control": "f07",
+  "rationale": {
+    "g2": "f1=0.974173 (sd 0.003402), params=2201931, latency=0.7280 ms, aug=color, best_epoch=21.3",
+    "d2": "f1=0.971584 (sd 0.006096), params=1448779, latency=0.9499 ms, aug=all, best_epoch=16.3",
+    "f07": "f1=0.965007 (sd 0.010409), params=2201931, latency=0.7407 ms, aug=none, best_epoch=20.7"
+  },
+  "ranked": [
+    {
+      "config_id": "g2",
+      "n_seeds": 3,
+      "macro_f1_mean": 0.9741730000000001,
+      "macro_f1_sd": 0.003401503638098891,
+      "params": 2201931,
+      "infer_ms_per_img": 0.728,
+      "aug_profile": "color",
+      "best_epoch_mean": 21.333333333333332
+    },
+    {
+      "config_id": "d2",
+      "n_seeds": 3,
+      "macro_f1_mean": 0.971584,
+      "macro_f1_sd": 0.0060962877228687195,
+      "params": 1448779,
+      "infer_ms_per_img": 0.9499,
+      "aug_profile": "all",
+      "best_epoch_mean": 16.333333333333332
+    },
+    {
+      "config_id": "f07",
+      "n_seeds": 3,
+      "macro_f1_mean": 0.965007,
+      "macro_f1_sd": 0.010409143672752304,
+      "params": 2201931,
+      "infer_ms_per_img": 0.7407,
+      "aug_profile": "none",
+      "best_epoch_mean": 20.666666666666668
+    },
+    {
+      "config_id": "f03",
+      "n_seeds": 3,
+      "macro_f1_mean": 0.9604683333333334,
+      "macro_f1_sd": 0.009754918468820399,
+      "params": 2201931,
+      "infer_ms_per_img": 0.7267,
+      "aug_profile": "none",
+      "best_epoch_mean": 18.333333333333332
+    },
+    {
+      "config_id": "g3",
+      "n_seeds": 3,
+      "macro_f1_mean": 0.9526363333333334,
+      "macro_f1_sd": 0.01988439826430093,
+      "params": 2201931,
+      "infer_ms_per_img": 0.7328,
+      "aug_profile": "perspective",
+      "best_epoch_mean": 15.333333333333334
+    },
+    {
+      "config_id": "w2",
+      "n_seeds": 3,
+      "macro_f1_mean": 0.9521473333333333,
+      "macro_f1_sd": 0.012295668559835746,
+      "params": 3366363,
+      "infer_ms_per_img": 0.7297,
+      "aug_profile": "all",
+      "best_epoch_mean": 27.666666666666668
+    },
+    {
+      "config_id": "f11",
+      "n_seeds": 3,
+      "macro_f1_mean": 0.9420946666666666,
+      "macro_f1_sd": 0.001979662176567845,
+      "params": 2201931,
+      "infer_ms_per_img": 0.7276,
+      "aug_profile": "all",
+      "best_epoch_mean": 31.666666666666668
+    },
+    {
+      "config_id": "f15",
+      "n_seeds": 3,
+      "macro_f1_mean": 0.9394626666666667,
+      "macro_f1_sd": 0.01107942712117071,
+      "params": 2201931,
+      "infer_ms_per_img": 0.741,
+      "aug_profile": "all",
+      "best_epoch_mean": 26.333333333333332
+    },
+    {
+      "config_id": "d3",
+      "n_seeds": 3,
+      "macro_f1_mean": 0.9310516666666667,
+      "macro_f1_sd": 0.009060705951157062,
+      "params": 399947,
+      "infer_ms_per_img": 0.8728,
+      "aug_profile": "all",
+      "best_epoch_mean": 27.333333333333332
+    },
+    {
+      "config_id": "cw1",
+      "n_seeds": 3,
+      "macro_f1_mean": 0.929427,
+      "macro_f1_sd": 0.004747336095116945,
+      "params": 2201931,
+      "infer_ms_per_img": 0.733,
+      "aug_profile": "all",
+      "best_epoch_mean": 28.0
+    },
+    {
+      "config_id": "g1",
+      "n_seeds": 3,
+      "macro_f1_mean": 0.9225106666666667,
+      "macro_f1_sd": 0.005954384630953311,
+      "params": 2201931,
+      "infer_ms_per_img": 0.7356,
+      "aug_profile": "affine",
+      "best_epoch_mean": 29.0
+    },
+    {
+      "config_id": "f06",
+      "n_seeds": 3,
+      "macro_f1_mean": 0.91958,
+      "macro_f1_sd": 0.02221893334523507,
+      "params": 2201707,
+      "infer_ms_per_img": 0.5564,
+      "aug_profile": "none",
+      "best_epoch_mean": 23.666666666666668
+    },
+    {
+      "config_id": "f02",
+      "n_seeds": 3,
+      "macro_f1_mean": 0.9161326666666666,
+      "macro_f1_sd": 0.005047454837176209,
+      "params": 2201707,
+      "infer_ms_per_img": 0.5656,
+      "aug_profile": "none",
+      "best_epoch_mean": 20.666666666666668
+    },
+    {
+      "config_id": "f10",
+      "n_seeds": 3,
+      "macro_f1_mean": 0.9109746666666667,
+      "macro_f1_sd": 0.016278155065403865,
+      "params": 2201707,
+      "infer_ms_per_img": 0.5565,
+      "aug_profile": "all",
+      "best_epoch_mean": 34.0
+    },
+    {
+      "config_id": "f13",
+      "n_seeds": 3,
+      "macro_f1_mean": 0.9070043333333334,
+      "macro_f1_sd": 0.01861305609869945,
+      "params": 2201931,
+      "infer_ms_per_img": 0.7273,
+      "aug_profile": "all",
+      "best_epoch_mean": 28.0
+    },
+    {
+      "config_id": "w1",
+      "n_seeds": 3,
+      "macro_f1_mean": 0.9068616666666666,
+      "macro_f1_sd": 0.014251225362520029,
+      "params": 1083579,
+      "infer_ms_per_img": 0.6959,
+      "aug_profile": "all",
+      "best_epoch_mean": 28.333333333333332
+    },
+    {
+      "config_id": "i2",
+      "n_seeds": 3,
+      "macro_f1_mean": 0.9049856666666667,
+      "macro_f1_sd": 0.014293867717777943,
+      "params": 4823371,
+      "infer_ms_per_img": 0.8669,
+      "aug_profile": "all",
+      "best_epoch_mean": 31.0
+    },
+    {
+      "config_id": "f14",
+      "n_seeds": 3,
+      "macro_f1_mean": 0.9031043333333333,
+      "macro_f1_sd": 0.0031418679687939145,
+      "params": 2201707,
+      "infer_ms_per_img": 0.5592,
+      "aug_profile": "all",
+      "best_epoch_mean": 28.333333333333332
+    },
+    {
+      "config_id": "f09",
+      "n_seeds": 3,
+      "macro_f1_mean": 0.9000606666666666,
+      "macro_f1_sd": 0.017378273053825933,
+      "params": 2201931,
+      "infer_ms_per_img": 0.7237,
+      "aug_profile": "all",
+      "best_epoch_mean": 27.333333333333332
+    },
+    {
+      "config_id": "f01",
+      "n_seeds": 3,
+      "macro_f1_mean": 0.8784550000000001,
+      "macro_f1_sd": 0.015240974903200916,
+      "params": 2201931,
+      "infer_ms_per_img": 0.7421,
+      "aug_profile": "none",
+      "best_epoch_mean": 16.333333333333332
+    },
+    {
+      "config_id": "f05",
+      "n_seeds": 3,
+      "macro_f1_mean": 0.8747000000000001,
+      "macro_f1_sd": 0.011059759626682692,
+      "params": 2201931,
+      "infer_ms_per_img": 0.7309,
+      "aug_profile": "none",
+      "best_epoch_mean": 10.666666666666666
+    },
+    {
+      "config_id": "f12",
+      "n_seeds": 3,
+      "macro_f1_mean": 0.8700273333333334,
+      "macro_f1_sd": 0.01058384246544385,
+      "params": 2201707,
+      "infer_ms_per_img": 0.5655,
+      "aug_profile": "all",
+      "best_epoch_mean": 28.333333333333332
+    },
+    {
+      "config_id": "l1",
+      "n_seeds": 3,
+      "macro_f1_mean": 0.8680743333333334,
+      "macro_f1_sd": 0.016146571968480895,
+      "params": 2201931,
+      "infer_ms_per_img": 0.7345,
+      "aug_profile": "all",
+      "best_epoch_mean": 22.0
+    },
+    {
+      "config_id": "f08",
+      "n_seeds": 3,
+      "macro_f1_mean": 0.8667233333333334,
+      "macro_f1_sd": 0.010082594176764936,
+      "params": 2201707,
+      "infer_ms_per_img": 0.5595,
+      "aug_profile": "all",
+      "best_epoch_mean": 19.333333333333332
+    },
+    {
+      "config_id": "f04",
+      "n_seeds": 3,
+      "macro_f1_mean": 0.8417296666666667,
+      "macro_f1_sd": 0.0018385228672315554,
+      "params": 2201707,
+      "infer_ms_per_img": 0.5591,
+      "aug_profile": "none",
+      "best_epoch_mean": 9.0
+    },
+    {
+      "config_id": "f00",
+      "n_seeds": 3,
+      "macro_f1_mean": 0.841095,
+      "macro_f1_sd": 0.03710374330172096,
+      "params": 2201707,
+      "infer_ms_per_img": 0.5745,
+      "aug_profile": "none",
+      "best_epoch_mean": 12.666666666666666
+    },
+    {
+      "config_id": "d1",
+      "n_seeds": 3,
+      "macro_f1_mean": 0.5918826666666667,
+      "macro_f1_sd": 0.0076428400698518445,
+      "params": 99019,
+      "infer_ms_per_img": 0.6779,
+      "aug_profile": "all",
+      "best_epoch_mean": 34.333333333333336
+    }
+  ],
+  "note": "Chọn trước khi chạy OOF; không đổi sau khi xem OOF."
+}

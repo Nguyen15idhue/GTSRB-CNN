@@ -345,6 +345,7 @@ def run_training_v2(
         "torch_version": str(torch.__version__),
         "device": str(device),
         "amp": use_amp,
+        "num_workers": loaders["meta"]["num_workers"],
         "mean": loaders["meta"]["mean"],
         "std": loaders["meta"]["std"],
         "notes": cfg["experiment"].get("notes", ""),

@@ -401,23 +401,26 @@ def corruption_table(config_ids: Sequence[str], seed: int = 42, max_images: int 
     labels = payload["y"][indices]
     mean, std = get_mean_std("screening")
     rows = []
+    models = {}
     for config_id in config_ids:
         checkpoint_path = run_dir(config_id, seed) / "best.pt"
         checkpoint = torch.load(checkpoint_path, map_location="cpu", weights_only=True)
         model, _ = build_model(checkpoint["config"])
         model.load_state_dict(checkpoint["state_dict"])
-        model.to(device).eval()
-        for kind in ("blur", "noise", "brightness", "contrast", "jpeg", "occlusion"):
-            for severity in (1, 2, 3):
-                corrupted = corrupt_images(images, kind, severity)
-                tensor = torch.from_numpy(corrupted.astype(np.float32) / 255.0).permute(0, 3, 1, 2)
-                mean_t = torch.tensor(mean).view(3, 1, 1)
-                std_t = torch.tensor(std).view(3, 1, 1)
-                tensor = (tensor - mean_t) / std_t
+        models[config_id] = model.to(device).eval()
+
+    mean_t = torch.tensor(mean).view(3, 1, 1)
+    std_t = torch.tensor(std).view(3, 1, 1)
+    for kind in ("blur", "noise", "brightness", "contrast", "jpeg", "occlusion"):
+        for severity in (1, 2, 3):
+            corrupted = corrupt_images(images, kind, severity)
+            tensor = torch.from_numpy(corrupted.astype(np.float32) / 255.0).permute(0, 3, 1, 2)
+            tensor = (tensor - mean_t) / std_t
+            for config_id in config_ids:
                 preds = []
                 with torch.no_grad():
                     for start in range(0, len(tensor), 256):
-                        logits = model(tensor[start:start + 256].to(device))
+                        logits = models[config_id](tensor[start:start + 256].to(device))
                         preds.append(logits.argmax(1).cpu().numpy())
                 pred = np.concatenate(preds)
                 rows.append({

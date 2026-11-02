@@ -1,4 +1,4 @@
-﻿block,config_id,model,widths,bn,dropout,wd,aug,aug_profile,gap,fc_hidden,input_size,batch_size,lr,epochs,warmup_epochs,class_weight,label_smoothing,seeds,folds,train_split,eval_split,role,priority,purpose
+block,config_id,model,widths,bn,dropout,wd,aug,aug_profile,gap,fc_hidden,input_size,batch_size,lr,epochs,warmup_epochs,class_weight,label_smoothing,seeds,folds,train_split,eval_split,role,priority,purpose
 baseline,B1,hog_svc,,,,,,,,,64,128,,0,0,,,42,0,screening_train,screening_val,baseline,must,HOG 64x64 + LinearSVC; C chọn trên screening val
 F_factorial,F00,smallcnn_3blk,32/64/128,off,0,0,off,none,off,256,64,128,1e-3,40,0,none,0,42;123;2024,0,screening_train,screening_val,factorial,must,"Factorial 2^4: BN=off, DO=0, WD=0, Aug=off"
 F_factorial,F01,smallcnn_3blk,32/64/128,on,0,0,off,none,off,256,64,128,1e-3,40,0,none,0,42;123;2024,0,screening_train,screening_val,factorial,must,"Factorial 2^4: BN=on, DO=0, WD=0, Aug=off"
@@ -31,7 +31,7 @@ G_augmentation,G1,smallcnn_3blk,32/64/128,on,0.3,1e-4,on,affine,off,256,64,128,1
 G_augmentation,G2,smallcnn_3blk,32/64/128,on,0.3,1e-4,on,color,off,256,64,128,1e-3,40,0,none,0,42;123;2024,0,screening_train,screening_val,augmentation,must,Chỉ color
 G_augmentation,G3,smallcnn_3blk,32/64/128,on,0.3,1e-4,on,perspective,off,256,64,128,1e-3,40,0,none,0,42;123;2024,0,screening_train,screening_val,augmentation,must,Chỉ perspective
 G_augmentation,G5,smallcnn_3blk,32/64/128,on,0.3,1e-4,on,all,off,256,64,128,1e-3,40,0,none,0,42;123;2024,0,screening_train,screening_val,augmentation,alias,All = F15; không chạy lại
-X_confirmation,X1,TBD,TBD,,,,,,,,64,128,,40,0,,,42;123;2024,3,dev_fold,dev_fold_val,confirmation,must,Điền sau screening: top 2 theo luật 4.5 + 1 control
-X_confirmation,X2,TBD,TBD,,,,,,,,64,128,,40,0,,,42;123;2024,3,dev_fold,dev_fold_val,confirmation,must,Điền sau screening: top 2 theo luật 4.5 + 1 control
-X_confirmation,X3,TBD,TBD,,,,,,,,64,128,,40,0,,,42;123;2024,3,dev_fold,dev_fold_val,confirmation,must,Điền sau screening: top 2 theo luật 4.5 + 1 control; control F07/F00
+X_confirmation,X1,smallcnn_3blk,32/64/128,on,0.3,0.0001,on,color,off,256,64,128,0.001,40,0,,,42;123;2024,3,dev_fold,dev_fold_val,confirmation,must,"OOF cho g2: f1=0.974173 (sd 0.003402), params=2201931, latency=0.7280 ms, aug=color, best_epoch=21.3"
+X_confirmation,X2,smallcnn_4blk,32/64/128/256,on,0.3,0.0001,on,all,off,256,64,128,0.001,40,0,,,42;123;2024,3,dev_fold,dev_fold_val,confirmation,must,"OOF cho d2: f1=0.971584 (sd 0.006096), params=1448779, latency=0.9499 ms, aug=all, best_epoch=16.3"
+X_confirmation,X3,smallcnn_3blk,32/64/128,on,0.3,0.0001,off,none,off,256,64,128,0.001,40,0,,,42;123;2024,3,dev_fold,dev_fold_val,confirmation,must,"OOF cho f07: f1=0.965007 (sd 0.010409), params=2201931, latency=0.7407 ms, aug=none, best_epoch=20.7"
 FINAL,FINAL,TBD,TBD,,,,,,,,64,128,,40,0,,,42;123;2024,0,dev_all,lockbox,final,must,Train toàn dev; test lockbox một lần sau freeze
