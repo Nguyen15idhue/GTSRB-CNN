@@ -16,9 +16,10 @@ Thư mục này chứa **kế hoạch đầy đủ** để tái thiết kế th�
 | File | Vai trò | Khi nào đọc |
 |---|---|---|
 | `KE_HOACH_V2_DAY_DU.md` | **Tài liệu chính**: bối cảnh, split, pre-registration, ma trận thí nghiệm, thống kê, cách giải thích, kế hoạch triển khai, mẫu báo cáo | Đọc toàn bộ trước khi làm |
-| `MA_TRAN_RUN.csv` | Danh sách config để chạy (56 dòng: baseline, factorial, kiến trúc, hyperparam, augmentation, xác nhận, final) | Dùng để sinh `configs/v2/*.yaml` |
+| `MA_TRAN_RUN.csv` | Danh sách config để chạy (36 dòng cấu hình, gồm alias; tổng ~112 run) | Dùng để sinh `configs/v2/*.yaml` |
 | `CHECKLIST_TRIEN_KHAI.md` | Checklist từng phase, tiêu chí pass, ký xác nhận | Dùng hằng ngày khi triển khai |
 | `MAU_KET_QUA_GIA_DINH.md` | **Mẫu kết quả giả định** — cho thấy sau khi chạy sẽ có bảng/hình/thông tin gì và mỗi thông tin trả lời vấn đề nào. **Toàn bộ số là giả định, không dùng trong báo cáo** | Đọc để hình dung đầu ra, không chép số |
+| `PROMPT_TRIEN_KHAI_V2.md` | Bộ prompt triển khai theo phase, nghiệm thu và xử lý sự cố | Dùng khi giao việc cho agent/người |
 | `README.md` | Trang này: tóm tắt và chỉ mục | Đọc đầu tiên |
 
 ---
@@ -31,8 +32,8 @@ Thư mục này chứa **kế hoạch đầy đủ** để tái thiết kế th�
   - Trong dev: **screening** 25.131/6.240 và **3-fold** 20.541–21.360/10.011–10.830.
 - **Mô hình cuối vẫn train trên 31.371 ảnh** — bằng đúng cỡ train cũ. Chỉ mô hình screening/3-fold mới train ít hơn.
 - **Mọi run dùng `stratified_group`**, không dùng `random`. Official test 12.630 ảnh chỉ là benchmark phụ (raw + clean 12.499).
-- **Factorial 2⁴** cho BN × dropout × WD × augmentation; tách riêng kiến trúc (depth/GAP/width), hyperparam và từng thành phần augmentation.
-- **Chọn mô hình bằng OOF 3-fold × 3 seed**, không bằng một val 7.830 ảnh; kết luận kèm Δ + CI cluster bootstrap theo track.
+- **Bản gọn sinh viên:** baseline chỉ **B1 HOG + LinearSVC**; factorial 2⁴ cho BN × dropout × WD × augmentation; kiến trúc (depth/GAP/width); hyperparam tối thiểu; 3 profile augmentation.
+- **Chọn mô hình bằng OOF 3-fold × 3 seed** với **top 2 + control**, không bằng một val 7.830 ảnh; kết luận kèm Δ + CI cluster bootstrap theo track.
 - **Test một lần** trên lockbox sau khi freeze; không tune trên test.
 - **Mỗi yếu tố có decision card**: mức đã thử, kết quả, Δ, CI, cơ chế, kết luận giữ/bỏ.
 
@@ -49,11 +50,13 @@ Thư mục này chứa **kế hoạch đầy đủ** để tái thiết kế th�
 | 3-fold train / val mỗi fold | 20.541–21.360 / 10.011–10.830 |
 | Final train | 31.371 |
 | Official test | 12.630 (clean 12.499) |
-| Số run đầy đủ | ~174 |
-| Số run tối thiểu | ~71 |
-| Thời gian GPU đầy đủ | ~15–18 giờ |
+| Số run bản gọn | ~112 |
+| Số run tối thiểu nếu gấp | ~58 |
+| Thời gian GPU bản gọn | ~10–11 giờ |
 
 > Số ảnh lockbox/screening/3-fold có thể lệch vài chục ảnh tùy seed. **Số chính xác lấy từ `outputs/splits/v2/manifest.json`**, không chép từ bảng này vào báo cáo.
+>
+> Bản tối thiểu chỉ dùng screening 1 seed để go/no-go; kết luận cuối vẫn lấy từ OOF/lockbox.
 
 ---
 
@@ -84,7 +87,7 @@ Thư mục này chứa **kế hoạch đầy đủ** để tái thiết kế th�
 - Không dùng `split_random` cho bất kỳ kết luận nào.
 - Không tune trên lockbox/official test.
 - Không so 10 epoch với 40 epoch.
-- Không đổi 3–4 yếu tố trong một run rồi quy công cho một yếu tố.
+- Không đổi nhiều yếu tố trong một run rồi quy công cho một yếu tố.
 - Không báo "tốt hơn" khi CI chứa 0.
 - Không đưa số cũ 99,9% (random val) vào kết luận.
 - Không tuyên bố mô hình đủ an toàn cho hệ thống giao thông thực tế.

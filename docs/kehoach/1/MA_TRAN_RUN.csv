@@ -1,7 +1,5 @@
 ﻿block,config_id,model,widths,bn,dropout,wd,aug,aug_profile,gap,fc_hidden,input_size,batch_size,lr,epochs,warmup_epochs,class_weight,label_smoothing,seeds,folds,train_split,eval_split,role,priority,purpose
-baseline,B0,majority,,,,,,,,,64,128,,0,0,,,42,0,screening_train,screening_val,baseline,must,Sàn majority; không train
 baseline,B1,hog_svc,,,,,,,,,64,128,,0,0,,,42,0,screening_train,screening_val,baseline,must,HOG 64x64 + LinearSVC; C chọn trên screening val
-baseline,B1b,hog_svc,,,,,,,,,64,128,,0,0,,,42,0,dev_all,lockbox,baseline,should,Refit HOG trên dev; chỉ test lockbox sau freeze
 F_factorial,F00,smallcnn_3blk,32/64/128,off,0,0,off,none,off,256,64,128,1e-3,40,0,none,0,42;123;2024,0,screening_train,screening_val,factorial,must,"Factorial 2^4: BN=off, DO=0, WD=0, Aug=off"
 F_factorial,F01,smallcnn_3blk,32/64/128,on,0,0,off,none,off,256,64,128,1e-3,40,0,none,0,42;123;2024,0,screening_train,screening_val,factorial,must,"Factorial 2^4: BN=on, DO=0, WD=0, Aug=off"
 F_factorial,F02,smallcnn_3blk,32/64/128,off,0.3,0,off,none,off,256,64,128,1e-3,40,0,none,0,42;123;2024,0,screening_train,screening_val,factorial,must,"Factorial 2^4: BN=off, DO=0.3, WD=0, Aug=off"
@@ -20,38 +18,20 @@ F_factorial,F14,smallcnn_3blk,32/64/128,off,0.3,1e-4,on,all,off,256,64,128,1e-3,
 F_factorial,F15,smallcnn_3blk,32/64/128,on,0.3,1e-4,on,all,off,256,64,128,1e-3,40,0,none,0,42;123;2024,0,screening_train,screening_val,factorial,must,"Factorial 2^4: BN=on, DO=0.3, WD=1e-4, Aug=on"
 D_architecture,D1,smallcnn_3blk,32/64/128,on,0.3,1e-4,on,all,on,256,64,128,1e-3,40,0,none,0,42;123;2024,0,screening_train,screening_val,architecture,must,3 khối + GAP; tách GAP khỏi depth
 D_architecture,D2,smallcnn_4blk,32/64/128/256,on,0.3,1e-4,on,all,off,256,64,128,1e-3,40,0,none,0,42;123;2024,0,screening_train,screening_val,architecture,must,4 khối + flatten; tách depth khỏi GAP
-D_architecture,D3,smallcnn_4blk,32/64/128/256,on,0.4,1e-4,on,all,on,256,64,128,1e-3,40,0,none,0,42;123;2024,0,screening_train,screening_val,architecture,must,4 khối + GAP + DO 0.4 = E4 cũ
+D_architecture,D3,smallcnn_4blk,32/64/128/256,on,0.4,1e-4,on,all,on,256,64,128,1e-3,40,0,none,0,42;123;2024,0,screening_train,screening_val,architecture,must,4 khối + GAP + DO 0.4 = E4 cũ; chỉ legacy
 D_architecture,D4,smallcnn_3blk,32/64/128,on,0.3,1e-4,on,all,off,256,64,128,1e-3,40,0,none,0,42;123;2024,0,screening_train,screening_val,architecture,alias,3 khối + flatten = F15; không chạy lại
-D_architecture,C1,smallcnn_4blk,32/64/128/256,on,0.3,1e-4,on,all,on,256,64,128,1e-3,40,0,none,0,42;123;2024,0,screening_train,screening_val,architecture,must,4 khối + GAP + DO 0.3; bỏ confound dropout
 D_architecture,W1,smallcnn_3blk,16/32/64,on,0.3,1e-4,on,all,off,256,64,128,1e-3,40,0,none,0,42;123;2024,0,screening_train,screening_val,architecture,should,Width nhỏ 16/32/64
 D_architecture,W2,smallcnn_3blk,48/96/192,on,0.3,1e-4,on,all,off,256,64,128,1e-3,40,0,none,0,42;123;2024,0,screening_train,screening_val,architecture,should,Width lớn 48/96/192
-D_architecture,W3,smallcnn_3blk,64/128/256,on,0.3,1e-4,on,all,off,256,64,128,1e-3,40,0,none,0,42;123;2024,0,screening_train,screening_val,architecture,should,Width rất lớn 64/128/256
-H_hyperparam,L1,smallcnn_3blk,32/64/128,on,0.3,1e-4,on,all,off,256,64,128,1e-4,40,0,none,0,42;123;2024,0,screening_train,screening_val,hyperparam,must,LR 1e-4; 40 epoch
-H_hyperparam,L2,smallcnn_3blk,32/64/128,on,0.3,1e-4,on,all,off,256,64,128,3e-4,40,0,none,0,42;123;2024,0,screening_train,screening_val,hyperparam,must,LR 3e-4; 40 epoch
+H_hyperparam,L1,smallcnn_3blk,32/64/128,on,0.3,1e-4,on,all,off,256,64,128,1e-4,40,0,none,0,42;123;2024,0,screening_train,screening_val,hyperparam,must,LR 1e-4; 40 epoch; cách 10 lần so với 1e-3
 H_hyperparam,L3,smallcnn_3blk,32/64/128,on,0.3,1e-4,on,all,off,256,64,128,1e-3,40,0,none,0,42;123;2024,0,screening_train,screening_val,hyperparam,alias,LR 1e-3 = F15; không chạy lại
-H_hyperparam,L4,smallcnn_3blk,32/64/128,on,0.3,1e-4,on,all,off,256,64,128,3e-3,40,0,none,0,42;123;2024,0,screening_train,screening_val,hyperparam,must,LR 3e-3; kiểm tra phân kỳ
-H_hyperparam,L5,smallcnn_3blk,32/64/128,on,0.3,1e-4,on,all,off,256,64,128,3e-3,40,3,none,0,42;123;2024,0,screening_train,screening_val,hyperparam,should,LR 3e-3 + warmup 3; kiểm tra phân kỳ do đâu
-H_hyperparam,P1,smallcnn_3blk,32/64/128,on,0.2,1e-4,on,all,off,256,64,128,1e-3,40,0,none,0,42;123;2024,0,screening_train,screening_val,hyperparam,should,Dropout 0.2
-H_hyperparam,P2,smallcnn_3blk,32/64/128,on,0.5,1e-4,on,all,off,256,64,128,1e-3,40,0,none,0,42;123;2024,0,screening_train,screening_val,hyperparam,should,Dropout 0.5
-H_hyperparam,W4,smallcnn_3blk,32/64/128,on,0.3,1e-3,on,all,off,256,64,128,1e-3,40,0,none,0,42;123;2024,0,screening_train,screening_val,hyperparam,should,WD 1e-3
 H_hyperparam,CW1,smallcnn_3blk,32/64/128,on,0.3,1e-4,on,all,off,256,64,128,1e-3,40,0,inv_sqrt,0,42;123;2024,0,screening_train,screening_val,hyperparam,must,Class weight 1/sqrt(freq)
-H_hyperparam,CW2,smallcnn_3blk,32/64/128,on,0.3,1e-4,on,all,off,256,64,128,1e-3,40,0,inv_freq,0,42;123;2024,0,screening_train,screening_val,hyperparam,must,Class weight 1/freq
-H_hyperparam,LS1,smallcnn_3blk,32/64/128,on,0.3,1e-4,on,all,off,256,64,128,1e-3,40,0,none,0.1,42;123;2024,0,screening_train,screening_val,hyperparam,optional,Label smoothing 0.1
-H_hyperparam,I1,smallcnn_3blk,32/64/128,on,0.3,1e-4,on,all,off,256,48,128,1e-3,40,0,none,0,42;123;2024,0,screening_train,screening_val,hyperparam,must,Input 48x48
 H_hyperparam,I2,smallcnn_3blk,32/64/128,on,0.3,1e-4,on,all,off,256,96,128,1e-3,40,0,none,0,42;123;2024,0,screening_train,screening_val,hyperparam,must,Input 96x96
-H_hyperparam,BS1,smallcnn_3blk,32/64/128,on,0.3,1e-4,on,all,off,256,64,64,1e-3,40,0,none,0,42;123;2024,0,screening_train,screening_val,hyperparam,optional,Batch 64
-H_hyperparam,BS2,smallcnn_3blk,32/64/128,on,0.3,1e-4,on,all,off,256,64,256,1e-3,40,0,none,0,42;123;2024,0,screening_train,screening_val,hyperparam,optional,Batch 256
 G_augmentation,G0,smallcnn_3blk,32/64/128,on,0.3,1e-4,off,none,off,256,64,128,1e-3,40,0,none,0,42;123;2024,0,screening_train,screening_val,augmentation,alias,Không aug = F07; không chạy lại
 G_augmentation,G1,smallcnn_3blk,32/64/128,on,0.3,1e-4,on,affine,off,256,64,128,1e-3,40,0,none,0,42;123;2024,0,screening_train,screening_val,augmentation,must,Chỉ affine
 G_augmentation,G2,smallcnn_3blk,32/64/128,on,0.3,1e-4,on,color,off,256,64,128,1e-3,40,0,none,0,42;123;2024,0,screening_train,screening_val,augmentation,must,Chỉ color
 G_augmentation,G3,smallcnn_3blk,32/64/128,on,0.3,1e-4,on,perspective,off,256,64,128,1e-3,40,0,none,0,42;123;2024,0,screening_train,screening_val,augmentation,must,Chỉ perspective
-G_augmentation,G4,smallcnn_3blk,32/64/128,on,0.3,1e-4,on,affine_color,off,256,64,128,1e-3,40,0,none,0,42;123;2024,0,screening_train,screening_val,augmentation,must,Affine + color
 G_augmentation,G5,smallcnn_3blk,32/64/128,on,0.3,1e-4,on,all,off,256,64,128,1e-3,40,0,none,0,42;123;2024,0,screening_train,screening_val,augmentation,alias,All = F15; không chạy lại
-G_augmentation,G6,smallcnn_3blk,32/64/128,on,0.3,1e-4,on,affine_perspective,off,256,64,128,1e-3,40,0,none,0,42;123;2024,0,screening_train,screening_val,augmentation,must,Affine + perspective
-G_augmentation,G7,smallcnn_3blk,32/64/128,on,0.3,1e-4,on,color_perspective,off,256,64,128,1e-3,40,0,none,0,42;123;2024,0,screening_train,screening_val,augmentation,must,Color + perspective
-G_augmentation,G8,smallcnn_3blk,32/64/128,on,0.3,1e-4,on,all_strong_color,off,256,64,128,1e-3,40,0,none,0,42;123;2024,0,screening_train,screening_val,augmentation,should,All + color mạnh 0.4
-X_confirmation,X1,TBD,TBD,,,,,,,,64,128,,40,0,,,42;123;2024,3,dev_fold,dev_fold_val,confirmation,must,Điền sau screening: top 3 theo luật 4.5 + 1 control
-X_confirmation,X2,TBD,TBD,,,,,,,,64,128,,40,0,,,42;123;2024,3,dev_fold,dev_fold_val,confirmation,must,Điền sau screening: top 3 theo luật 4.5 + 1 control
-X_confirmation,X3,TBD,TBD,,,,,,,,64,128,,40,0,,,42;123;2024,3,dev_fold,dev_fold_val,confirmation,must,Điền sau screening: top 3 theo luật 4.5 + 1 control
-X_confirmation,X4,TBD,TBD,,,,,,,,64,128,,40,0,,,42;123;2024,3,dev_fold,dev_fold_val,confirmation,must,Điền sau screening: top 3 theo luật 4.5 + 1 control
+X_confirmation,X1,TBD,TBD,,,,,,,,64,128,,40,0,,,42;123;2024,3,dev_fold,dev_fold_val,confirmation,must,Điền sau screening: top 2 theo luật 4.5 + 1 control
+X_confirmation,X2,TBD,TBD,,,,,,,,64,128,,40,0,,,42;123;2024,3,dev_fold,dev_fold_val,confirmation,must,Điền sau screening: top 2 theo luật 4.5 + 1 control
+X_confirmation,X3,TBD,TBD,,,,,,,,64,128,,40,0,,,42;123;2024,3,dev_fold,dev_fold_val,confirmation,must,Điền sau screening: top 2 theo luật 4.5 + 1 control; control F07/F00
 FINAL,FINAL,TBD,TBD,,,,,,,,64,128,,40,0,,,42;123;2024,0,dev_all,lockbox,final,must,Train toàn dev; test lockbox một lần sau freeze

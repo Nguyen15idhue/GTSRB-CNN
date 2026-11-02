@@ -5,10 +5,10 @@
 
 | Thông tin | Giá trị |
 |---|---|
-| Người thực hiện | |
-| Ngày bắt đầu | |
-| Commit pre-registration | |
-| Trạng thái | Chưa bắt đầu / Đang làm / Tạm dừng / Xong |
+| Người thực hiện | Kỹ sư ML chính kiêm auditor tái lập (AI agent) |
+| Ngày bắt đầu | 02/11/2026 |
+| Commit pre-registration | điền ở mục 0.1 sau khi commit |
+| Trạng thái | Đang làm |
 
 ---
 
@@ -16,12 +16,12 @@
 
 ### 0.1. Chốt tài liệu
 
-- [ ] Đọc hết `KE_HOACH_V2_DAY_DU.md`.
-- [ ] Chốt 8 so sánh chính (mục 4.4).
-- [ ] Chốt luật quyết định (mục 4.5).
-- [ ] Chốt luật dừng (mục 4.6).
-- [ ] Commit tài liệu + `MA_TRAN_RUN.csv`; ghi commit hash: `__________`.
-- [ ] Không sửa luật sau khi xem kết quả; nếu buộc sửa, tạo file `_v2` và ghi lý do.
+- [x] Đọc hết `KE_HOACH_V2_DAY_DU.md`.
+- [x] Chốt 8 so sánh chính (mục 4.4) — ghi trong `PRE_REGISTRATION_V2.md` mục 3.
+- [x] Chốt luật quyết định (mục 4.5) — ghi trong `PRE_REGISTRATION_V2.md` mục 4.
+- [x] Chốt luật dừng (mục 4.6) — ghi trong `PRE_REGISTRATION_V2.md` mục 5.
+- [x] Commit tài liệu + `MA_TRAN_RUN.csv`; ghi commit hash: `__________` (cập nhật sau commit).
+- [x] Không sửa luật sau khi xem kết quả; nếu buộc sửa, tạo file `_v2` và ghi lý do.
 
 **Điều kiện xong:** có commit hash và ngày chốt.
 
@@ -69,10 +69,9 @@
 
 ### 1.1. Baseline
 
-- [ ] B0 majority trên screening val.
 - [ ] B1 HOG + LinearSVC; C chọn trên screening val.
 - [ ] Ghi lại C tốt nhất và thời gian trích/fit.
-- [ ] B1b refit trên dev (chưa test lockbox).
+- [ ] Không chạy B0 majority / B1b refit (đã bỏ để giảm run).
 
 ### 1.2. Factorial
 
@@ -93,39 +92,38 @@
 
 ### 2.1. Kiến trúc
 
-- [ ] D1, D2, D3, C1 × 3 seed.
-- [ ] W1, W2, W3 × 3 seed.
+- [ ] D1, D2, D3 × 3 seed.
+- [ ] W1, W2 × 3 seed.
 - [ ] Bảng params vs macro-F1 (Pareto).
-- [ ] So sánh D1 vs D4 (GAP), D2 vs D4 (depth), C1 vs D3 (dropout).
+- [ ] So sánh D1 vs D4 (GAP), D2 vs D4 (depth), W1/W2 vs D4 (width).
+- [ ] D3 chỉ map E4 cũ; không dùng D3 để kết luận cơ chế.
 - [ ] Kết luận GAP/depth/width.
 
 ### 2.2. Hyperparam
 
-- [ ] L1, L2, L4, L5 × 3 seed.
-- [ ] P1, P2, W4 × 3 seed.
-- [ ] CW1, CW2 × 3 seed.
-- [ ] LS1 × 3 seed (optional).
-- [ ] I1, I2 × 3 seed.
-- [ ] BS1, BS2 × 3 seed (optional).
-- [ ] Kiểm tra 3e-3 có NaN/không hội tụ; ghi rõ.
+- [ ] L1 (LR 1e-4, cách 10 lần so với 1e-3) × 3 seed; L3 = F15.
+- [ ] CW1 (inv_sqrt) × 3 seed.
+- [ ] I2 (input 96) × 3 seed.
 - [ ] Không so 10 epoch với 40 epoch.
+- [ ] Không chạy L2/L4/L5/P1/P2/W4/CW2/LS1/I1/BS1/BS2 (đã bỏ để giảm run).
 
 ### 2.3. Augmentation
 
-- [ ] G1–G4, G6–G8 × 3 seed.
-- [ ] Corruption 8 loại × 3 mức trên screening val.
+- [ ] G1, G2, G3 × 3 seed; G0 = F07, G5 = F15.
+- [ ] Corruption 6 loại × 3 mức trên screening val.
 - [ ] Bảng clean + corruption.
 - [ ] Kết luận aug có cần, phần nào.
+- [ ] Không chạy G4/G6/G7/G8 (đã bỏ).
 
-### 2.4. Chọn top 3–4
+### 2.4. Chọn top 2 + control
 
 - [ ] Sắp xếp theo mean macro-F1.
 - [ ] Lấy nhóm trong 0,3 điểm so với tốt nhất.
-- [ ] Chọn top 3 theo tie-break + 1 control.
+- [ ] Chọn top 2 theo tie-break + 1 control (F07; nếu F07 đã trong top 2 thì F00).
 - [ ] Ghi lý do chọn **trước** khi chạy OOF.
-- [ ] Điền X1–X4 vào `MA_TRAN_RUN.csv`.
+- [ ] Điền X1–X3 vào `MA_TRAN_RUN.csv`.
 
-**Điều kiện xong:** có danh sách top 3–4 và lý do, có bảng D/H/G.
+**Điều kiện xong:** có danh sách top 2 + control và lý do, có bảng D/H/G.
 
 ---
 
@@ -133,7 +131,7 @@
 
 ### 3.1. OOF
 
-- [ ] Chạy top 3 + control × 3 fold × 3 seed (36 run).
+- [ ] Chạy top 2 + control × 3 fold × 3 seed (27 run).
 - [ ] Mỗi ảnh dev được dự đoán đúng 1 lần mỗi seed.
 - [ ] `oof_predictions.csv` đủ dòng, không trùng.
 - [ ] Tính macro-F1/43 trên OOF.
@@ -183,7 +181,7 @@
 - [ ] Per-class Δ heatmap.
 - [ ] Grad-CAM 12 ảnh.
 - [ ] Reliability diagram + ECE.
-- [ ] Corruption curves 8 panel.
+- [ ] Corruption curves 6 panel.
 - [ ] Confusion matrix chuẩn hóa hàng.
 - [ ] Error taxonomy 12 mẫu.
 
@@ -223,7 +221,7 @@ Mỗi card có: mức đã thử, mean ± sd, Δ [CI], cơ chế, kết luận, 
 | 2 | Mọi run kết luận dùng `stratified_group` | [ ] |
 | 3 | Mỗi kết luận có Δ + CI + luật quyết định | [ ] |
 | 4 | Factorial 2⁴ đủ 16 config | [ ] |
-| 5 | Kiến trúc tách GAP/depth/width/dropout | [ ] |
+| 5 | Kiến trúc tách GAP/depth/width; D3 chỉ legacy | [ ] |
 | 6 | Aug bật/tắt + corruption | [ ] |
 | 7 | OOF 3-fold × 3 seed | [ ] |
 | 8 | Decision card đủ 10 yếu tố | [ ] |

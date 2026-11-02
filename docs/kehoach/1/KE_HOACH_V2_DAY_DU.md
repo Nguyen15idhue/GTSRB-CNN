@@ -67,8 +67,8 @@
 | 3-fold train / val mỗi fold | **20.541–21.360 / 10.011–10.830** | 2/3 – 1/3 track trong dev |
 | Final train | **31.371 ảnh** | Toàn bộ dev; **bằng đúng cỡ train cũ** |
 | Official test | **12.630 ảnh** | Phụ; clean 12.499 sau khi bỏ 131 ảnh gần trùng |
-| Số run dự kiến | **~174** | ~15–18 h GPU |
-| Số run tối thiểu | **~71** | ~7–9 h GPU |
+| Số run bản gọn | **~112** | ~10–11 h GPU |
+| Số run tối thiểu nếu gấp | **~58** | Screening 1 seed; kết luận từ OOF/lockbox |
 
 > Số ảnh của lockbox/screening/3-fold có thể lệch vài chục ảnh tùy seed và cách chọn track; **số chính xác phải ghi từ `outputs/splits/v2/manifest.json`**, không chép từ bảng này vào báo cáo.
 
@@ -140,7 +140,7 @@
 |---|---|---|---|
 | P1 | Split theo track/sign-group | Lockbox/dev/screening/3-fold đều group theo track; sign-group nếu làm được | Không dùng random split cho kết luận |
 | P2 | Đăng ký trước | Chốt câu hỏi, endpoint, luật quyết định trước khi chạy | Không đổi luật sau khi xem kết quả |
-| P3 | Tách yếu tố | Factorial cho 4 yếu tố chính; one-factor cho phần còn lại | Không đổi 3–4 thứ trong một run rồi quy công |
+| P3 | Tách yếu tố | Factorial cho 4 yếu tố chính; one-factor cho phần còn lại | Không đổi nhiều thứ trong một run rồi quy công |
 | P4 | CI + effect size | Cluster bootstrap theo track; Δ kèm 95% CI | Không chỉ báo p-value hoặc chỉ báo điểm |
 | P5 | Test một lần | Lockbox chỉ mở sau freeze | Không tune trên lockbox/test |
 | P6 | Kết quả âm hợp lệ | Báo "không đủ bằng chứng" nếu CI chứa 0 | Không giữ cấu hình vì "báo cáo đẹp" |
@@ -194,7 +194,7 @@
     │   └── Dùng cho factorial, kiến trúc, hyperparam, augmentation
     │
     └── 3-FOLD         20.541–21.360 train / 10.011–10.830 val mỗi fold
-        └── Dùng cho top 3–4 cấu hình; OOF 31.371 ảnh
+        └── Dùng cho top 2 + control; OOF 31.371 ảnh
 ```
 
 | Tập | Quy tắc | Track | Ảnh dự kiến | Vai trò |
@@ -338,13 +338,15 @@ for each class c:
 | H1 | CNN-B (BN+DO+WD) > CNN-A | Δ macro-F1 ≥ 0,3 điểm, CI > 0 | Báo cáo; có thể BN không cần ở quy mô này |
 | H2 | Aug không tăng clean accuracy đáng kể nhưng tăng corruption accuracy | Clean Δ < 0,3; corruption Δ ≥ 0,5, CI > 0 | Nếu aug tăng cả hai → giữ; nếu không tăng cả hai → bỏ |
 | H3 | CNN-C (4 khối + GAP) ≤ CNN-B | Δ ≤ 0 hoặc CI chứa 0 | Nếu C thắng → chọn C; giải thích depth/GAP |
-| H4 | 3 khối ≥ 4 khối; 2 khối < 3 khối | Δ 3-4 ≥ 0; Δ 2-3 < 0 | Báo cáo; chọn theo dữ liệu |
-| H5 | LR 1e-3 ≥ 3e-4; 3e-3 phân kỳ hoặc cần warmup | Δ ≥ 0,3 hoặc 3e-3 NaN/không hội tụ | Nếu 3e-3 + warmup bằng 1e-3 → ghi nhận |
+| H4 | 3 khối ≥ 4 khối | Δ 3-4 ≥ 0 | Báo cáo; chọn theo dữ liệu |
+| H5 | LR 1e-3 ≥ 1e-4 (cách 10 lần) | Δ ≥ 0,3 | Nếu 1e-4 tốt hơn → ghi nhận |
 | H6 | Class weight tăng recall lớp hiếm và macro-F1 | Δ macro-F1 ≥ 0,3, CI > 0 | Nếu giảm → bỏ; báo trade-off |
-| H7 | Input 96 không hơn 64 quá 0,3; 48 kém hơn | Δ 96-64 < 0,3; Δ 48-64 < -0,3 | Nếu 96 thắng rõ → cân nhắc latency |
-| H8 | Width > 32/64/128 không đáng | Δ < 0,3 so với 32/64/128 | Nếu thắng rõ → chọn theo dữ liệu |
+| H7 | Input 96 không hơn 64 quá 0,3 | Δ 96-64 < 0,3 | Nếu 96 thắng rõ → cân nhắc latency |
+| H8 | Width 48/96/192 không đáng so với 32/64/128 | Δ < 0,3 so với 32/64/128 | Nếu thắng rõ → chọn theo dữ liệu |
 
 > Đây là **giả thuyết**, không phải kết luận. Kết quả trái giả thuyết vẫn là kết quả tốt nếu quy trình đúng.
+>
+> **Bản gọn** chỉ so LR **1e-4 vs 1e-3** (cách 10 lần); không khảo sát các mức LR trung gian/warmup, dropout 0,2/0,5, WD 1e-3, label smoothing, batch size, input 48. Chỉ làm exploratory nếu còn thời gian; không dùng để kết luận chính.
 
 ### 4.3. Endpoint
 
@@ -355,7 +357,7 @@ for each class c:
 | Phụ | Per-class F1, precision, recall, support | `classification_report` | Bắt buộc cho lớp hiếm |
 | Phụ | Top-3 accuracy | Logits | Demo |
 | Phụ | ECE, Brier | 15 bin | Calibration |
-| Phụ | Corruption accuracy | 8 loại × 3 mức | Robustness |
+| Phụ | Corruption accuracy | 6 loại × 3 mức | Robustness |
 | Phụ | Params, latency | `count_parameters`, đo model-only | Chọn tie-break |
 | Phụ | Train time, GPU mem | `metrics.csv` | Minh bạch chi phí |
 
@@ -369,10 +371,10 @@ for each class c:
 4. Aug on vs off.
 5. GAP on vs off (3 khối).
 6. Depth 4 vs 3.
-7. Width lớn nhất vs 32/64/128.
-8. LR 1e-3 vs 3e-4.
+7. Width lớn (48/96/192) vs 32/64/128.
+8. LR 1e-3 vs 1e-4 (cách 10 lần).
 
-**Hiệu chỉnh:** Holm–Bonferroni cho 8 so sánh chính. Các so sánh còn lại (class weight, input, batch, label smoothing, aug components) là **exploratory**, ghi rõ "chưa hiệu chỉnh" và không dùng để tuyên bố thắng/thua tuyệt đối.
+**Hiệu chỉnh:** Holm–Bonferroni cho 8 so sánh chính. Các so sánh còn lại (class weight, input, aug components) là **exploratory**, ghi rõ "chưa hiệu chỉnh" và không dùng để tuyên bố thắng/thua tuyệt đối.
 
 ### 4.5. Luật quyết định (chốt trước)
 
@@ -395,7 +397,7 @@ Cho Δ = macro-F1(config) − macro-F1(reference), CI 95% cluster bootstrap theo
 
 - Tối đa **40 epoch**; early stopping **patience 7** theo val macro-F1.
 - Run **không hợp lệ** nếu: loss NaN/Inf; > 10% epoch NaN; không có checkpoint; val thiếu lớp mà không ghi rõ; config/split hash không khớp.
-- Run **hợp lệ nhưng thất bại** (ví dụ 3e-3 phân kỳ) vẫn phải báo cáo, không xóa.
+- Run **hợp lệ nhưng thất bại** (ví dụ NaN hoặc phân kỳ) vẫn phải báo cáo, không xóa.
 - Không dùng test/lockbox để early stop.
 - Không chạy lại run đã có nếu không có lý do; nếu chạy lại do bug, tạo `_v2` và ghi log.
 
@@ -418,19 +420,19 @@ Trước khi mở lockbox:
 | Tham số | Giá trị | Ghi chú |
 |---|---|---|
 | Optimizer | AdamW | |
-| Learning rate | 1e-3 | L1–L5 test |
-| Weight decay | 1e-4 | F, W4 test |
-| Batch size | 128 | BS1–BS2 test |
+| Learning rate | 1e-3 | L1 test (1e-4, cách 10 lần) |
+| Weight decay | 1e-4 | F test (0 vs 1e-4) |
+| Batch size | 128 | Không khảo sát |
 | Epochs | 40 | **Không so 10 epoch** |
-| Scheduler | Cosine annealing | Không warmup, trừ L5 |
-| Warmup | 0 | L5 = 3 epoch |
+| Scheduler | Cosine annealing | Không warmup |
+| Warmup | 0 | Không khảo sát |
 | AMP | Bật khi CUDA | |
 | Early stopping | Patience 7, theo val macro-F1 | |
-| Label smoothing | 0 | LS1 test |
-| Class weight | None | CW1–CW2 test |
-| Input size | 64×64 RGB | I1–I2 test |
+| Label smoothing | 0 | Không khảo sát |
+| Class weight | None | CW1 test (inv_sqrt) |
+| Input size | 64×64 RGB | I2 test (96) |
 | Mean/std | Tính trên train của từng split | Không dùng toàn cục |
-| Dropout | 0,3 | P1–P2 test |
+| Dropout | 0,3 | F test (0 vs 0,3) |
 | BN | Bật | F test |
 | Aug | Bật (affine + color + perspective) | G test |
 | Seed | 42, 123, 2024 | Screening/confirmation |
@@ -458,11 +460,9 @@ Trước khi mở lockbox:
 | `affine` | RandomAffine | degrees ±10, translate 0,1, scale 0,9–1,1, shear 5 |
 | `color` | ColorJitter | brightness 0,2, contrast 0,2, saturation 0,2, hue 0,02 |
 | `perspective` | RandomPerspective | distortion 0,1, p=0,3 |
-| `affine_color` | affine + color | |
-| `affine_perspective` | affine + perspective | |
-| `color_perspective` | color + perspective | |
 | `all` | affine + color + perspective | Mặc định |
-| `all_strong_color` | affine + color (0,4) + perspective | G8 |
+
+**Bản gọn** chỉ dùng 3 profile đơn (`affine`, `color`, `perspective`) và `all`; bỏ các tổ hợp trung gian để giảm run.
 
 **Cấm:** HorizontalFlip, VerticalFlip, xoay 90/180, hoặc bất kỳ biến đổi nào làm đổi nghĩa biển. Có test tự động chặn flip.
 
@@ -523,7 +523,7 @@ Ghi 1 dòng/epoch, flush ngay.
 | Official test inference | – | ~15–25 giây | 12.630 ảnh |
 | HOG+SVC | 25.131 | ~10–30 phút | Tùy C search |
 
-Tổng full ~174 run × ~5,5 phút ≈ **16 giờ GPU**; cộng phân tích/lỗi ≈ **2–3 ngày làm việc**.
+Tổng bản gọn ~112 run × ~5,5 phút ≈ **10–11 giờ GPU**; cộng phân tích/lỗi ≈ **1–2 ngày làm việc**.
 
 ### 5.7. mean/std
 
@@ -536,18 +536,20 @@ Tổng full ~174 run × ~5,5 phút ≈ **16 giờ GPU**; cộng phân tích/lỗ
 
 ## 6. Ma trận thí nghiệm
 
-> File `MA_TRAN_RUN.csv` chứa danh sách config đầy đủ để chạy. Mục này giải thích thiết kế và cách đọc.
+> **Bản gọn cho bài tập lớn sinh viên.** Chỉ giữ các thí nghiệm trả lời trực tiếp 4 phản biện. Baseline chỉ B1. Tổng ~112 run, ~10–11 h GPU. Các thí nghiệm exploratory đã cắt được ghi ở 6.4/6.5; không tự chạy lại nếu không có yêu cầu.
+>
+> File `MA_TRAN_RUN.csv` chứa danh sách config để chạy. Mục này giải thích thiết kế và cách đọc.
 
 ### 6.0. Baseline
 
+**Chỉ giữ B1** để giảm run; bỏ B0 majority và B1b refit.
+
 | ID | Mô hình | Train | Val | Số run | Mục đích |
 |---|---|---|---:|---:|---|
-| B0 | Majority class | – | screening val | 1 | Sàn thấp nhất |
 | B1 | HOG 64×64 + LinearSVC, C chọn trên val | screening train | screening val | 1 | Baseline cổ điển |
-| B1b | HOG + SVC refit trên dev | dev all | lockbox | 1 | So sánh cuối |
 
 - HOG dùng ảnh xám 64×64; `StandardScaler` fit trên train; `LinearSVC` OvR; C chọn trên **screening val**, không chọn trên lockbox.
-- B1b chỉ chạy sau khi chốt C; dùng để so với final model trên lockbox.
+- Không refit B1 trên dev, không test B1 trên lockbox. So sánh với CNN dùng screening val; kết luận cuối dùng OOF/lockbox của CNN.
 
 ### 6.1. Block R — tái lập bảng cũ trên split mới
 
@@ -623,7 +625,7 @@ Nếu interaction lớn (≥ 0,3 điểm), **không** được nói "aug giúp X
 
 ### 6.3. Block D — tách kiến trúc
 
-**Mục đích:** E3→E4 cũ đổi 4 thứ; block này tách depth, GAP, width, dropout.
+**Mục đích:** E3→E4 cũ đổi 4 thứ; block này tách depth, GAP, width. D3 giữ dropout 0,4 làm legacy, không dùng để kết luận cơ chế.
 
 **Cố định:** BN on, WD 1e-4, aug on, input 64, batch 128, lr 1e-3, 40 epoch, 3 seed.
 
@@ -632,19 +634,18 @@ Nếu interaction lớn (≥ 0,3 điểm), **không** được nói "aug giúp X
 | D4 | 3 | 32/64/128 | off | 0,3 | E3 | Mốc (= F15) |
 | D1 | 3 | 32/64/128 | **on** | 0,3 | D4 | **Chỉ thêm GAP** |
 | D2 | **4** | 32/64/128/256 | off | 0,3 | D4 | **Chỉ thêm depth** |
-| D3 | 4 | 32/64/128/256 | on | **0,4** | E4 | Cả hai (E4 cũ) |
-| C1 | 4 | 32/64/128/256 | on | **0,3** | D3 | Bỏ confound dropout 0,4 |
+| D3 | 4 | 32/64/128/256 | on | **0,4** | E4 | Cả hai (E4 cũ, legacy) |
 | W1 | 3 | 16/32/64 | off | 0,3 | D4 | Width nhỏ |
 | W2 | 3 | 48/96/192 | off | 0,3 | D4 | Width lớn |
-| W3 | 3 | 64/128/256 | off | 0,3 | D4 | Width rất lớn |
 
-**Số run:** 7 config mới × 3 seed = **21 run** (D4 = F15, không chạy lại).
+**Số run:** 5 config mới × 3 seed = **15 run** (D4 = F15, không chạy lại).
 
 **Báo cáo:**
 - Bảng `params vs macro-F1` (Pareto).
 - Nếu D1 tương đương D4 trong CI → chọn D1 (5× ít params).
-- Nếu D2/D3 kém D4 → kết luận 4 khối overfit; kèm train acc / val gap.
-- Nếu W1 kém, W3 không hơn W2 → kết luận 2,2M đủ.
+- Nếu D2 kém D4 → kết luận 4 khối overfit; kèm train acc / val gap.
+- Nếu W1 kém, W2 không hơn D4 → kết luận 2,2M đủ.
+- D3 chỉ để map E4 cũ; D3 đổi cả depth/GAP/dropout 0,4 nên **không dùng để kết luận cơ chế**. D1/D2 mới tách GAP/depth.
 
 ### 6.4. Block H — siêu tham số huấn luyện
 
@@ -652,25 +653,16 @@ Nếu interaction lớn (≥ 0,3 điểm), **không** được nói "aug giúp X
 
 | ID | Yếu tố | Giá trị | Số run | Câu hỏi |
 |---|---|---|---:|---|
-| L1 | LR | 1e-4 | 3 | Có chậm/underfit? |
-| L2 | LR | 3e-4 | 3 | So với 1e-3? |
+| L1 | LR | 1e-4 | 3 | So với 1e-3 (cách 10 lần)? |
 | L3 | LR | 1e-3 | – | Mốc (= F15) |
-| L4 | LR | 3e-3 | 3 | Có phân kỳ? |
-| L5 | LR + warmup | 3e-3, warmup 3 | 3 | Phân kỳ do lr hay thiếu warmup? |
-| P1 | Dropout | 0,2 | 3 | So với 0,3? |
-| P2 | Dropout | 0,5 | 3 | Có underfit? |
-| W4 | WD | 1e-3 | 3 | 1e-4 có tối ưu? |
 | CW1 | Class weight | inv_sqrt | 3 | Có giúp lớp hiếm? |
-| CW2 | Class weight | inv_freq | 3 | Có tốt hơn inv_sqrt? |
-| LS1 | Label smoothing | 0,1 | 3 | Có cải thiện calibration? |
-| I1 | Input size | 48 | 3 | Mất bao nhiêu điểm? |
 | I2 | Input size | 96 | 3 | Được bao nhiêu điểm? |
-| BS1 | Batch size | 64 | 3 | Ảnh hưởng accuracy? |
-| BS2 | Batch size | 256 | 3 | Ảnh hưởng accuracy? |
 
-**Số run:** 14 config mới × 3 seed = **42 run** (L3 = F15).
+**Số run:** 3 config mới × 3 seed = **9 run** (L3 = F15).
 
-**Bắt buộc:** L1–L4 chạy **đủ 40 epoch**. Không so 10 epoch với 40 epoch. Nếu 3e-3 NaN, ghi nhận và dừng run; vẫn báo cáo.
+**Bắt buộc:** L1 chạy **đủ 40 epoch**. Không so 10 epoch với 40 epoch.
+
+**Đã bỏ để giữ quy mô sinh viên:** L2, L4/L5 (warmup), P1/P2 (dropout 0,2/0,5), W4 (WD 1e-3), CW2 (inv_freq), LS1 (label smoothing), I1 (input 48), BS1/BS2 (batch 64/256). Chỉ làm exploratory nếu còn thời gian; không dùng để kết luận chính.
 
 ### 6.5. Block G — augmentation thành phần
 
@@ -684,13 +676,11 @@ Nếu interaction lớn (≥ 0,3 điểm), **không** được nói "aug giúp X
 | G1 | affine | hình học | G0 |
 | G2 | color | màu/sáng | G0 |
 | G3 | perspective | phối cảnh | G0 |
-| G4 | affine_color | hình học + màu | G0 |
 | G5 | all | affine + color + perspective | = F15 |
-| G6 | affine_perspective | hình học + phối cảnh | G0 |
-| G7 | color_perspective | màu + phối cảnh | G0 |
-| G8 | all_strong_color | all, color 0,4 | G5 |
 
-**Số run:** 7 config mới × 3 seed = **21 run** (G0 = F07, G5 = F15).
+**Số run:** 3 config mới × 3 seed = **9 run** (G0 = F07, G5 = F15).
+
+**Đã bỏ:** G4, G6, G7, G8 (các tổ hợp trung gian và color mạnh) để giảm run; chỉ giữ 3 profile đơn + `all`.
 
 **Corruption benchmark (không train thêm):**
 
@@ -702,8 +692,6 @@ Nếu interaction lớn (≥ 0,3 điểm), **không** được nói "aug giúp X
 | Contrast | 0,8 | 0,5 | 0,3 |
 | JPEG | q 50 | q 30 | q 15 |
 | Occlusion | 10% | 20% | 30% |
-| Scale | 0,7 | 0,5 | 0,35 |
-| Rotate | ±10° | ±20° | ±30° |
 
 - Đánh giá trên **screening val** cho tất cả config G; lockbox chỉ dùng cho final sau freeze.
 - Báo cáo accuracy từng điều kiện + trung bình theo loại + Δ so với clean.
@@ -711,18 +699,18 @@ Nếu interaction lớn (≥ 0,3 điểm), **không** được nói "aug giúp X
 
 ### 6.6. Block X — xác nhận OOF và lockbox
 
-**Bước 1 — chọn top 3–4 từ screening:**
+**Bước 1 — chọn top 2 + control từ screening:**
 
 - Sắp xếp theo mean macro-F1 (3 seed).
-- Lấy tất cả config trong khoảng 0,3 điểm so với tốt nhất (nhóm tương đương).
-- Trong nhóm đó, chọn top 3 theo tie-break (params, latency, đơn giản).
-- Thêm **1 control** (F00 hoặc F07) để neo.
+- Lấy các config trong khoảng 0,3 điểm so với tốt nhất (nhóm tương đương).
+- Trong nhóm đó, chọn **top 2** theo tie-break (params, latency, đơn giản).
+- Thêm **1 control** (F07; nếu F07 đã nằm trong top 2 thì dùng F00) để neo.
 - Ghi rõ lý do chọn trước khi chạy OOF.
 
 **Bước 2 — 3-fold × 3 seed:**
 
 - Mỗi config: 3 fold × 3 seed = 9 run.
-- Top 3 + control = 4 config → **36 run**.
+- Top 2 + control = 3 config → **27 run**.
 - Mỗi ảnh dev được dự đoán đúng 1 lần trong mỗi seed (OOF).
 - Tính macro-F1/43 trên OOF; CI cluster bootstrap theo track.
 
@@ -739,58 +727,50 @@ Nếu interaction lớn (≥ 0,3 điểm), **không** được nói "aug giúp X
 - Đánh giá lockbox **một lần** cho mỗi seed; báo cáo mean ± sd và CI.
 - Đánh giá official test raw/clean cho cùng model (phụ).
 
-**Số run:** 36 OOF + 3 final = **39 run** (nếu top 3 + control); nếu top 3 không control: 27 + 3 = 30.
+**Số run:** 27 OOF + 3 final = **30 run**.
 
 ### 6.7. Tổng hợp số run
 
 | Block | Config | Seed/fold | Run | GPU (≈5,5 phút/run) | Ưu tiên |
 |---|---:|---:|---:|---:|---|
-| Baseline | 3 | 1 | 3 | 0,5 h | Bắt buộc |
+| Baseline | 1 | 1 | 1 | 0,1 h | Bắt buộc |
 | F factorial | 16 | 3 | 48 | 4,5 h | Bắt buộc |
-| D architecture | 7 | 3 | 21 | 2,0 h | Bắt buộc |
-| H hyperparam | 14 | 3 | 42 | 4,0 h | Nên có |
-| G augmentation | 7 | 3 | 21 | 2,0 h | Bắt buộc |
-| X confirmation | 4 | 9 | 36 | 2,7 h | Bắt buộc |
+| D architecture | 5 | 3 | 15 | 1,4 h | Bắt buộc |
+| H hyperparam | 3 | 3 | 9 | 0,8 h | Nên có |
+| G augmentation | 3 | 3 | 9 | 0,8 h | Bắt buộc |
+| X confirmation | 3 | 9 | 27 | 2,5 h | Bắt buộc |
 | Final lockbox | 1 | 3 | 3 | 0,3 h | Bắt buộc |
-| **Tổng** | | | **174** | **~16 h** | |
+| **Tổng** | | | **112** | **~10–11 h** | |
 
-**Bản tối thiểu (~71 run, ~7–9 h):**
-
-- F: 16 config × 1 seed = 16.
-- D: 7 × 1 = 7.
-- H: 8 config quan trọng × 1 = 8 (L1, L2, L4, L5, CW1, CW2, I1, I2).
-- G: 7 × 1 = 7.
-- X: top 3 × 3 fold × 3 seed = 27.
-- Final: 3.
-- Baseline: 3.
-- Tổng ~71 run.
-- Ghi rõ: "screening 1 seed chỉ để go/no-go; kết luận cuối từ 3-fold × 3 seed".
+**Nếu rất gấp (~58 run, ~5–6 h):** chạy screening 1 seed (F16 + D5 + H3 + G3 = 27 run), OOF vẫn 3 fold × 3 seed (27), final 3, B1 1. Chỉ dùng screening để go/no-go; kết luận cuối từ OOF/lockbox; ghi rõ trong báo cáo.
 
 ### 6.8. Thứ tự chạy
 
 | Phase | Việc | GPU | Đầu ra |
 |---|---|---|---|
 | 0 | Chốt protocol, chia split, audit, hash, test | Không | `manifest.json`, `PRE_REGISTRATION` commit |
-| 1 | Baseline + F factorial (3 seed) | ~5 h | Bảng main effect sơ bộ |
-| 2 | D + G + H (3 seed) | ~8 h | Bảng kiến trúc/aug/hyperparam |
-| 3 | Chọn top 3–4; 3-fold OOF; freeze; final; lockbox | ~3 h | OOF, lockbox result |
+| 1 | Baseline + F factorial (3 seed) | ~4–5 h | Bảng main effect sơ bộ |
+| 2 | D + G + H (3 seed) | ~3 h | Bảng kiến trúc/aug/hyperparam |
+| 3 | Chọn top 2 + control; 3-fold OOF; freeze; final; lockbox | ~2–3 h | OOF, lockbox result |
 | 4 | Phân tích thống kê, hình, viết báo cáo | Không | Báo cáo v2 |
 
 ### 6.9. Mapping bảng cũ → v2
 
 | Bảng cũ | ID v2 | Thay đổi |
 |---|---|---|
-| E0a majority | B0 | Chạy trên screening val |
-| E0b HOG+SVC | B1 / B1b | C chọn trên screening val; refit dev cho lockbox |
+| E0a majority | – | Bỏ; baseline chỉ B1 |
+| E0b HOG+SVC | B1 | C chọn trên screening val; không refit lockbox |
 | E1 CNN-A | F00 / R1 | Split sạch, 3 seed |
 | E2 CNN-B | F07 / R2 | Split sạch, 3 seed |
 | E3 CNN-B+aug | F15 / R3 | Split sạch, 3 seed |
-| E4 CNN-C+GAP+aug | D3 / R4 | Tách depth/GAP/dropout bằng D1/D2/C1 |
-| E5a lr 3e-4 (10 epoch) | L2 | **40 epoch** |
-| E5b lr 3e-3 (10 epoch) | L4 / L5 | **40 epoch**, thêm warmup |
-| E7 class weight | CW1 / CW2 | 3 seed, CI |
+| E4 CNN-C+GAP+aug | D3 / R4 | D3 là legacy; D1/D2 tách GAP/depth |
+| E5a lr 1e-4 (10 epoch) | L1 | **40 epoch**, cách 10 lần so với 1e-3 |
+| E5b lr cao (10 epoch) | – | Bỏ; không khảo sát mức LR cao/warmup |
+| E7 class weight | CW1 | 3 seed, CI; bỏ CW2 |
 
 > Không được trộn số cũ với số v2 trong cùng một bảng kết luận. Số cũ chỉ để trong phụ lục `legacy_leaky`.
+>
+> **Đã bỏ khỏi bản gọn:** B0, B1b, C1, W3, L2, L4, L5, P1, P2, W4, CW2, LS1, I1, BS1, BS2, G4, G6, G7, G8. Không cần chạy lại nếu không có yêu cầu.
 
 ---
 
@@ -930,15 +910,15 @@ Mỗi yếu tố có một "thẻ quyết định":
 | Yếu tố | Mức | Kết quả | Δ [CI] | Cơ chế | Kết luận |
 |---|---|---|---|---|---|
 | BN | off/on | ___ | ___ | Ổn định phân phối activation, cho phép lr cao hơn; nếu off, gradient không ổn định và cần lr thấp | ___ |
-| Dropout | 0/0,2/0,3/0,5 | ___ | ___ | Giảm đồng thích nghi; quá cao → underfit | ___ |
-| WD | 0/1e-4/1e-3 | ___ | ___ | Co weight, giảm overfit; quá cao → underfit | ___ |
-| Aug | off/on + profile | ___ | ___ | Tăng bất biến với hình học/ánh sáng; có thể không tăng clean acc | ___ |
+| Dropout | 0/0,3 | ___ | ___ | Giảm đồng thích nghi; quá cao → underfit | ___ |
+| WD | 0/1e-4 | ___ | ___ | Co weight, giảm overfit; quá cao → underfit | ___ |
+| Aug | off + 3 profile | ___ | ___ | Tăng bất biến với hình học/ánh sáng; có thể không tăng clean acc | ___ |
 | GAP | off/on | ___ | ___ | Giảm params, mất chi tiết không gian | ___ |
-| Depth | 2/3/4 | ___ | ___ | Receptive field tăng; quá sâu → overfit | ___ |
-| Width | 4 mức | ___ | ___ | Dung lượng tăng; diminishing return | ___ |
-| LR | 4 mức | ___ | ___ | Tốc độ/ổn định; 3e-3 có thể phân kỳ | ___ |
-| Class weight | none/inv_sqrt/inv_freq | ___ | ___ | Tăng recall lớp hiếm, có thể giảm precision | ___ |
-| Input | 48/64/96 | ___ | ___ | Chi tiết vs chi phí | ___ |
+| Depth | 3/4 | ___ | ___ | Receptive field tăng; quá sâu → overfit | ___ |
+| Width | 3 mức | ___ | ___ | Dung lượng tăng; diminishing return | ___ |
+| LR | 2 mức | ___ | ___ | Tốc độ/ổn định | ___ |
+| Class weight | none/inv_sqrt | ___ | ___ | Tăng recall lớp hiếm, có thể giảm precision | ___ |
+| Input | 64/96 | ___ | ___ | Chi tiết vs chi phí | ___ |
 
 ### 8.2. Learning curves
 
@@ -983,8 +963,8 @@ Vẽ 4 panel cho từng cấu hình chính:
 
 ### 8.6. Corruption robustness
 
-- 8 loại × 3 mức (mục 6.5).
-- Vẽ 8 panel: accuracy vs severity, mỗi panel một loại; đường cho G0, G5, G8.
+- 6 loại × 3 mức (mục 6.5).
+- Vẽ 6 panel: accuracy vs severity, mỗi panel một loại; đường cho G0, G5.
 - Bảng trung bình theo loại + Δ so với clean.
 - Câu hỏi: aug có tăng robustness không? Phần nào (affine/color/perspective) đóng góp?
 - Nếu aug không tăng clean nhưng tăng corruption, đây là bằng chứng để giữ aug cho demo.
@@ -1026,7 +1006,7 @@ Sau khi có kết quả, điền đoạn sau (giữ nguyên cấu trúc):
 | Aug không tăng cả hai | Aug không cần | Bỏ aug; giảm chi phí |
 | Class weight giảm macro-F1 | Không cần | Bỏ; báo trade-off |
 | Input 96 thắng rõ | Chi tiết quan trọng | Chọn 96 nếu latency chấp nhận; nếu không, 64 |
-| 3e-3 + warmup bằng 1e-3 | Vấn đề là warmup | Chọn 1e-3 hoặc 3e-3+warmup; giải thích |
+| LR 1e-4 tốt hơn 1e-3 rõ | LR nhỏ ổn định hơn | Chọn 1e-4 nếu CI > 0; báo trade-off thời gian |
 | Không gì hơn baseline | Bài toán dễ / model đủ | Báo tương đương; chọn đơn giản nhất |
 
 ### 8.9. Điều quan trọng nhất
@@ -1077,30 +1057,30 @@ Sau khi có kết quả, điền đoạn sau (giữ nguyên cấu trúc):
 | Test split | `tests/test_split_v2.py` | Pass |
 | Ghi hash split/config | `manifest.json` | Có SHA256 |
 
-### 10.2. Phase 1 — Baseline + factorial (1 ngày GPU)
+### 10.2. Phase 1 — Baseline + factorial (~4–5 h GPU)
 
 | Việc | Số run | Đầu ra |
 |---|---:|---|
-| B0, B1, B1b | 3 | Bảng baseline |
+| B1 | 1 | Bảng baseline |
 | F00–F15 × 3 seed | 48 | Bảng 2⁴ + main effect |
 | Phân tích sơ bộ | – | Quyết định có cần chỉnh gì không (không đổi luật) |
 
 **Cửa kiểm tra:** nếu F15 (E3) trên split mới thấp hơn nhiều so với 97,06% cũ, kiểm tra lại split/mean/std trước khi chạy tiếp; không vội kết luận.
 
-### 10.3. Phase 2 — Kiến trúc, hyperparam, augmentation (1,5 ngày GPU)
+### 10.3. Phase 2 — Kiến trúc, hyperparam, augmentation (~3 h GPU)
 
 | Việc | Số run | Đầu ra |
 |---|---:|---|
-| D1–D4, C1, W1–W3 × 3 seed | 21 | Bảng kiến trúc/Pareto |
-| L/P/W/CW/LS/I/BS × 3 seed | 42 | Bảng hyperparam |
-| G0–G8 × 3 seed | 21 | Bảng aug + corruption |
-| Phân tích | – | Chọn top 3–4 |
+| D1–D3, W1–W2 × 3 seed (D4 = F15) | 15 | Bảng kiến trúc/Pareto |
+| L1, CW1, I2 × 3 seed | 9 | Bảng hyperparam |
+| G1–G3 × 3 seed (G0 = F07, G5 = F15) | 9 | Bảng aug + corruption |
+| Phân tích | – | Chọn top 2 + control |
 
-### 10.4. Phase 3 — Xác nhận, freeze, lockbox (1 ngày GPU)
+### 10.4. Phase 3 — Xác nhận, freeze, lockbox (~2–3 h GPU)
 
 | Việc | Số run | Đầu ra |
 |---|---:|---|
-| Top 3 + control × 3 fold × 3 seed | 36 | OOF predictions, CI |
+| Top 2 + control × 3 fold × 3 seed | 27 | OOF predictions, CI |
 | Chọn winner theo luật 4.5 | – | Quyết định + lý do |
 | Freeze config/commit | – | `FREEZE.md` + hash |
 | Train final trên dev × 3 seed | 3 | 3 checkpoint |
@@ -1119,9 +1099,11 @@ Sau khi có kết quả, điền đoạn sau (giữ nguyên cấu trúc):
 
 ### 10.6. Đường tối thiểu nếu gấp
 
+Bản gọn 112 run là mặc định. Nếu rất gấp:
+
 1. Phase 0 đầy đủ (không cắt).
-2. F 16 config × 1 seed; D 7 × 1; G 7 × 1; H 8 × 1.
-3. Chọn top 3 theo screening; 3-fold × 3 seed (27 run).
+2. Screening 1 seed: F16 + D5 + H3 + G3 = 27 run.
+3. Chọn top 2 + control; 3-fold × 3 seed (27 run).
 4. Final 3 seed; lockbox.
 5. Báo cáo rõ "screening 1 seed, xác nhận 3 seed"; không tuyên bố thắng/thua ở screening.
 
@@ -1130,9 +1112,9 @@ Sau khi có kết quả, điền đoạn sau (giữ nguyên cấu trúc):
 | File | Việc | Test |
 |---|---|---|
 | `src/split_v2.py` | Lockbox/dev/screening/3-fold; sign-group union-find; manifest/hash | `tests/test_split_v2.py` |
-| `src/data.py` | Đọc split manifest; mean/std theo split; cache 48/96 | Smoke test |
-| `src/train.py` | `fold`, `class_weight`, `label_smoothing`, `warmup`, `aug_profile`; log hash | `tests/test_train_smoke.py` |
-| `src/evaluate.py` | Per-class, top-3, ECE, corruption, lưu prediction | `tests/test_eval.py` |
+| `src/data.py` | Đọc split manifest; mean/std theo split; cache 64/96 | Smoke test |
+| `src/train.py` | `fold`, `class_weight`, `aug_profile`; log hash | `tests/test_train_smoke.py` |
+| `src/evaluate.py` | Per-class, top-3, ECE, corruption 6 loại, lưu prediction | `tests/test_eval.py` |
 | `src/stats.py` | Cluster bootstrap, paired bootstrap, Holm, variance | `tests/test_stats.py` |
 | `src/explain.py` | Grad-CAM, reliability, per-class Δ | Smoke test |
 | `scripts/run_matrix.py` | Chạy theo CSV, resume, skip run đã có | Dry-run |
@@ -1153,15 +1135,15 @@ docs/kehoach/1/
 ├── KE_HOACH_V2_DAY_DU.md
 ├── MA_TRAN_RUN.csv
 ├── CHECKLIST_TRIEN_KHAI.md
-└── MAU_KET_QUA_GIA_DINH.md
+├── MAU_KET_QUA_GIA_DINH.md
+└── PROMPT_TRIEN_KHAI_V2.md
 
 configs/v2/
-├── b0.yaml, b1.yaml, b1b.yaml
+├── b1.yaml
 ├── f00.yaml ... f15.yaml
-├── d1.yaml ... d4.yaml, c1.yaml, w1.yaml ... w3.yaml
-├── l1.yaml ... l5.yaml, p1.yaml, p2.yaml, w4.yaml
-├── cw1.yaml, cw2.yaml, ls1.yaml, i1.yaml, i2.yaml
-├── g0.yaml ... g8.yaml
+├── d1.yaml ... d4.yaml, w1.yaml, w2.yaml
+├── l1.yaml, l3.yaml, cw1.yaml, i2.yaml
+├── g0.yaml ... g3.yaml, g5.yaml
 └── final.yaml
 
 outputs/splits/v2/
@@ -1201,7 +1183,7 @@ outputs/results/legacy/
 ### 11.2. Quy ước tên
 
 - `run_id = v2_<config_id>_s<seed>`; nếu 3-fold: `v2_<config_id>_s<seed>_f<fold>`.
-- `config_id` viết thường: `f00`, `d1`, `l2`, `g5`, `x1`, `final`.
+- `config_id` viết thường: `f00`, `d1`, `l1`, `g5`, `x1`, `final`.
 - Không ghi đè run cũ; nếu chạy lại, thêm `_r2`.
 - `summary.csv` có cột `protocol` = `v2_clean` và `valid_for_conclusion` = 1/0.
 
@@ -1306,7 +1288,7 @@ config_id,corruption,severity,accuracy,macro_f1,n
 
 - "Val random 99,9% chứng minh mô hình gần hoàn hảo" → **sai**, do leak.
 - "17.214 cặp pHash chỉ là hash collision, không có gần trùng" → **quá mạnh**; có 131 ảnh gần trùng xác nhận.
-- "E4 kém vì GAP" → **chưa chứng minh**; E4 đổi 4 thứ. Phải dùng D1/D2/C1.
+- "E4 kém vì GAP" → **chưa chứng minh**; E4 đổi 4 thứ. Phải dùng D1/D2; D3 chỉ là legacy.
 - "Aug luôn tốt" → **chưa chắc**; phải bật/tắt và đo corruption.
 - "Test độc lập" → **không chính xác**; nói "test công khai, không track-disjoint".
 
@@ -1318,16 +1300,16 @@ config_id,corruption,severity,accuracy,macro_f1,n
 |---|---|---|---|
 | Split seed làm lockbox lệch phân phối | Trung bình | CI rộng, kết quả khó so | Stratified theo lớp; báo per-class support; có thể lặp 3 lockbox seed nếu còn thời gian |
 | Sign-group gộp quá nhiều, 3-fold thiếu nhóm | Trung bình | Không đủ 43 lớp/fold | Kiểm tra trước; nếu <6 nhóm/lớp, dùng track-level cho lớp đó và ghi rõ |
-| LR 3e-3 NaN | Cao | Run lỗi | Báo cáo là kết quả; thử warmup L5; không xóa |
+| Run NaN/phân kỳ | Thấp | Run lỗi | Báo cáo là kết quả; không xóa |
 | 4 khối/GAP không hội tụ | Trung bình | Kết luận sai | Chạy đủ 40 epoch; kiểm tra curve; không so 10 epoch |
-| Thời gian vượt | Trung bình | Trễ báo cáo | Dùng đường tối thiểu; ưu tiên F + G + X |
+| Thời gian vượt | Trung bình | Trễ báo cáo | Dùng bản tối thiểu 58 run; ưu tiên F + OOF + lockbox |
 | Ổ đĩa cache 96 | Thấp | Đầy đĩa | Cache riêng, xóa sau; 96 chỉ chạy I2 |
 | Config drift | Trung bình | Không tái lập | Config hash; validate YAML; không sửa tay |
 | Vô tình dùng test/lockbox | Thấp | Mất độc lập | Quyền read-only; log; checklist |
 | Giảng viên hỏi "sao không pretrained" | Cao | Mất điểm | Đề yêu cầu tự xây; baseline HOG; pretrained ngoài phạm vi |
 | Kết quả không có ý nghĩa | Trung bình | Khó bảo vệ | Báo tương đương/chưa kết luận; chọn đơn giản; không伪造 |
 | Bug metric | Thấp | Sai số | Unit test với sklearn; so tay 1 batch |
-| GPU 12 GB không đủ batch 256 | Thấp | Run lỗi | Giảm batch hoặc AMP; ghi rõ |
+| GPU 12 GB không đủ batch 128 | Thấp | Run lỗi | Giảm batch hoặc AMP; ghi rõ |
 | Windows num_workers | Trung bình | Treo | `if __name__ == "__main__":`; test 2 worker |
 
 ---
@@ -1425,10 +1407,8 @@ config_id,corruption,severity,accuracy,macro_f1,n
 | D1 | 3 | 32/64/128 | on | 0,3 | | | | | | |
 | D2 | 4 | 32/64/128/256 | off | 0,3 | | | | | | |
 | D3 | 4 | 32/64/128/256 | on | 0,4 | | | | | | |
-| C1 | 4 | 32/64/128/256 | on | 0,3 | | | | | | |
 | W1 | 3 | 16/32/64 | off | 0,3 | | | | | | |
 | W2 | 3 | 48/96/192 | off | 0,3 | | | | | | |
-| W3 | 3 | 64/128/256 | off | 0,3 | | | | | | |
 
 ### Phụ lục C — Mẫu bảng augmentation + corruption
 
@@ -1440,19 +1420,14 @@ config_id,corruption,severity,accuracy,macro_f1,n
 | G1 | affine | | | | |
 | G2 | color | | | | |
 | G3 | perspective | | | | |
-| G4 | affine_color | | | | |
 | G5 | all | | | | |
-| G6 | affine_perspective | | | | |
-| G7 | color_perspective | | | | |
-| G8 | all_strong_color | | | | |
 
 **C.2. Corruption trung bình:**
 
-| ID | Blur | Noise | Bright | Contrast | JPEG | Occl | Scale | Rotate | TB |
-|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|
-| G0 | | | | | | | | | |
-| G5 | | | | | | | | | |
-| G8 | | | | | | | | | |
+| ID | Blur | Noise | Bright | Contrast | JPEG | Occl | TB |
+|---|---:|---:|---:|---:|---:|---:|---:|
+| G0 | | | | | | | |
+| G5 | | | | | | | |
 
 ### Phụ lục D — Lệnh dự kiến (PowerShell)
 
