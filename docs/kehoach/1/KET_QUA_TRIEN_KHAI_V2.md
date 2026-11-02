@@ -92,3 +92,41 @@ Nguồn: `outputs/results/v2/baseline.json`, log `outputs/results/v2/log_b1.txt`
   tăng `max_iter` sau khi xem kết quả (tránh tune ngoài đăng ký).
 - Không refit trên dev, không đánh giá trên lockbox.
 
+### 1.2. Factorial 2⁴ (F00–F15 × 3 seed)
+
+Nguồn: `outputs/results/v2/summary.csv`, `factorial_effects.json`,
+`tables/factorial.md`, `tables/main_effects.md`, `phase12_artifacts.json`.
+
+- **48/48 run** đủ artifact (config, env, metrics đúng schema, best.pt, curves, meta);
+  `phase12_artifacts.json.all_complete = true`.
+- Mapping: **F00 = CNN-A (E1)**, **F07 = CNN-B không aug (E2)**, **F15 = CNN-B + aug (E3)** —
+  `alias_mapping.json` khớp cả 3 (`all_match = true`).
+- Bảng đầy đủ 16 dòng: `outputs/results/v2/tables/factorial.md`.
+
+**Main effect (điểm %, CI cluster bootstrap theo track):**
+
+| Yếu tố | Δ (điểm %) | 95% CI | Diễn giải |
+|---|---:|---|---|
+| BN | **+3,724** | [+1,778; +5,016] | Tốt hơn rõ |
+| Dropout 0,3 | **+5,963** | [+2,921; +7,264] | Tốt hơn rõ |
+| Weight decay 1e-4 | +0,058 | [−0,526; +0,568] | Không đủ bằng chứng |
+| Augmentation | +0,529 | [−1,216; +2,330] | Không đủ bằng chứng (CI rộng) |
+| BN × Aug | −0,279 | [−1,058; +0,551] | Tương tác không rõ |
+| Dropout × WD | −0,121 | [−0,686; +0,548] | Tương tác không rõ |
+
+**Phát hiện quan trọng (không được bỏ qua):** aug **không** có tác dụng đồng nhất.
+Cụ thể trên cùng 3 seed:
+
+- F08 − F00 = 86,672 − 84,109 = **+2,563 điểm** (aug khi chưa có BN/DO/WD).
+- F15 − F07 = 93,946 − 96,501 = **−2,555 điểm** (aug khi đã bật BN+DO+WD).
+- Vì vậy không được nói "aug giúp X điểm" chung chung; phải nói aug giúp khi
+  thiếu regularization và làm giảm clean accuracy khi đủ regularization.
+- Kiểm tra corruption ở bước 2.3 sẽ quyết định giữ aug hay không.
+
+**Cửa kiểm tra F15:** F15 trung bình 93,946 so với mốc cũ 97,061 = **−3,115 điểm**.
+Đã kiểm tra lại: audit split 15/15 PASS, mean/std khớp 0,0e+00, không có lỗi split;
+khác biệt do (a) screening chỉ train 24.719 ảnh (cũ 31.360), (b) split sign-group
+khó hơn, (c) aug làm giảm clean accuracy ở ngân sách 40 epoch. Ghi nhận, **không đổi
+luật**, kết luận cuối lấy từ OOF/final (`gate_check_f15.json`).
+
+

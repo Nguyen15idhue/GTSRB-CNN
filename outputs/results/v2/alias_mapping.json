@@ -1,0 +1,32 @@
+{
+  "f00": {
+    "legacy": "e1_cnna",
+    "checks": {
+      "use_bn": true,
+      "dropout": true,
+      "weight_decay": true,
+      "augmentation": true
+    },
+    "all_match": true
+  },
+  "f07": {
+    "legacy": "e2_cnnb",
+    "checks": {
+      "use_bn": true,
+      "dropout": true,
+      "weight_decay": true,
+      "augmentation": true
+    },
+    "all_match": true
+  },
+  "f15": {
+    "legacy": "e3_cnnb_aug",
+    "checks": {
+      "use_bn": true,
+      "dropout": true,
+      "weight_decay": true,
+      "augmentation": true
+    },
+    "all_match": true
+  }
+}

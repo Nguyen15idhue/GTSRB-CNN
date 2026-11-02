@@ -1,0 +1,18 @@
+{
+  "reference_old_macro_f1": 0.970613,
+  "reference_source": "outputs/results/summary.csv run final_s42 (split_stratified_group, train 31.360)",
+  "f15_mean_macro_f1": 0.9394626666666667,
+  "f15_values": [
+    0.93881,
+    0.928724,
+    0.950854
+  ],
+  "f07_mean_macro_f1": 0.965007,
+  "difference_vs_old_points": -3.115033333333328,
+  "split_audit_passed": true,
+  "split_audit_checks": 15,
+  "n_train_screening": 24719,
+  "n_train_old": 31360,
+  "explanation": "Split/mean-std đã kiểm tra lại (audit 15/15, mean/std lệch 0.0). Chênh lệch không do lỗi split: mô hình screening train 24.719 ảnh (so với 31.360 cũ) trên split sign-group khó hơn; augment làm clean accuracy giảm ở ngân sách 40 epoch (F15 < F07). Kết luận cuối lấy từ OOF/final, không đổi luật.",
+  "action": "Tiếp tục Phase 2; không đổi luật quyết định."
+}

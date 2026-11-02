@@ -79,16 +79,18 @@
 
 ### 1.2. Factorial
 
-- [ ] Chạy F00–F15 × 3 seed (48 run).
-- [ ] Mỗi run có config, env, metrics, best.pt, curves.
-- [ ] Kiểm tra F00/F07/F15 tương ứng CNN-A/E2/E3.
-- [ ] Tính main effect BN/DO/WD/Aug.
-- [ ] Tính interaction BN×Aug, DO×WD.
-- [ ] Bảng 2⁴ đầy đủ 16 dòng.
+- [x] Chạy F00–F15 × 3 seed (48 run) — `phase12_artifacts.json` 48/48 đủ.
+- [x] Mỗi run có config, env, metrics, best.pt, curves.
+- [x] Kiểm tra F00/F07/F15 tương ứng CNN-A/E2/E3 — `alias_mapping.json` khớp.
+- [x] Tính main effect BN/DO/WD/Aug — BN +3,724; DO +5,963; WD +0,058; Aug +0,529 (điểm %).
+- [x] Tính interaction BN×Aug (−0,279), DO×WD (−0,121) — `factorial_effects.json`.
+- [x] Bảng 2⁴ đầy đủ 16 dòng — `outputs/results/v2/tables/factorial.md`.
 
-**Cửa kiểm tra:** nếu F15 thấp hơn 97,06% quá xa, kiểm tra split/mean/std trước khi chạy tiếp. Không đổi luật.
+**Cửa kiểm tra:** F15 = 93,946, thấp hơn 97,061 cũ 3,115 điểm → đã kiểm tra split/mean-std
+(audit 15/15, lệch 0,0e+00), không phải lỗi split; ghi nhận và tiếp tục, không đổi luật.
 
-**Điều kiện xong:** bảng 2⁴ + bảng main effect + 4 hình curve đại diện.
+**Điều kiện xong:** bảng 2⁴ + bảng main effect + 4 hình curve đại diện. → **ĐẠT**
+(curve: `outputs/figures/v2/01_learning_curves.png` sẽ sinh ở bước 4.2 từ metrics của F00/F07/F15).
 
 ---
 

@@ -1,0 +1,435 @@
+timestamp,config,seed,fold,status,seconds,error
+2026-11-02 22:03:15,f00,42,,ok,44.3,
+2026-11-02 22:04:21,f00,123,,ok,66.4,
+2026-11-02 22:05:16,f00,2024,,ok,55.2,
+2026-11-02 22:06:19,f01,42,,ok,62.5,
+2026-11-02 22:07:06,f01,123,,ok,46.5,
+2026-11-02 22:08:26,f01,2024,,ok,80.6,
+2026-11-02 22:09:43,f02,42,,ok,77.1,
+2026-11-02 22:10:39,f02,123,,ok,55.6,
+2026-11-02 22:11:58,f02,2024,,ok,79.6,
+2026-11-02 22:12:54,f03,42,,ok,55.3,
+2026-11-02 22:14:20,f03,123,,ok,86.8,
+2026-11-02 22:15:22,f03,2024,,ok,61.7,
+2026-11-02 22:16:13,f04,42,,ok,51.1,
+2026-11-02 22:16:57,f04,123,,ok,44.1,
+2026-11-02 22:17:45,f04,2024,,ok,47.1,
+2026-11-02 22:18:59,f05,42,,ok,74.1,
+2026-11-02 22:19:36,f05,123,,ok,37.1,
+2026-11-02 22:20:19,f05,2024,,ok,43.2,
+2026-11-02 22:21:21,f06,42,,ok,61.6,
+2026-11-02 22:22:53,f06,123,,ok,92.4,
+2026-11-02 22:23:56,f06,2024,,ok,63.4,
+2026-11-02 22:25:20,f07,42,,ok,83.2,
+2026-11-02 22:26:07,f07,123,,ok,46.9,
+2026-11-02 22:27:33,f07,2024,,ok,86.5,
+2026-11-02 22:27:40,f08,42,,fail,7.0,"TypeError: Caught TypeError in DataLoader worker process 0.
+Original Traceback (most recent call last):
+  File ""C:\0\1.Laptrinh\BTLHocSau\.venv\Lib\site-packages\torch\utils\data\_utils\worker.py"", line 358, in _worker_loop
+    data = fetcher.fetch(index)  # type: ignore[possibly-undefined]
+           ^^^^^^^^^^^^^^^^^^^^
+  File ""C:\0\1.Laptrinh\BTLHocSau\.venv\Lib\site-packages\torch\utils\data\_utils\fetch.py"", line 57, in fetch
+    return self.collate_fn(data)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File ""C:\0\1.Laptrinh\BTLHocSau\.venv\Lib\site-packages\torch\utils\data\_utils\collate.py"", line 401, in default_collate
+    return collate(batch, collate_fn_map=default_collate_fn_map)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File ""C:\0\1.Laptrinh\BTLHocSau\.venv\Lib\site-packages\torch\utils\data\_utils\collate.py"", line 215, in collate
+    collate(samples, collate_fn_map=collate_fn_map)
+  File ""C:\0\1.Laptrinh\BTLHocSau\.venv\Lib\site-packages\torch\utils\data\_utils\collate.py"", line 243, in collate
+    raise TypeError(default_collate_err_msg_format.format(elem_type))
+TypeError: default_collate: batch must contain tensors, numpy arrays, numbers, dicts or lists; found <class 'PIL.Image.Image'>
+"
+2026-11-02 22:27:48,f08,123,,fail,8.0,"TypeError: Caught TypeError in DataLoader worker process 0.
+Original Traceback (most recent call last):
+  File ""C:\0\1.Laptrinh\BTLHocSau\.venv\Lib\site-packages\torch\utils\data\_utils\worker.py"", line 358, in _worker_loop
+    data = fetcher.fetch(index)  # type: ignore[possibly-undefined]
+           ^^^^^^^^^^^^^^^^^^^^
+  File ""C:\0\1.Laptrinh\BTLHocSau\.venv\Lib\site-packages\torch\utils\data\_utils\fetch.py"", line 57, in fetch
+    return self.collate_fn(data)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File ""C:\0\1.Laptrinh\BTLHocSau\.venv\Lib\site-packages\torch\utils\data\_utils\collate.py"", line 401, in default_collate
+    return collate(batch, collate_fn_map=default_collate_fn_map)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File ""C:\0\1.Laptrinh\BTLHocSau\.venv\Lib\site-packages\torch\utils\data\_utils\collate.py"", line 215, in collate
+    collate(samples, collate_fn_map=collate_fn_map)
+  File ""C:\0\1.Laptrinh\BTLHocSau\.venv\Lib\site-packages\torch\utils\data\_utils\collate.py"", line 243, in collate
+    raise TypeError(default_collate_err_msg_format.format(elem_type))
+TypeError: default_collate: batch must contain tensors, numpy arrays, numbers, dicts or lists; found <class 'PIL.Image.Image'>
+"
+2026-11-02 22:28:15,f08,2024,,fail,27.1,"TypeError: Caught TypeError in DataLoader worker process 0.
+Original Traceback (most recent call last):
+  File ""C:\0\1.Laptrinh\BTLHocSau\.venv\Lib\site-packages\torch\utils\data\_utils\worker.py"", line 358, in _worker_loop
+    data = fetcher.fetch(index)  # type: ignore[possibly-undefined]
+           ^^^^^^^^^^^^^^^^^^^^
+  File ""C:\0\1.Laptrinh\BTLHocSau\.venv\Lib\site-packages\torch\utils\data\_utils\fetch.py"", line 57, in fetch
+    return self.collate_fn(data)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File ""C:\0\1.Laptrinh\BTLHocSau\.venv\Lib\site-packages\torch\utils\data\_utils\collate.py"", line 401, in default_collate
+    return collate(batch, collate_fn_map=default_collate_fn_map)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File ""C:\0\1.Laptrinh\BTLHocSau\.venv\Lib\site-packages\torch\utils\data\_utils\collate.py"", line 215, in collate
+    collate(samples, collate_fn_map=collate_fn_map)
+  File ""C:\0\1.Laptrinh\BTLHocSau\.venv\Lib\site-packages\torch\utils\data\_utils\collate.py"", line 243, in collate
+    raise TypeError(default_collate_err_msg_format.format(elem_type))
+TypeError: default_collate: batch must contain tensors, numpy arrays, numbers, dicts or lists; found <class 'PIL.Image.Image'>
+"
+2026-11-02 22:28:23,f09,42,,fail,8.2,"TypeError: Caught TypeError in DataLoader worker process 0.
+Original Traceback (most recent call last):
+  File ""C:\0\1.Laptrinh\BTLHocSau\.venv\Lib\site-packages\torch\utils\data\_utils\worker.py"", line 358, in _worker_loop
+    data = fetcher.fetch(index)  # type: ignore[possibly-undefined]
+           ^^^^^^^^^^^^^^^^^^^^
+  File ""C:\0\1.Laptrinh\BTLHocSau\.venv\Lib\site-packages\torch\utils\data\_utils\fetch.py"", line 57, in fetch
+    return self.collate_fn(data)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File ""C:\0\1.Laptrinh\BTLHocSau\.venv\Lib\site-packages\torch\utils\data\_utils\collate.py"", line 401, in default_collate
+    return collate(batch, collate_fn_map=default_collate_fn_map)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File ""C:\0\1.Laptrinh\BTLHocSau\.venv\Lib\site-packages\torch\utils\data\_utils\collate.py"", line 215, in collate
+    collate(samples, collate_fn_map=collate_fn_map)
+  File ""C:\0\1.Laptrinh\BTLHocSau\.venv\Lib\site-packages\torch\utils\data\_utils\collate.py"", line 243, in collate
+    raise TypeError(default_collate_err_msg_format.format(elem_type))
+TypeError: default_collate: batch must contain tensors, numpy arrays, numbers, dicts or lists; found <class 'PIL.Image.Image'>
+"
+2026-11-02 22:28:32,f09,123,,fail,8.2,"TypeError: Caught TypeError in DataLoader worker process 0.
+Original Traceback (most recent call last):
+  File ""C:\0\1.Laptrinh\BTLHocSau\.venv\Lib\site-packages\torch\utils\data\_utils\worker.py"", line 358, in _worker_loop
+    data = fetcher.fetch(index)  # type: ignore[possibly-undefined]
+           ^^^^^^^^^^^^^^^^^^^^
+  File ""C:\0\1.Laptrinh\BTLHocSau\.venv\Lib\site-packages\torch\utils\data\_utils\fetch.py"", line 57, in fetch
+    return self.collate_fn(data)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File ""C:\0\1.Laptrinh\BTLHocSau\.venv\Lib\site-packages\torch\utils\data\_utils\collate.py"", line 401, in default_collate
+    return collate(batch, collate_fn_map=default_collate_fn_map)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File ""C:\0\1.Laptrinh\BTLHocSau\.venv\Lib\site-packages\torch\utils\data\_utils\collate.py"", line 215, in collate
+    collate(samples, collate_fn_map=collate_fn_map)
+  File ""C:\0\1.Laptrinh\BTLHocSau\.venv\Lib\site-packages\torch\utils\data\_utils\collate.py"", line 243, in collate
+    raise TypeError(default_collate_err_msg_format.format(elem_type))
+TypeError: default_collate: batch must contain tensors, numpy arrays, numbers, dicts or lists; found <class 'PIL.Image.Image'>
+"
+2026-11-02 22:28:40,f09,2024,,fail,8.2,"TypeError: Caught TypeError in DataLoader worker process 0.
+Original Traceback (most recent call last):
+  File ""C:\0\1.Laptrinh\BTLHocSau\.venv\Lib\site-packages\torch\utils\data\_utils\worker.py"", line 358, in _worker_loop
+    data = fetcher.fetch(index)  # type: ignore[possibly-undefined]
+           ^^^^^^^^^^^^^^^^^^^^
+  File ""C:\0\1.Laptrinh\BTLHocSau\.venv\Lib\site-packages\torch\utils\data\_utils\fetch.py"", line 57, in fetch
+    return self.collate_fn(data)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File ""C:\0\1.Laptrinh\BTLHocSau\.venv\Lib\site-packages\torch\utils\data\_utils\collate.py"", line 401, in default_collate
+    return collate(batch, collate_fn_map=default_collate_fn_map)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File ""C:\0\1.Laptrinh\BTLHocSau\.venv\Lib\site-packages\torch\utils\data\_utils\collate.py"", line 215, in collate
+    collate(samples, collate_fn_map=collate_fn_map)
+  File ""C:\0\1.Laptrinh\BTLHocSau\.venv\Lib\site-packages\torch\utils\data\_utils\collate.py"", line 243, in collate
+    raise TypeError(default_collate_err_msg_format.format(elem_type))
+TypeError: default_collate: batch must contain tensors, numpy arrays, numbers, dicts or lists; found <class 'PIL.Image.Image'>
+"
+2026-11-02 22:28:48,f10,42,,fail,8.1,"TypeError: Caught TypeError in DataLoader worker process 0.
+Original Traceback (most recent call last):
+  File ""C:\0\1.Laptrinh\BTLHocSau\.venv\Lib\site-packages\torch\utils\data\_utils\worker.py"", line 358, in _worker_loop
+    data = fetcher.fetch(index)  # type: ignore[possibly-undefined]
+           ^^^^^^^^^^^^^^^^^^^^
+  File ""C:\0\1.Laptrinh\BTLHocSau\.venv\Lib\site-packages\torch\utils\data\_utils\fetch.py"", line 57, in fetch
+    return self.collate_fn(data)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File ""C:\0\1.Laptrinh\BTLHocSau\.venv\Lib\site-packages\torch\utils\data\_utils\collate.py"", line 401, in default_collate
+    return collate(batch, collate_fn_map=default_collate_fn_map)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File ""C:\0\1.Laptrinh\BTLHocSau\.venv\Lib\site-packages\torch\utils\data\_utils\collate.py"", line 215, in collate
+    collate(samples, collate_fn_map=collate_fn_map)
+  File ""C:\0\1.Laptrinh\BTLHocSau\.venv\Lib\site-packages\torch\utils\data\_utils\collate.py"", line 243, in collate
+    raise TypeError(default_collate_err_msg_format.format(elem_type))
+TypeError: default_collate: batch must contain tensors, numpy arrays, numbers, dicts or lists; found <class 'PIL.Image.Image'>
+"
+2026-11-02 22:28:56,f10,123,,fail,8.2,"TypeError: Caught TypeError in DataLoader worker process 0.
+Original Traceback (most recent call last):
+  File ""C:\0\1.Laptrinh\BTLHocSau\.venv\Lib\site-packages\torch\utils\data\_utils\worker.py"", line 358, in _worker_loop
+    data = fetcher.fetch(index)  # type: ignore[possibly-undefined]
+           ^^^^^^^^^^^^^^^^^^^^
+  File ""C:\0\1.Laptrinh\BTLHocSau\.venv\Lib\site-packages\torch\utils\data\_utils\fetch.py"", line 57, in fetch
+    return self.collate_fn(data)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File ""C:\0\1.Laptrinh\BTLHocSau\.venv\Lib\site-packages\torch\utils\data\_utils\collate.py"", line 401, in default_collate
+    return collate(batch, collate_fn_map=default_collate_fn_map)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File ""C:\0\1.Laptrinh\BTLHocSau\.venv\Lib\site-packages\torch\utils\data\_utils\collate.py"", line 215, in collate
+    collate(samples, collate_fn_map=collate_fn_map)
+  File ""C:\0\1.Laptrinh\BTLHocSau\.venv\Lib\site-packages\torch\utils\data\_utils\collate.py"", line 243, in collate
+    raise TypeError(default_collate_err_msg_format.format(elem_type))
+TypeError: default_collate: batch must contain tensors, numpy arrays, numbers, dicts or lists; found <class 'PIL.Image.Image'>
+"
+2026-11-02 22:29:04,f10,2024,,fail,8.2,"TypeError: Caught TypeError in DataLoader worker process 0.
+Original Traceback (most recent call last):
+  File ""C:\0\1.Laptrinh\BTLHocSau\.venv\Lib\site-packages\torch\utils\data\_utils\worker.py"", line 358, in _worker_loop
+    data = fetcher.fetch(index)  # type: ignore[possibly-undefined]
+           ^^^^^^^^^^^^^^^^^^^^
+  File ""C:\0\1.Laptrinh\BTLHocSau\.venv\Lib\site-packages\torch\utils\data\_utils\fetch.py"", line 57, in fetch
+    return self.collate_fn(data)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File ""C:\0\1.Laptrinh\BTLHocSau\.venv\Lib\site-packages\torch\utils\data\_utils\collate.py"", line 401, in default_collate
+    return collate(batch, collate_fn_map=default_collate_fn_map)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File ""C:\0\1.Laptrinh\BTLHocSau\.venv\Lib\site-packages\torch\utils\data\_utils\collate.py"", line 215, in collate
+    collate(samples, collate_fn_map=collate_fn_map)
+  File ""C:\0\1.Laptrinh\BTLHocSau\.venv\Lib\site-packages\torch\utils\data\_utils\collate.py"", line 243, in collate
+    raise TypeError(default_collate_err_msg_format.format(elem_type))
+TypeError: default_collate: batch must contain tensors, numpy arrays, numbers, dicts or lists; found <class 'PIL.Image.Image'>
+"
+2026-11-02 22:29:13,f11,42,,fail,8.2,"TypeError: Caught TypeError in DataLoader worker process 0.
+Original Traceback (most recent call last):
+  File ""C:\0\1.Laptrinh\BTLHocSau\.venv\Lib\site-packages\torch\utils\data\_utils\worker.py"", line 358, in _worker_loop
+    data = fetcher.fetch(index)  # type: ignore[possibly-undefined]
+           ^^^^^^^^^^^^^^^^^^^^
+  File ""C:\0\1.Laptrinh\BTLHocSau\.venv\Lib\site-packages\torch\utils\data\_utils\fetch.py"", line 57, in fetch
+    return self.collate_fn(data)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File ""C:\0\1.Laptrinh\BTLHocSau\.venv\Lib\site-packages\torch\utils\data\_utils\collate.py"", line 401, in default_collate
+    return collate(batch, collate_fn_map=default_collate_fn_map)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File ""C:\0\1.Laptrinh\BTLHocSau\.venv\Lib\site-packages\torch\utils\data\_utils\collate.py"", line 215, in collate
+    collate(samples, collate_fn_map=collate_fn_map)
+  File ""C:\0\1.Laptrinh\BTLHocSau\.venv\Lib\site-packages\torch\utils\data\_utils\collate.py"", line 243, in collate
+    raise TypeError(default_collate_err_msg_format.format(elem_type))
+TypeError: default_collate: batch must contain tensors, numpy arrays, numbers, dicts or lists; found <class 'PIL.Image.Image'>
+"
+2026-11-02 22:29:40,f11,123,,fail,27.1,"TypeError: Caught TypeError in DataLoader worker process 0.
+Original Traceback (most recent call last):
+  File ""C:\0\1.Laptrinh\BTLHocSau\.venv\Lib\site-packages\torch\utils\data\_utils\worker.py"", line 358, in _worker_loop
+    data = fetcher.fetch(index)  # type: ignore[possibly-undefined]
+           ^^^^^^^^^^^^^^^^^^^^
+  File ""C:\0\1.Laptrinh\BTLHocSau\.venv\Lib\site-packages\torch\utils\data\_utils\fetch.py"", line 57, in fetch
+    return self.collate_fn(data)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File ""C:\0\1.Laptrinh\BTLHocSau\.venv\Lib\site-packages\torch\utils\data\_utils\collate.py"", line 401, in default_collate
+    return collate(batch, collate_fn_map=default_collate_fn_map)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File ""C:\0\1.Laptrinh\BTLHocSau\.venv\Lib\site-packages\torch\utils\data\_utils\collate.py"", line 215, in collate
+    collate(samples, collate_fn_map=collate_fn_map)
+  File ""C:\0\1.Laptrinh\BTLHocSau\.venv\Lib\site-packages\torch\utils\data\_utils\collate.py"", line 243, in collate
+    raise TypeError(default_collate_err_msg_format.format(elem_type))
+TypeError: default_collate: batch must contain tensors, numpy arrays, numbers, dicts or lists; found <class 'PIL.Image.Image'>
+"
+2026-11-02 22:29:48,f11,2024,,fail,8.2,"TypeError: Caught TypeError in DataLoader worker process 0.
+Original Traceback (most recent call last):
+  File ""C:\0\1.Laptrinh\BTLHocSau\.venv\Lib\site-packages\torch\utils\data\_utils\worker.py"", line 358, in _worker_loop
+    data = fetcher.fetch(index)  # type: ignore[possibly-undefined]
+           ^^^^^^^^^^^^^^^^^^^^
+  File ""C:\0\1.Laptrinh\BTLHocSau\.venv\Lib\site-packages\torch\utils\data\_utils\fetch.py"", line 57, in fetch
+    return self.collate_fn(data)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File ""C:\0\1.Laptrinh\BTLHocSau\.venv\Lib\site-packages\torch\utils\data\_utils\collate.py"", line 401, in default_collate
+    return collate(batch, collate_fn_map=default_collate_fn_map)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File ""C:\0\1.Laptrinh\BTLHocSau\.venv\Lib\site-packages\torch\utils\data\_utils\collate.py"", line 215, in collate
+    collate(samples, collate_fn_map=collate_fn_map)
+  File ""C:\0\1.Laptrinh\BTLHocSau\.venv\Lib\site-packages\torch\utils\data\_utils\collate.py"", line 243, in collate
+    raise TypeError(default_collate_err_msg_format.format(elem_type))
+TypeError: default_collate: batch must contain tensors, numpy arrays, numbers, dicts or lists; found <class 'PIL.Image.Image'>
+"
+2026-11-02 22:29:56,f12,42,,fail,8.2,"TypeError: Caught TypeError in DataLoader worker process 0.
+Original Traceback (most recent call last):
+  File ""C:\0\1.Laptrinh\BTLHocSau\.venv\Lib\site-packages\torch\utils\data\_utils\worker.py"", line 358, in _worker_loop
+    data = fetcher.fetch(index)  # type: ignore[possibly-undefined]
+           ^^^^^^^^^^^^^^^^^^^^
+  File ""C:\0\1.Laptrinh\BTLHocSau\.venv\Lib\site-packages\torch\utils\data\_utils\fetch.py"", line 57, in fetch
+    return self.collate_fn(data)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File ""C:\0\1.Laptrinh\BTLHocSau\.venv\Lib\site-packages\torch\utils\data\_utils\collate.py"", line 401, in default_collate
+    return collate(batch, collate_fn_map=default_collate_fn_map)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File ""C:\0\1.Laptrinh\BTLHocSau\.venv\Lib\site-packages\torch\utils\data\_utils\collate.py"", line 215, in collate
+    collate(samples, collate_fn_map=collate_fn_map)
+  File ""C:\0\1.Laptrinh\BTLHocSau\.venv\Lib\site-packages\torch\utils\data\_utils\collate.py"", line 243, in collate
+    raise TypeError(default_collate_err_msg_format.format(elem_type))
+TypeError: default_collate: batch must contain tensors, numpy arrays, numbers, dicts or lists; found <class 'PIL.Image.Image'>
+"
+2026-11-02 22:30:04,f12,123,,fail,8.2,"TypeError: Caught TypeError in DataLoader worker process 0.
+Original Traceback (most recent call last):
+  File ""C:\0\1.Laptrinh\BTLHocSau\.venv\Lib\site-packages\torch\utils\data\_utils\worker.py"", line 358, in _worker_loop
+    data = fetcher.fetch(index)  # type: ignore[possibly-undefined]
+           ^^^^^^^^^^^^^^^^^^^^
+  File ""C:\0\1.Laptrinh\BTLHocSau\.venv\Lib\site-packages\torch\utils\data\_utils\fetch.py"", line 57, in fetch
+    return self.collate_fn(data)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File ""C:\0\1.Laptrinh\BTLHocSau\.venv\Lib\site-packages\torch\utils\data\_utils\collate.py"", line 401, in default_collate
+    return collate(batch, collate_fn_map=default_collate_fn_map)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File ""C:\0\1.Laptrinh\BTLHocSau\.venv\Lib\site-packages\torch\utils\data\_utils\collate.py"", line 215, in collate
+    collate(samples, collate_fn_map=collate_fn_map)
+  File ""C:\0\1.Laptrinh\BTLHocSau\.venv\Lib\site-packages\torch\utils\data\_utils\collate.py"", line 243, in collate
+    raise TypeError(default_collate_err_msg_format.format(elem_type))
+TypeError: default_collate: batch must contain tensors, numpy arrays, numbers, dicts or lists; found <class 'PIL.Image.Image'>
+"
+2026-11-02 22:30:13,f12,2024,,fail,8.3,"TypeError: Caught TypeError in DataLoader worker process 0.
+Original Traceback (most recent call last):
+  File ""C:\0\1.Laptrinh\BTLHocSau\.venv\Lib\site-packages\torch\utils\data\_utils\worker.py"", line 358, in _worker_loop
+    data = fetcher.fetch(index)  # type: ignore[possibly-undefined]
+           ^^^^^^^^^^^^^^^^^^^^
+  File ""C:\0\1.Laptrinh\BTLHocSau\.venv\Lib\site-packages\torch\utils\data\_utils\fetch.py"", line 57, in fetch
+    return self.collate_fn(data)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File ""C:\0\1.Laptrinh\BTLHocSau\.venv\Lib\site-packages\torch\utils\data\_utils\collate.py"", line 401, in default_collate
+    return collate(batch, collate_fn_map=default_collate_fn_map)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File ""C:\0\1.Laptrinh\BTLHocSau\.venv\Lib\site-packages\torch\utils\data\_utils\collate.py"", line 215, in collate
+    collate(samples, collate_fn_map=collate_fn_map)
+  File ""C:\0\1.Laptrinh\BTLHocSau\.venv\Lib\site-packages\torch\utils\data\_utils\collate.py"", line 243, in collate
+    raise TypeError(default_collate_err_msg_format.format(elem_type))
+TypeError: default_collate: batch must contain tensors, numpy arrays, numbers, dicts or lists; found <class 'PIL.Image.Image'>
+"
+2026-11-02 22:30:21,f13,42,,fail,8.4,"TypeError: Caught TypeError in DataLoader worker process 0.
+Original Traceback (most recent call last):
+  File ""C:\0\1.Laptrinh\BTLHocSau\.venv\Lib\site-packages\torch\utils\data\_utils\worker.py"", line 358, in _worker_loop
+    data = fetcher.fetch(index)  # type: ignore[possibly-undefined]
+           ^^^^^^^^^^^^^^^^^^^^
+  File ""C:\0\1.Laptrinh\BTLHocSau\.venv\Lib\site-packages\torch\utils\data\_utils\fetch.py"", line 57, in fetch
+    return self.collate_fn(data)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File ""C:\0\1.Laptrinh\BTLHocSau\.venv\Lib\site-packages\torch\utils\data\_utils\collate.py"", line 401, in default_collate
+    return collate(batch, collate_fn_map=default_collate_fn_map)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File ""C:\0\1.Laptrinh\BTLHocSau\.venv\Lib\site-packages\torch\utils\data\_utils\collate.py"", line 215, in collate
+    collate(samples, collate_fn_map=collate_fn_map)
+  File ""C:\0\1.Laptrinh\BTLHocSau\.venv\Lib\site-packages\torch\utils\data\_utils\collate.py"", line 243, in collate
+    raise TypeError(default_collate_err_msg_format.format(elem_type))
+TypeError: default_collate: batch must contain tensors, numpy arrays, numbers, dicts or lists; found <class 'PIL.Image.Image'>
+"
+2026-11-02 22:30:29,f13,123,,fail,8.2,"TypeError: Caught TypeError in DataLoader worker process 0.
+Original Traceback (most recent call last):
+  File ""C:\0\1.Laptrinh\BTLHocSau\.venv\Lib\site-packages\torch\utils\data\_utils\worker.py"", line 358, in _worker_loop
+    data = fetcher.fetch(index)  # type: ignore[possibly-undefined]
+           ^^^^^^^^^^^^^^^^^^^^
+  File ""C:\0\1.Laptrinh\BTLHocSau\.venv\Lib\site-packages\torch\utils\data\_utils\fetch.py"", line 57, in fetch
+    return self.collate_fn(data)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File ""C:\0\1.Laptrinh\BTLHocSau\.venv\Lib\site-packages\torch\utils\data\_utils\collate.py"", line 401, in default_collate
+    return collate(batch, collate_fn_map=default_collate_fn_map)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File ""C:\0\1.Laptrinh\BTLHocSau\.venv\Lib\site-packages\torch\utils\data\_utils\collate.py"", line 215, in collate
+    collate(samples, collate_fn_map=collate_fn_map)
+  File ""C:\0\1.Laptrinh\BTLHocSau\.venv\Lib\site-packages\torch\utils\data\_utils\collate.py"", line 243, in collate
+    raise TypeError(default_collate_err_msg_format.format(elem_type))
+TypeError: default_collate: batch must contain tensors, numpy arrays, numbers, dicts or lists; found <class 'PIL.Image.Image'>
+"
+2026-11-02 22:30:37,f13,2024,,fail,8.1,"TypeError: Caught TypeError in DataLoader worker process 0.
+Original Traceback (most recent call last):
+  File ""C:\0\1.Laptrinh\BTLHocSau\.venv\Lib\site-packages\torch\utils\data\_utils\worker.py"", line 358, in _worker_loop
+    data = fetcher.fetch(index)  # type: ignore[possibly-undefined]
+           ^^^^^^^^^^^^^^^^^^^^
+  File ""C:\0\1.Laptrinh\BTLHocSau\.venv\Lib\site-packages\torch\utils\data\_utils\fetch.py"", line 57, in fetch
+    return self.collate_fn(data)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File ""C:\0\1.Laptrinh\BTLHocSau\.venv\Lib\site-packages\torch\utils\data\_utils\collate.py"", line 401, in default_collate
+    return collate(batch, collate_fn_map=default_collate_fn_map)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File ""C:\0\1.Laptrinh\BTLHocSau\.venv\Lib\site-packages\torch\utils\data\_utils\collate.py"", line 215, in collate
+    collate(samples, collate_fn_map=collate_fn_map)
+  File ""C:\0\1.Laptrinh\BTLHocSau\.venv\Lib\site-packages\torch\utils\data\_utils\collate.py"", line 243, in collate
+    raise TypeError(default_collate_err_msg_format.format(elem_type))
+TypeError: default_collate: batch must contain tensors, numpy arrays, numbers, dicts or lists; found <class 'PIL.Image.Image'>
+"
+2026-11-02 22:31:04,f14,42,,fail,27.1,"TypeError: Caught TypeError in DataLoader worker process 0.
+Original Traceback (most recent call last):
+  File ""C:\0\1.Laptrinh\BTLHocSau\.venv\Lib\site-packages\torch\utils\data\_utils\worker.py"", line 358, in _worker_loop
+    data = fetcher.fetch(index)  # type: ignore[possibly-undefined]
+           ^^^^^^^^^^^^^^^^^^^^
+  File ""C:\0\1.Laptrinh\BTLHocSau\.venv\Lib\site-packages\torch\utils\data\_utils\fetch.py"", line 57, in fetch
+    return self.collate_fn(data)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File ""C:\0\1.Laptrinh\BTLHocSau\.venv\Lib\site-packages\torch\utils\data\_utils\collate.py"", line 401, in default_collate
+    return collate(batch, collate_fn_map=default_collate_fn_map)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File ""C:\0\1.Laptrinh\BTLHocSau\.venv\Lib\site-packages\torch\utils\data\_utils\collate.py"", line 215, in collate
+    collate(samples, collate_fn_map=collate_fn_map)
+  File ""C:\0\1.Laptrinh\BTLHocSau\.venv\Lib\site-packages\torch\utils\data\_utils\collate.py"", line 243, in collate
+    raise TypeError(default_collate_err_msg_format.format(elem_type))
+TypeError: default_collate: batch must contain tensors, numpy arrays, numbers, dicts or lists; found <class 'PIL.Image.Image'>
+"
+2026-11-02 22:31:13,f14,123,,fail,8.3,"TypeError: Caught TypeError in DataLoader worker process 0.
+Original Traceback (most recent call last):
+  File ""C:\0\1.Laptrinh\BTLHocSau\.venv\Lib\site-packages\torch\utils\data\_utils\worker.py"", line 358, in _worker_loop
+    data = fetcher.fetch(index)  # type: ignore[possibly-undefined]
+           ^^^^^^^^^^^^^^^^^^^^
+  File ""C:\0\1.Laptrinh\BTLHocSau\.venv\Lib\site-packages\torch\utils\data\_utils\fetch.py"", line 57, in fetch
+    return self.collate_fn(data)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File ""C:\0\1.Laptrinh\BTLHocSau\.venv\Lib\site-packages\torch\utils\data\_utils\collate.py"", line 401, in default_collate
+    return collate(batch, collate_fn_map=default_collate_fn_map)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File ""C:\0\1.Laptrinh\BTLHocSau\.venv\Lib\site-packages\torch\utils\data\_utils\collate.py"", line 215, in collate
+    collate(samples, collate_fn_map=collate_fn_map)
+  File ""C:\0\1.Laptrinh\BTLHocSau\.venv\Lib\site-packages\torch\utils\data\_utils\collate.py"", line 243, in collate
+    raise TypeError(default_collate_err_msg_format.format(elem_type))
+TypeError: default_collate: batch must contain tensors, numpy arrays, numbers, dicts or lists; found <class 'PIL.Image.Image'>
+"
+2026-11-02 22:31:21,f14,2024,,fail,8.4,"TypeError: Caught TypeError in DataLoader worker process 0.
+Original Traceback (most recent call last):
+  File ""C:\0\1.Laptrinh\BTLHocSau\.venv\Lib\site-packages\torch\utils\data\_utils\worker.py"", line 358, in _worker_loop
+    data = fetcher.fetch(index)  # type: ignore[possibly-undefined]
+           ^^^^^^^^^^^^^^^^^^^^
+  File ""C:\0\1.Laptrinh\BTLHocSau\.venv\Lib\site-packages\torch\utils\data\_utils\fetch.py"", line 57, in fetch
+    return self.collate_fn(data)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File ""C:\0\1.Laptrinh\BTLHocSau\.venv\Lib\site-packages\torch\utils\data\_utils\collate.py"", line 401, in default_collate
+    return collate(batch, collate_fn_map=default_collate_fn_map)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File ""C:\0\1.Laptrinh\BTLHocSau\.venv\Lib\site-packages\torch\utils\data\_utils\collate.py"", line 215, in collate
+    collate(samples, collate_fn_map=collate_fn_map)
+  File ""C:\0\1.Laptrinh\BTLHocSau\.venv\Lib\site-packages\torch\utils\data\_utils\collate.py"", line 243, in collate
+    raise TypeError(default_collate_err_msg_format.format(elem_type))
+TypeError: default_collate: batch must contain tensors, numpy arrays, numbers, dicts or lists; found <class 'PIL.Image.Image'>
+"
+2026-11-02 22:31:29,f15,42,,fail,8.3,"TypeError: Caught TypeError in DataLoader worker process 0.
+Original Traceback (most recent call last):
+  File ""C:\0\1.Laptrinh\BTLHocSau\.venv\Lib\site-packages\torch\utils\data\_utils\worker.py"", line 358, in _worker_loop
+    data = fetcher.fetch(index)  # type: ignore[possibly-undefined]
+           ^^^^^^^^^^^^^^^^^^^^
+  File ""C:\0\1.Laptrinh\BTLHocSau\.venv\Lib\site-packages\torch\utils\data\_utils\fetch.py"", line 57, in fetch
+    return self.collate_fn(data)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File ""C:\0\1.Laptrinh\BTLHocSau\.venv\Lib\site-packages\torch\utils\data\_utils\collate.py"", line 401, in default_collate
+    return collate(batch, collate_fn_map=default_collate_fn_map)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File ""C:\0\1.Laptrinh\BTLHocSau\.venv\Lib\site-packages\torch\utils\data\_utils\collate.py"", line 215, in collate
+    collate(samples, collate_fn_map=collate_fn_map)
+  File ""C:\0\1.Laptrinh\BTLHocSau\.venv\Lib\site-packages\torch\utils\data\_utils\collate.py"", line 243, in collate
+    raise TypeError(default_collate_err_msg_format.format(elem_type))
+TypeError: default_collate: batch must contain tensors, numpy arrays, numbers, dicts or lists; found <class 'PIL.Image.Image'>
+"
+2026-11-02 22:31:38,f15,123,,fail,8.3,"TypeError: Caught TypeError in DataLoader worker process 0.
+Original Traceback (most recent call last):
+  File ""C:\0\1.Laptrinh\BTLHocSau\.venv\Lib\site-packages\torch\utils\data\_utils\worker.py"", line 358, in _worker_loop
+    data = fetcher.fetch(index)  # type: ignore[possibly-undefined]
+           ^^^^^^^^^^^^^^^^^^^^
+  File ""C:\0\1.Laptrinh\BTLHocSau\.venv\Lib\site-packages\torch\utils\data\_utils\fetch.py"", line 57, in fetch
+    return self.collate_fn(data)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File ""C:\0\1.Laptrinh\BTLHocSau\.venv\Lib\site-packages\torch\utils\data\_utils\collate.py"", line 401, in default_collate
+    return collate(batch, collate_fn_map=default_collate_fn_map)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File ""C:\0\1.Laptrinh\BTLHocSau\.venv\Lib\site-packages\torch\utils\data\_utils\collate.py"", line 215, in collate
+    collate(samples, collate_fn_map=collate_fn_map)
+  File ""C:\0\1.Laptrinh\BTLHocSau\.venv\Lib\site-packages\torch\utils\data\_utils\collate.py"", line 243, in collate
+    raise TypeError(default_collate_err_msg_format.format(elem_type))
+TypeError: default_collate: batch must contain tensors, numpy arrays, numbers, dicts or lists; found <class 'PIL.Image.Image'>
+"
+2026-11-02 22:31:46,f15,2024,,fail,8.4,"TypeError: Caught TypeError in DataLoader worker process 0.
+Original Traceback (most recent call last):
+  File ""C:\0\1.Laptrinh\BTLHocSau\.venv\Lib\site-packages\torch\utils\data\_utils\worker.py"", line 358, in _worker_loop
+    data = fetcher.fetch(index)  # type: ignore[possibly-undefined]
+           ^^^^^^^^^^^^^^^^^^^^
+  File ""C:\0\1.Laptrinh\BTLHocSau\.venv\Lib\site-packages\torch\utils\data\_utils\fetch.py"", line 57, in fetch
+    return self.collate_fn(data)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File ""C:\0\1.Laptrinh\BTLHocSau\.venv\Lib\site-packages\torch\utils\data\_utils\collate.py"", line 401, in default_collate
+    return collate(batch, collate_fn_map=default_collate_fn_map)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File ""C:\0\1.Laptrinh\BTLHocSau\.venv\Lib\site-packages\torch\utils\data\_utils\collate.py"", line 215, in collate
+    collate(samples, collate_fn_map=collate_fn_map)
+  File ""C:\0\1.Laptrinh\BTLHocSau\.venv\Lib\site-packages\torch\utils\data\_utils\collate.py"", line 243, in collate
+    raise TypeError(default_collate_err_msg_format.format(elem_type))
+TypeError: default_collate: batch must contain tensors, numpy arrays, numbers, dicts or lists; found <class 'PIL.Image.Image'>
+"
+2026-11-02 22:38:19,f08,42,,ok,312.3,
+2026-11-02 22:41:08,f08,123,,ok,169.2,

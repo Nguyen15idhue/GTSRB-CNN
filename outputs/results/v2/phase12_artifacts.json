@@ -1,0 +1,294 @@
+{
+  "n_runs": 48,
+  "all_complete": true,
+  "runs": [
+    {
+      "run_id": "v2_f00_s42",
+      "missing": [],
+      "schema_ok": true,
+      "n_epochs": 13
+    },
+    {
+      "run_id": "v2_f00_s123",
+      "missing": [],
+      "schema_ok": true,
+      "n_epochs": 26
+    },
+    {
+      "run_id": "v2_f00_s2024",
+      "missing": [],
+      "schema_ok": true,
+      "n_epochs": 20
+    },
+    {
+      "run_id": "v2_f01_s42",
+      "missing": [],
+      "schema_ok": true,
+      "n_epochs": 23
+    },
+    {
+      "run_id": "v2_f01_s123",
+      "missing": [],
+      "schema_ok": true,
+      "n_epochs": 15
+    },
+    {
+      "run_id": "v2_f01_s2024",
+      "missing": [],
+      "schema_ok": true,
+      "n_epochs": 32
+    },
+    {
+      "run_id": "v2_f02_s42",
+      "missing": [],
+      "schema_ok": true,
+      "n_epochs": 31
+    },
+    {
+      "run_id": "v2_f02_s123",
+      "missing": [],
+      "schema_ok": true,
+      "n_epochs": 20
+    },
+    {
+      "run_id": "v2_f02_s2024",
+      "missing": [],
+      "schema_ok": true,
+      "n_epochs": 32
+    },
+    {
+      "run_id": "v2_f03_s42",
+      "missing": [],
+      "schema_ok": true,
+      "n_epochs": 19
+    },
+    {
+      "run_id": "v2_f03_s123",
+      "missing": [],
+      "schema_ok": true,
+      "n_epochs": 34
+    },
+    {
+      "run_id": "v2_f03_s2024",
+      "missing": [],
+      "schema_ok": true,
+      "n_epochs": 23
+    },
+    {
+      "run_id": "v2_f04_s42",
+      "missing": [],
+      "schema_ok": true,
+      "n_epochs": 17
+    },
+    {
+      "run_id": "v2_f04_s123",
+      "missing": [],
+      "schema_ok": true,
+      "n_epochs": 15
+    },
+    {
+      "run_id": "v2_f04_s2024",
+      "missing": [],
+      "schema_ok": true,
+      "n_epochs": 16
+    },
+    {
+      "run_id": "v2_f05_s42",
+      "missing": [],
+      "schema_ok": true,
+      "n_epochs": 28
+    },
+    {
+      "run_id": "v2_f05_s123",
+      "missing": [],
+      "schema_ok": true,
+      "n_epochs": 11
+    },
+    {
+      "run_id": "v2_f05_s2024",
+      "missing": [],
+      "schema_ok": true,
+      "n_epochs": 14
+    },
+    {
+      "run_id": "v2_f06_s42",
+      "missing": [],
+      "schema_ok": true,
+      "n_epochs": 24
+    },
+    {
+      "run_id": "v2_f06_s123",
+      "missing": [],
+      "schema_ok": true,
+      "n_epochs": 40
+    },
+    {
+      "run_id": "v2_f06_s2024",
+      "missing": [],
+      "schema_ok": true,
+      "n_epochs": 25
+    },
+    {
+      "run_id": "v2_f07_s42",
+      "missing": [],
+      "schema_ok": true,
+      "n_epochs": 34
+    },
+    {
+      "run_id": "v2_f07_s123",
+      "missing": [],
+      "schema_ok": true,
+      "n_epochs": 15
+    },
+    {
+      "run_id": "v2_f07_s2024",
+      "missing": [],
+      "schema_ok": true,
+      "n_epochs": 34
+    },
+    {
+      "run_id": "v2_f08_s42",
+      "missing": [],
+      "schema_ok": true,
+      "n_epochs": 23
+    },
+    {
+      "run_id": "v2_f08_s123",
+      "missing": [],
+      "schema_ok": true,
+      "n_epochs": 28
+    },
+    {
+      "run_id": "v2_f08_s2024",
+      "missing": [],
+      "schema_ok": true,
+      "n_epochs": 28
+    },
+    {
+      "run_id": "v2_f09_s42",
+      "missing": [],
+      "schema_ok": true,
+      "n_epochs": 39
+    },
+    {
+      "run_id": "v2_f09_s123",
+      "missing": [],
+      "schema_ok": true,
+      "n_epochs": 26
+    },
+    {
+      "run_id": "v2_f09_s2024",
+      "missing": [],
+      "schema_ok": true,
+      "n_epochs": 38
+    },
+    {
+      "run_id": "v2_f10_s42",
+      "missing": [],
+      "schema_ok": true,
+      "n_epochs": 40
+    },
+    {
+      "run_id": "v2_f10_s123",
+      "missing": [],
+      "schema_ok": true,
+      "n_epochs": 38
+    },
+    {
+      "run_id": "v2_f10_s2024",
+      "missing": [],
+      "schema_ok": true,
+      "n_epochs": 40
+    },
+    {
+      "run_id": "v2_f11_s42",
+      "missing": [],
+      "schema_ok": true,
+      "n_epochs": 33
+    },
+    {
+      "run_id": "v2_f11_s123",
+      "missing": [],
+      "schema_ok": true,
+      "n_epochs": 40
+    },
+    {
+      "run_id": "v2_f11_s2024",
+      "missing": [],
+      "schema_ok": true,
+      "n_epochs": 40
+    },
+    {
+      "run_id": "v2_f12_s42",
+      "missing": [],
+      "schema_ok": true,
+      "n_epochs": 34
+    },
+    {
+      "run_id": "v2_f12_s123",
+      "missing": [],
+      "schema_ok": true,
+      "n_epochs": 38
+    },
+    {
+      "run_id": "v2_f12_s2024",
+      "missing": [],
+      "schema_ok": true,
+      "n_epochs": 34
+    },
+    {
+      "run_id": "v2_f13_s42",
+      "missing": [],
+      "schema_ok": true,
+      "n_epochs": 39
+    },
+    {
+      "run_id": "v2_f13_s123",
+      "missing": [],
+      "schema_ok": true,
+      "n_epochs": 28
+    },
+    {
+      "run_id": "v2_f13_s2024",
+      "missing": [],
+      "schema_ok": true,
+      "n_epochs": 38
+    },
+    {
+      "run_id": "v2_f14_s42",
+      "missing": [],
+      "schema_ok": true,
+      "n_epochs": 37
+    },
+    {
+      "run_id": "v2_f14_s123",
+      "missing": [],
+      "schema_ok": true,
+      "n_epochs": 25
+    },
+    {
+      "run_id": "v2_f14_s2024",
+      "missing": [],
+      "schema_ok": true,
+      "n_epochs": 40
+    },
+    {
+      "run_id": "v2_f15_s42",
+      "missing": [],
+      "schema_ok": true,
+      "n_epochs": 36
+    },
+    {
+      "run_id": "v2_f15_s123",
+      "missing": [],
+      "schema_ok": true,
+      "n_epochs": 32
+    },
+    {
+      "run_id": "v2_f15_s2024",
+      "missing": [],
+      "schema_ok": true,
+      "n_epochs": 32
+    }
+  ]
+}
