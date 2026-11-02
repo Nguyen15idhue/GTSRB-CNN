@@ -208,14 +208,16 @@ Mỗi card có: mức đã thử, mean ± sd, Δ [CI], cơ chế, kết luận, 
 
 ### 4.4. Báo cáo
 
-- [ ] Chương 2: split v2 + audit official test.
-- [ ] Chương 3: config v2 + metric/CI/luật.
-- [ ] Chương 4: thay bảng ablation cũ bằng 2⁴ + kiến trúc + aug + OOF/lockbox.
-- [ ] Chương 5: thêm cơ chế.
-- [ ] Chương 6: hạn chế trung thực.
-- [ ] Phụ lục: legacy leaky.
-- [ ] Xóa/sửa các câu sai (mục 12.4).
-- [ ] Kiểm tra số trong báo cáo khớp `summary.csv`/`lockbox_result.json`.
+- [x] Chương 2: split v2 + audit official test — `docs/bao_cao/BAO_CAO_v2.md`.
+- [x] Chương 3: config v2 + metric/CI/luật — có.
+- [x] Chương 4: thay bảng ablation cũ bằng 2⁴ + kiến trúc + aug + OOF/lockbox — có.
+- [x] Chương 5: thêm cơ chế — có (curve, per-class, Grad-CAM, calibration, corruption, taxonomy).
+- [x] Chương 6: hạn chế trung thực — có.
+- [x] Phụ lục: legacy leaky — có (Phụ lục A).
+- [x] Xóa/sửa các câu sai (mục 12.4) — Phụ lục C đính chính 5 câu.
+- [x] Kiểm tra số trong báo cáo khớp `summary.csv`/`lockbox_result.json` — đã đối chiếu từng bảng.
+
+**Ghi chú:** không ghi đè `docs/bao_cao/BAO_CAO.md` cũ; báo cáo mới là `BAO_CAO_v2.md`.
 
 ---
 
