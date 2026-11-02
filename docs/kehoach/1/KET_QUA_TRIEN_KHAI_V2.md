@@ -319,6 +319,81 @@ params 1.448.779.
 - Clean **cao hơn** raw (98,869 so với 98,699) → ảnh gần trùng **không** thổi phồng
   kết quả; nhưng official test vẫn **không track-disjoint**, chỉ là benchmark phụ.
 
+## Phase 4 — Thống kê, hình, decision cards
+
+### 4.1. Tổng hợp và kiểm tra số
+
+- `summary.csv`: **111 run** (81 screening + 27 fold + 3 dev_all), 111/111
+  `valid_for_conclusion=1`, không run nào thiếu `config_sha256`/`split_sha256`.
+- `verify_41.json`: macro-F1 OOF x2/seed42 tính lại = **0,969321** = số lưu
+  (sai khác 0,0); macro-F1 F15/s42 tính lại từ `predictions_val.csv` lệch
+  **3,1e−07** so với summary → đạt.
+- `variance.json`: var_fold = 4,20e−04 (91,0%), var_seed = 4,42e−06 (0,9%),
+  var_resid = 3,82e−05 (8,3%).
+
+**Tám so sánh chính (Holm):**
+
+| Yếu tố | Δ (điểm %) | 95% CI | p Holm | Kết luận |
+|---|---:|---|---:|---|
+| BN | +3,724 | [+1,767; +5,005] | 0,000 | Tốt hơn |
+| Dropout | +5,963 | [+2,873; +7,147] | 0,000 | Tốt hơn |
+| Weight decay | +0,058 | [−0,506; +0,551] | 0,412 | Chưa kết luận |
+| Augmentation | +0,529 | [−1,204; +2,303] | 0,708 | Chưa kết luận |
+| GAP (D1 vs D4) | −34,758 | [−36,108; −22,444] | 0,000 | Kém hơn |
+| Depth (D2 vs D4) | +3,212 | [+0,011; +4,513] | 0,373 | CI ủng hộ; sau Holm chưa đủ mạnh |
+| Width (W2 vs D4) | +1,268 | [−0,591; +2,541] | 0,708 | Chưa kết luận |
+| LR (1e-4 vs 1e-3) | −7,139 | [−9,353; −3,366] | 0,000 | Kém hơn |
+
+> Depth có CI không chứa 0 nhưng p Holm 0,373: báo **"có bằng chứng vừa, chưa đủ
+> sau hiệu chỉnh"**, không tuyên bố "depth chắc chắn tốt hơn". Quyết định chọn D2
+> dựa trên OOF (Δ +1,981 so với control, CI [+1,053; +2,961]) và tie-break params.
+
+### 4.2. Hình cơ chế
+
+Tất cả trong `outputs/figures/v2/`:
+
+| Hình | Nội dung | Số chính |
+|---|---|---|
+| `01_learning_curves.png` | F00/F07/F15/D2 theo epoch | gap train−val: F00 9,87; F07 2,60; F15 1,08 điểm |
+| `02_factorial_effects.png` | Main effect + interaction | BN +3,72; DO +5,96; WD +0,06; Aug +0,53; BN×Aug −0,28; DO×WD −0,12 |
+| `03_pareto_params_f1.png` | Params vs macro-F1 | D2 trên frontier (1,45M params, F1 97,16) |
+| `04_per_class_delta.png` | ΔF1 43 lớp so với F15 | tập trung lớp hiếm/khó |
+| `05_reliability.png` | Reliability 15 bin | ECE: F00 0,0758; F07 0,0154; F15 0,0120; G2 0,0101; D2 0,0084 |
+| `06_corruption_curves.png` | 6 loại × 3 mức | TB: F07 81,51; G2 81,97; F15 80,22; D2 79,65 |
+| `07_confusion_*.png` | Confusion chuẩn hóa hàng | F15, D2 trên screening val |
+| `08_gradcam_grid.png` | Grad-CAM 12 ảnh, B vs C | 4 lớp × 3 trường hợp |
+| `09_error_samples.png` | 12 mẫu lỗi | 190 lỗi: 102 nhãn khó, 64 mờ, 23 nhầm cặp, 1 chói |
+| `10_confusion_lockbox.png` | Confusion lockbox (TB 3 seed) | 43×43, chuẩn hóa hàng |
+| `11_per_class_f1_lockbox.png` | F1 từng lớp trên lockbox | thấp nhất: lớp 19 (0,760), 29 (0,776), 30 (0,925) |
+
+**Cơ chế rút ra:**
+
+- BN + dropout giảm gap mạnh (F00 gap 9,87 → F07 2,60 điểm) và tăng F1.
+- Aug "all" làm train khó hơn nhưng **không** tăng val F1; affine là thành phần hại.
+- GAP 3 khối underfit (train acc 84,6%) — không phải "mất chi tiết" mà là **thiếu
+  dung lượng/tối ưu**.
+- Calibration tốt lên theo regularization: ECE F00 0,0758 → D2 0,0084.
+- Occlusion là điểm yếu chung (17,6–26,4% accuracy), cần nêu trong hạn chế.
+- Lớp 19 và 29 là hai lớp yếu nhất trên lockbox (F1 0,760 / 0,776), support 30 / 60.
+
+### 4.3. Decision cards (10 yếu tố)
+
+Nguồn: `outputs/results/v2/decision_cards.csv`.
+
+| Yếu tố | Mức đã thử | Δ [CI] (điểm %) | Kết luận | Đánh đổi |
+|---|---|---|---:|---|
+| BN | off/on | +3,72 [+1,77; +5,00] | **Giữ** | không thêm chi phí suy luận |
+| Dropout | 0 / 0,3 | +5,96 [+2,87; +7,15] | **Giữ** | không thêm chi phí suy luận |
+| Weight decay | 0 / 1e-4 | +0,06 [−0,51; +0,55] | Không đủ bằng chứng | giữ 1e-4 vì không hại |
+| Augmentation | off / all | +0,53 [−1,20; +2,30] | Không đủ bằng chứng (all hại clean) | bỏ all; color trung tính |
+| Depth | 3 / 4 khối | +3,21 [+0,01; +4,51] | Giữ 4 khối (CI ủng hộ; Holm chưa mạnh) | ít params hơn D4 |
+| GAP | off/on (3 khối) | −34,76 [−36,11; −22,44] | **Bỏ** | GAP 3 khối underfit |
+| Width | 32/64/128 vs 48/96/192 | +1,27 [−0,59; +2,54] | Không đủ bằng chứng | W2 tăng 1,5× params |
+| LR | 1e-4 vs 1e-3 | −7,14 [−9,35; −3,37] | **Giữ 1e-3** | LR nhỏ cần nhiều epoch hơn |
+| Class weight | none / inv_sqrt | −1,00 [−2,11; +0,26] | Bỏ | exploratory, chưa hiệu chỉnh |
+| Input size | 64 / 96 | −3,45 [−5,52; −0,93] | **Giữ 64** | 96 tăng 2,2× params, chậm hơn |
+
+
 
 
 

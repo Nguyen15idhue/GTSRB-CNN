@@ -328,19 +328,23 @@ def error_taxonomy(config_id: str = "f15", seed: int = 42) -> Path:
     wrong = np.flatnonzero(truth != pred)
     blur = np.array([float(np.var(laplace(rgb2gray(image.astype(np.float32) / 255.0)))) for image in images])
     brightness = images.astype(np.float32).mean(axis=(1, 2, 3)) / 255.0
+    blur_low = float(np.percentile(blur, 10))
+    bright_low = float(np.percentile(brightness, 5))
+    bright_high = float(np.percentile(brightness, 95))
     categories: list[str] = []
     for i in wrong:
-        if blur[i] < 20:
+        if blur[i] < blur_low:
             categories.append("mờ")
-        elif brightness[i] < 0.15:
+        elif brightness[i] < bright_low:
             categories.append("tối")
-        elif brightness[i] > 0.85:
+        elif brightness[i] > bright_high:
             categories.append("chói")
         elif conf[i] < 0.5:
             categories.append("nhầm cặp giống nhau / confidence thấp")
         else:
             categories.append("góc nhìn lạ / nhãn khó")
     counts = {name: categories.count(name) for name in sorted(set(categories))}
+    thresholds = {"blur_p10": blur_low, "brightness_p5": bright_low, "brightness_p95": bright_high}
     chosen = wrong[:12]
     fig, axes = plt.subplots(3, 4, figsize=(9, 7))
     for ax, i in zip(axes.ravel(), chosen):
@@ -357,7 +361,8 @@ def error_taxonomy(config_id: str = "f15", seed: int = 42) -> Path:
                              round(float(blur[i]), 3), round(float(brightness[i]), 4), cat])
     (V2_RESULTS / "error_taxonomy_summary.json").write_text(
         json.dumps({"config_id": config_id, "seed": seed, "n_errors": int(len(wrong)),
-                    "counts": counts, "method": "heuristic trên blur/brightness/confidence; cần xem thủ công"},
+                    "counts": counts, "thresholds": thresholds,
+                    "method": "heuristic trên blur/brightness/confidence theo percentile; cần xem thủ công"},
                    ensure_ascii=False, indent=2),
         encoding="utf-8",
     )

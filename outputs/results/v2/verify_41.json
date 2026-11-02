@@ -1,0 +1,16 @@
+{
+  "oof_x2_seed42": {
+    "recomputed": 0.9693210256106752,
+    "stored": 0.9693210256106752,
+    "abs_diff": 0.0,
+    "passed": true
+  },
+  "summary_f15_s42": {
+    "recomputed": 0.9508543055482359,
+    "stored": 0.950854,
+    "abs_diff": 3.0554823593487157e-07,
+    "passed": true
+  },
+  "hash_missing_runs": [],
+  "passed": true
+}

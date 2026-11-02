@@ -61,12 +61,8 @@ def main() -> int:
     step("learning_curves", learning_curves, {"CNN-A (F00)": "v2_f00_s42", "CNN-B (F07)": "v2_f07_s42",
                                               "CNN-B+aug (F15)": "v2_f15_s42", "4 khối (D2)": "v2_d2_s42"})
     summary = load_summary()
-    arch = [r for r in summary if r["config_id"] in ("d1", "d2", "d3", "w1", "w2", "f15")]
-    combined = {(r["config_id"]): r for r in arch}
-    pareto_rows = [
-        {"config_id": cid, "params": int(row["params"]), "macro_f1_mean": float(row["val_macro_f1"])}
-        for cid, row in combined.items()
-    ]
+    config_ids = sorted({r["config_id"] for r in summary if r["split"] == "screening"})
+    pareto_rows = aggregate(config_ids)
     step("pareto", pareto_plot, pareto_rows)
     step("per_class_heatmap", per_class_heatmap, ["f00", "f07", "f15", "d2", "g2"], "f15", 42)
     step("reliability", reliability_plot, ["f00", "f07", "f15", "g2", "d2"], 42)

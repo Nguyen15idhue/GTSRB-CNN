@@ -173,38 +173,38 @@
 
 ### 4.1. Thống kê
 
-- [ ] Bảng summary v2 khớp artifact.
-- [ ] Bảng CI cho 8 so sánh chính.
-- [ ] Bảng variance decomposition.
-- [ ] Kiểm tra macro-F1/43 với sklearn trên một mẫu.
-- [ ] Không có số nào không trace được về file.
+- [x] Bảng summary v2 khớp artifact — 111 run, `verify_41.json` sai khác 0,0 / 3,1e−07.
+- [x] Bảng CI cho 8 so sánh chính — `main_comparisons.csv` (+ Holm).
+- [x] Bảng variance decomposition — `variance.json`, fold 91,0%.
+- [x] Kiểm tra macro-F1/43 với sklearn trên một mẫu — `verify_41.json` passed.
+- [x] Không có số nào không trace được về file — mọi mục trong KET_QUA có đường dẫn.
 
 ### 4.2. Hình cơ chế
 
-- [ ] Learning curves A/B/C.
-- [ ] Interaction plot (BN×Aug, DO×WD).
-- [ ] Pareto params vs macro-F1.
-- [ ] Per-class Δ heatmap.
-- [ ] Grad-CAM 12 ảnh.
-- [ ] Reliability diagram + ECE.
-- [ ] Corruption curves 6 panel.
-- [ ] Confusion matrix chuẩn hóa hàng.
-- [ ] Error taxonomy 12 mẫu.
+- [x] Learning curves A/B/C — `01_learning_curves.png`.
+- [x] Interaction plot (BN×Aug, DO×WD) — `02_factorial_effects.png`.
+- [x] Pareto params vs macro-F1 — `03_pareto_params_f1.png`.
+- [x] Per-class Δ heatmap — `04_per_class_delta.png` + `per_class_delta.csv`.
+- [x] Grad-CAM 12 ảnh — `08_gradcam_grid.png`.
+- [x] Reliability diagram + ECE — `05_reliability.png` + `calibration.csv`.
+- [x] Corruption curves — `06_corruption_curves.png` (6 loại × 3 mức).
+- [x] Confusion matrix chuẩn hóa hàng — `07_confusion_*.png`, `10_confusion_lockbox.png`.
+- [x] Error taxonomy 12 mẫu — `09_error_samples.png`, `error_taxonomy.csv`.
 
 ### 4.3. Decision cards
 
-- [ ] BN.
-- [ ] Dropout.
-- [ ] WD.
-- [ ] Aug.
-- [ ] Depth.
-- [ ] GAP.
-- [ ] Width.
-- [ ] LR.
-- [ ] Class weight.
-- [ ] Input size.
+- [x] BN — giữ (+3,72 [+1,77; +5,00]).
+- [x] Dropout — giữ (+5,96 [+2,87; +7,15]).
+- [x] WD — không đủ bằng chứng (+0,06 [−0,51; +0,55]).
+- [x] Aug — không đủ bằng chứng (+0,53 [−1,20; +2,30]); all/affine hại clean.
+- [x] Depth — giữ 4 khối (+3,21 [+0,01; +4,51]; Holm 0,373).
+- [x] GAP — bỏ (−34,76 [−36,11; −22,44]).
+- [x] Width — không đủ bằng chứng (+1,27 [−0,59; +2,54]).
+- [x] LR — giữ 1e-3 (−7,14 [−9,35; −3,37] nếu 1e-4).
+- [x] Class weight — bỏ (−1,00 [−2,11; +0,26]).
+- [x] Input size — giữ 64 (−3,45 [−5,52; −0,93] nếu 96).
 
-Mỗi card có: mức đã thử, mean ± sd, Δ [CI], cơ chế, kết luận, đánh đổi.
+Mỗi card có: mức đã thử, mean ± sd, Δ [CI], cơ chế, kết luận, đánh đổi — `decision_cards.csv`.
 
 ### 4.4. Báo cáo
 

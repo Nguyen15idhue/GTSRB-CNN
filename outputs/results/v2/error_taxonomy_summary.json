@@ -1,0 +1,17 @@
+{
+  "config_id": "f15",
+  "seed": 42,
+  "n_errors": 190,
+  "counts": {
+    "chói": 1,
+    "góc nhìn lạ / nhãn khó": 102,
+    "mờ": 64,
+    "nhầm cặp giống nhau / confidence thấp": 23
+  },
+  "thresholds": {
+    "blur_p10": 0.00020219684811308982,
+    "brightness_p5": 0.08447758853435516,
+    "brightness_p95": 0.6677447557449341
+  },
+  "method": "heuristic trên blur/brightness/confidence theo percentile; cần xem thủ công"
+}
