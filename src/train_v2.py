@@ -159,24 +159,63 @@ def predict_val(model, loader, device) -> tuple[np.ndarray, np.ndarray, np.ndarr
 
 
 def plot_curves(rows: Sequence[Mapping[str, Any]], out_path: Path, title: str) -> None:
-    """3 panel: loss, accuracy, macro-F1."""
+    """3 panel: loss, accuracy, macro-F1 (bỏ panel val nếu run không có val)."""
     epochs = [int(r["epoch"]) for r in rows]
+
+    def values(key: str) -> list[float]:
+        return [float(r[key]) if str(r[key]).strip() not in ("", "None") else float("nan") for r in rows]
+
+    has_val = any(np.isfinite(values("val_acc")))
     fig, axes = plt.subplots(1, 3, figsize=(15, 4.0))
-    axes[0].plot(epochs, [r["train_loss"] for r in rows], label="train")
-    axes[0].plot(epochs, [r["val_loss"] for r in rows], label="val")
+    axes[0].plot(epochs, values("train_loss"), label="train")
+    if has_val:
+        axes[0].plot(epochs, values("val_loss"), label="val")
     axes[0].set_title("Loss"); axes[0].set_xlabel("epoch")
-    axes[1].plot(epochs, [r["train_acc"] for r in rows], label="train")
-    axes[1].plot(epochs, [r["val_acc"] for r in rows], label="val")
+    axes[1].plot(epochs, values("train_acc"), label="train")
+    if has_val:
+        axes[1].plot(epochs, values("val_acc"), label="val")
     axes[1].set_title("Accuracy"); axes[1].set_xlabel("epoch"); axes[1].set_ylim(0, 1.02)
-    axes[2].plot(epochs, [r["val_macro_f1"] for r in rows], color="tab:green", label="val macro-F1")
-    axes[2].set_title("Val macro-F1/43"); axes[2].set_xlabel("epoch"); axes[2].set_ylim(0, 1.02)
-    for ax in axes:
+    axes[2].plot(epochs, values("val_macro_f1"), color="tab:green", label="val macro-F1")
+    axes[2].set_title("Val macro-F1/43"); axes[2].set_xlabel("epoch")
+    if has_val:
+        axes[2].set_ylim(0, 1.02)
+    else:
+        axes[2].axis("off")
+    for ax in axes[:2]:
         ax.grid(alpha=0.3); ax.legend(fontsize=8)
+    if has_val:
+        axes[2].grid(alpha=0.3); axes[2].legend(fontsize=8)
     fig.suptitle(title)
     fig.tight_layout()
     out_path.parent.mkdir(parents=True, exist_ok=True)
     fig.savefig(out_path, dpi=120)
     plt.close(fig)
+
+
+def _save_checkpoint(
+    out_dir: Path,
+    model: nn.Module,
+    resolved: Mapping[str, Any],
+    epoch: int,
+    val_macro_f1: float,
+    config_sha: str,
+    split_sha: str,
+) -> None:
+    """Lưu ``best.pt`` dạng dict thuần (không pickle model)."""
+    torch.save(
+        {
+            "state_dict": model.state_dict(),
+            "config": dict(resolved),
+            "class_names": json.loads(CLASS_NAMES_PATH.read_text(encoding="utf-8")),
+            "epoch": int(epoch),
+            "val_macro_f1": float(val_macro_f1),
+            "git_commit": git_commit(short=False),
+            "torch_version": str(torch.__version__),
+            "config_sha256": config_sha,
+            "split_sha256": split_sha,
+        },
+        out_dir / "best.pt",
+    )
 
 
 def run_training_v2(
@@ -208,6 +247,7 @@ def run_training_v2(
     train_cfg = cfg["train"]
     use_amp = bool(train_cfg.get("amp", True)) and device.type == "cuda"
     indices = loaders["indices"]
+    has_val = len(indices["val"]) > 0
     train_labels = loaders["train"].dataset.labels[indices["train"]]
     criterion = build_criterion(cfg, train_labels, device)
     optimizer = torch.optim.AdamW(
@@ -254,64 +294,71 @@ def run_training_v2(
             train_loss, train_acc = train_epoch(model, loaders["train"], criterion, optimizer, scaler, device, use_amp)
             if scheduler is not None:
                 scheduler.step()
-            val_loss, val_acc, val_f1 = evaluate_epoch(model, loaders["val"], criterion, device)
+            if has_val:
+                val_loss, val_acc, val_f1 = evaluate_epoch(model, loaders["val"], criterion, device)
+            else:
+                # Final train trên dev_all: không có val; không early stop, đánh giá sau trên lockbox.
+                val_loss = val_acc = val_f1 = float("nan")
             gpu_mem = round(torch.cuda.max_memory_allocated(device) / 1024**2, 1) if device.type == "cuda" else 0.0
             row = {
                 "epoch": epoch, "lr": f"{lr_used:.6f}", "train_loss": round(train_loss, 6),
-                "train_acc": round(train_acc, 6), "val_loss": round(val_loss, 6),
-                "val_acc": round(val_acc, 6), "val_macro_f1": round(val_f1, 6),
+                "train_acc": round(train_acc, 6),
+                "val_loss": "" if not has_val else round(val_loss, 6),
+                "val_acc": "" if not has_val else round(val_acc, 6),
+                "val_macro_f1": "" if not has_val else round(val_f1, 6),
                 "epoch_time_s": round(time.perf_counter() - epoch_started, 2), "gpu_mem_mb": gpu_mem,
             }
             writer.writerow(row); fh.flush(); rows.append(row)
             LOG.info(
-                "epoch %02d | lr %.2e | train %.4f/%.4f | val %.4f/%.4f f1 %.4f | %.1fs",
-                epoch, lr_used, train_loss, train_acc, val_loss, val_acc, val_f1, row["epoch_time_s"],
+                "epoch %02d | lr %.2e | train %.4f/%.4f | val %s/%s f1 %s | %.1fs",
+                epoch, lr_used, train_loss, train_acc,
+                "–" if not has_val else f"{val_loss:.4f}", "–" if not has_val else f"{val_acc:.4f}",
+                "–" if not has_val else f"{val_f1:.4f}", row["epoch_time_s"],
             )
-            if val_f1 > best_f1:
-                best_f1, best_epoch, best_row = val_f1, epoch, dict(row)
-                bad = 0
-                torch.save(
-                    {
-                        "state_dict": model.state_dict(),
-                        "config": resolved,
-                        "class_names": json.loads(CLASS_NAMES_PATH.read_text(encoding="utf-8")),
-                        "epoch": int(epoch),
-                        "val_macro_f1": float(val_f1),
-                        "git_commit": git_commit(short=False),
-                        "torch_version": str(torch.__version__),
-                        "config_sha256": config_sha,
-                        "split_sha256": split_sha,
-                    },
-                    out_dir / "best.pt",
-                )
+            if has_val:
+                if val_f1 > best_f1:
+                    best_f1, best_epoch, best_row = val_f1, epoch, dict(row)
+                    bad = 0
+                    _save_checkpoint(out_dir, model, resolved, epoch, float(val_f1), config_sha, split_sha)
+                else:
+                    bad += 1
+                    if bad >= int(train_cfg["patience"]):
+                        LOG.info("Early stopping tại epoch %d (patience=%d)", epoch, bad)
+                        break
             else:
-                bad += 1
-                if bad >= int(train_cfg["patience"]):
-                    LOG.info("Early stopping tại epoch %d (patience=%d)", epoch, bad)
-                    break
+                # Lưu checkpoint mỗi epoch; best.pt cuối cùng = epoch cuối.
+                best_epoch, best_row = epoch, dict(row)
+                _save_checkpoint(out_dir, model, resolved, epoch, 0.0, config_sha, split_sha)
 
     train_time = time.perf_counter() - started
     # Nạp lại checkpoint tốt nhất để dự đoán val (OOF dùng file này).
     checkpoint = torch.load(out_dir / "best.pt", map_location="cpu", weights_only=True)
     model.load_state_dict(checkpoint["state_dict"])
     model.to(device)
-    y_true, y_pred, y_prob = predict_val(model, loaders["val"], device)
-    mapping = track_map()
-    val_indices = list(indices["val"])
-    with (out_dir / "predictions_val.csv").open("w", newline="", encoding="utf-8") as fh:
-        writer = csv.writer(fh)
-        writer.writerow(["image_index", "track_key", "true_label", "pred_label", "prob_true", "prob_pred", "fold"])
-        for pos, image_index in enumerate(val_indices):
-            true_id, pred_id = int(y_true[pos]), int(y_pred[pos])
-            writer.writerow([
-                int(image_index), mapping[int(image_index)]["track_key"], true_id, pred_id,
-                f"{float(y_prob[pos, true_id]):.6f}", f"{float(y_prob[pos, pred_id]):.6f}",
-                "" if used_fold is None else int(used_fold),
-            ])
-    from sklearn.metrics import accuracy_score, f1_score
+    if has_val:
+        y_true, y_pred, y_prob = predict_val(model, loaders["val"], device)
+        mapping = track_map()
+        val_indices = list(indices["val"])
+        with (out_dir / "predictions_val.csv").open("w", newline="", encoding="utf-8") as fh:
+            writer = csv.writer(fh)
+            writer.writerow(["image_index", "track_key", "true_label", "pred_label", "prob_true", "prob_pred", "fold"])
+            for pos, image_index in enumerate(val_indices):
+                true_id, pred_id = int(y_true[pos]), int(y_pred[pos])
+                writer.writerow([
+                    int(image_index), mapping[int(image_index)]["track_key"], true_id, pred_id,
+                    f"{float(y_prob[pos, true_id]):.6f}", f"{float(y_prob[pos, pred_id]):.6f}",
+                    "" if used_fold is None else int(used_fold),
+                ])
+        from sklearn.metrics import accuracy_score, f1_score
 
-    val_macro = float(f1_score(y_true, y_pred, average="macro", labels=list(range(NUM_CLASSES)), zero_division=0))
-    val_acc = float(accuracy_score(y_true, y_pred))
+        val_macro = float(f1_score(y_true, y_pred, average="macro", labels=list(range(NUM_CLASSES)), zero_division=0))
+        val_acc = float(accuracy_score(y_true, y_pred))
+    else:
+        with (out_dir / "predictions_val.csv").open("w", newline="", encoding="utf-8") as fh:
+            writer = csv.writer(fh)
+            writer.writerow(["image_index", "track_key", "true_label", "pred_label", "prob_true", "prob_pred", "fold"])
+        val_macro = None
+        val_acc = None
 
     # Latency model-only: batch 1, 100 lần, median.
     latency_ms = _latency_ms(model, int(cfg["data"]["image_size"]), device)
@@ -329,13 +376,13 @@ def run_training_v2(
         "augmentation_profile": loaders["meta"]["augmentation_profile"],
         "epochs_run": len(rows),
         "best_epoch": int(best_epoch),
-        "best_val_macro_f1": round(best_f1, 6),
-        "best_val_acc": round(float(best_row.get("val_acc", 0.0)), 6),
+        "best_val_macro_f1": None if not has_val else round(best_f1, 6),
+        "best_val_acc": None if not has_val else round(float(best_row.get("val_acc", 0.0)), 6),
         "best_train_acc": round(float(best_row.get("train_acc", 0.0)), 6),
-        "train_val_acc_gap": round(float(best_row.get("train_acc", 0.0)) - float(best_row.get("val_acc", 0.0)), 6),
-        "val_acc": round(val_acc, 6),
-        "val_macro_f1": round(val_macro, 6),
-        "val_macro_f1_checkpoint": round(best_f1, 6),
+        "train_val_acc_gap": None if not has_val else round(float(best_row.get("train_acc", 0.0)) - float(best_row.get("val_acc", 0.0)), 6),
+        "val_acc": None if val_acc is None else round(val_acc, 6),
+        "val_macro_f1": None if val_macro is None else round(val_macro, 6),
+        "val_macro_f1_checkpoint": None if not has_val else round(best_f1, 6),
         "n_train": loaders["meta"]["n_train"],
         "n_val": loaders["meta"]["n_val"],
         "train_time_s": round(train_time, 2),
@@ -353,8 +400,8 @@ def run_training_v2(
         "notes": cfg["experiment"].get("notes", ""),
     }
     (out_dir / "meta.json").write_text(json.dumps(meta, ensure_ascii=False, indent=2), encoding="utf-8")
-    LOG.info("Xong %s: best epoch %d | val acc %.4f | macro-F1 %.4f | %.1f s",
-             name, best_epoch, val_acc, val_macro, train_time)
+    LOG.info("Xong %s: best epoch %d | val macro-F1 %s | %.1f s",
+             name, best_epoch, "– (dev_all)" if not has_val else f"{val_macro:.4f}", train_time)
     return meta
 
 

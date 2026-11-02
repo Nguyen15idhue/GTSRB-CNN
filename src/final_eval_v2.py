@@ -26,7 +26,7 @@ import torch
 
 from .config import CLASS_NAMES_PATH, NUM_CLASSES, PROJECT_ROOT, RESULTS_DIR, get_device
 from .data import load_cache
-from .data_v2 import get_indices, get_mean_std, load_images, track_map
+from .data_v2 import get_indices, get_mean_std, load_images, load_manifest, track_map
 from .evaluate import classification_metrics, sha256_file
 from .models import build_model
 
@@ -171,6 +171,7 @@ def run_lockbox(
         "n_images": int(len(labels)),
         "n_tracks": len({track_map()[int(i)]["track_key"] for i in indices}),
         "split_sha256": freeze["split_sha256"],
+        "lockbox_sha256": load_manifest()["lockbox"]["sha256"],
         "freeze": freeze,
         "reports": reports,
         "summary": _summarize_seeds(reports),

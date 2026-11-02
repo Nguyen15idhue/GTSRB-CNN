@@ -101,3 +101,12 @@ timestamp,config,seed,fold,status,seconds,error
 2026-11-03 03:51:20,x3,123,2,ok,73.5,
 2026-11-03 03:52:20,x3,2024,1,ok,60.3,
 2026-11-03 03:53:20,x3,2024,2,ok,60.3,
+2026-11-03 03:59:02,final,42,,fail,29.0,"ValueError: Found empty input array (e.g., `y_true` or `y_pred`) while a minimum of 1 sample is required."
+2026-11-03 03:59:30,final,123,,fail,26.4,"ValueError: Found empty input array (e.g., `y_true` or `y_pred`) while a minimum of 1 sample is required."
+2026-11-03 03:59:57,final,2024,,fail,26.1,"ValueError: Found empty input array (e.g., `y_true` or `y_pred`) while a minimum of 1 sample is required."
+2026-11-03 04:03:46,final,42,,ok,161.3,
+2026-11-03 04:03:46,final,42,,fail,161.3,TypeError: unsupported format string passed to NoneType.__format__
+2026-11-03 04:06:25,final,123,,ok,159.1,
+2026-11-03 04:06:25,final,123,,fail,159.1,TypeError: unsupported format string passed to NoneType.__format__
+2026-11-03 04:09:04,final,2024,,ok,159.3,
+2026-11-03 04:09:04,final,2024,,fail,159.3,TypeError: unsupported format string passed to NoneType.__format__

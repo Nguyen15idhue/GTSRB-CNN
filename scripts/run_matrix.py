@@ -101,7 +101,8 @@ def main() -> int:
                                  "ok", round(seconds, 1), ""])
                 fh.flush()
                 print(
-                    f"[{number}/{len(jobs)}] {run_name} — OK — f1={meta['val_macro_f1']:.4f} "
+                    f"[{number}/{len(jobs)}] {run_name} — OK — "
+                    f"f1={meta['val_macro_f1'] if meta.get('val_macro_f1') is not None else 'n/a'} "
                     f"({seconds:.0f}s)",
                     flush=True,
                 )

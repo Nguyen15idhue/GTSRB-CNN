@@ -1,0 +1,69 @@
+{
+  "freeze": {
+    "protocol": "v2_clean",
+    "winner": "x2",
+    "source_config": "d2",
+    "reason": "OOF cao nhat 97.040; x1 vs x2 CI chua 0; tie-break it params hon (1.45M vs 2.20M)",
+    "epoch": 26,
+    "epoch_source": "median best epoch của 9 run OOF",
+    "best_epochs_oof": [
+      31,
+      32,
+      15,
+      31,
+      22,
+      26,
+      21,
+      19,
+      40
+    ],
+    "final_config": "configs/v2/final.yaml",
+    "final_config_sha256": "2678af82b7fc85fb9069e7a3db2d6410abb0ca1afde12b5ccc058c120ed2d191",
+    "split_sha256": "640a1913e011b2ed89c5ed7dff1f95ac84871f0c384455df984dec745797df68",
+    "git_commit": "c7edd9952d038e9a98eea2ffa6a89753f46da2c7",
+    "frozen_at": "2026-11-03 03:57:32",
+    "lockbox_opened": false
+  },
+  "checks": [
+    {
+      "run_id": "v2_final_s42",
+      "epochs_run": 26,
+      "checkpoint_epoch": 26,
+      "params": 1448779,
+      "forward_shape": [
+        2,
+        43
+      ],
+      "config_sha256_match": true,
+      "split_sha256_match": true,
+      "meta_config_sha256_match": true
+    },
+    {
+      "run_id": "v2_final_s123",
+      "epochs_run": 26,
+      "checkpoint_epoch": 26,
+      "params": 1448779,
+      "forward_shape": [
+        2,
+        43
+      ],
+      "config_sha256_match": true,
+      "split_sha256_match": true,
+      "meta_config_sha256_match": true
+    },
+    {
+      "run_id": "v2_final_s2024",
+      "epochs_run": 26,
+      "checkpoint_epoch": 26,
+      "params": 1448779,
+      "forward_shape": [
+        2,
+        43
+      ],
+      "config_sha256_match": true,
+      "split_sha256_match": true,
+      "meta_config_sha256_match": true
+    }
+  ],
+  "passed": true
+}

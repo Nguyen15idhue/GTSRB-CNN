@@ -89,15 +89,16 @@ def summarize(compute_ci: bool = True, B: int = 2000) -> Path:
         pred_path = folder / "predictions_val.csv"
         if compute_ci and pred_path.is_file():
             index, truth, pred = read_predictions(pred_path)
-            ci = cluster_bootstrap_f1(truth, pred, tracks_all[index].tolist(), B=B)
-            row["val_macro_f1_ci_low"] = round(ci["ci_low"], 6)
-            row["val_macro_f1_ci_high"] = round(ci["ci_high"], 6)
-            point = ci["macro_f1"]
-            if abs(point - float(row["val_macro_f1"])) > 1e-6:
-                LOG.warning(
-                    "%s: macro-F1 trong meta %.6f khác tính lại %.6f",
-                    meta["run_id"], float(row["val_macro_f1"]), point,
-                )
+            if len(truth) > 0:
+                ci = cluster_bootstrap_f1(truth, pred, tracks_all[index].tolist(), B=B)
+                row["val_macro_f1_ci_low"] = round(ci["ci_low"], 6)
+                row["val_macro_f1_ci_high"] = round(ci["ci_high"], 6)
+                point = ci["macro_f1"]
+                if row["val_macro_f1"] not in ("", None) and abs(point - float(row["val_macro_f1"])) > 1e-6:
+                    LOG.warning(
+                        "%s: macro-F1 trong meta %.6f khác tính lại %.6f",
+                        meta["run_id"], float(row["val_macro_f1"]), point,
+                    )
         rows.append(row)
 
     with SUMMARY_PATH.open("w", newline="", encoding="utf-8") as fh:
