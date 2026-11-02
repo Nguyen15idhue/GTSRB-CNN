@@ -1,0 +1,2 @@
+2026-11-03 04:40:36 | user=GEOTEK | host=DESKTOP-63C09U5 | runs=['v2_final_s42', 'v2_final_s123', 'v2_final_s2024'] | n=8302 | acc=0.988758 | f1=0.975981 | rerun=False
+2026-11-03 04:10 | ATTEMPT1 | runs=[v2_final_s42,s123,s2024] | LOI ghi ket qua: track_map() goi lai trong comprehension 8302 lan, treo sau khi tinh du 3 seed; KHONG ghi file, KHONG dung so de chinh gi. Config/model/hash khong doi. Mo lai de ghi ket qua (04:40).
