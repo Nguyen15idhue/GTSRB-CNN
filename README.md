@@ -71,6 +71,12 @@ python scripts/run_phase4.py
 python scripts/acceptance_v2.py
 ```
 
+Tài liệu v2:
+
+- Báo cáo đầy đủ: `docs/bao_cao/BAO_CAO_v2.md` và bản Word `docs/bao_cao/BAO_CAO_v2.docx`
+  (6 chương, 28 bảng, 16 hình).
+- Giải thích mã nguồn hiện trạng: `docs/GIAI_THICH_MA_NGUON_TU_A_DEN_Z_v2.md`.
+
 ## 2. Yêu cầu hệ thống
 
 - Windows 10/11 + PowerShell, Python **3.12 64-bit**.
