@@ -6,20 +6,20 @@
       "device": "cpu",
       "n_images": 6180,
       "batch_size": 256,
-      "seconds": 4.91493760002777,
-      "images_per_s": 1257.3913451037674,
+      "seconds": 4.95370680000633,
+      "images_per_s": 1247.550622090129,
       "model_only_estimate_s": 3.8782638281249997,
-      "preprocess_estimate_ms_per_img": 0.16774656503281068,
+      "preprocess_estimate_ms_per_img": 0.1740198983626748,
       "scope": "eval screening val: normalize uint8 -> forward; không gồm đọc file/ppm"
     },
     {
       "device": "cuda",
       "n_images": 6180,
       "batch_size": 256,
-      "seconds": 1.4666695999912918,
-      "images_per_s": 4213.627936405509,
+      "seconds": 1.501543499995023,
+      "images_per_s": 4115.7648779542415,
       "model_only_estimate_s": 0.078209445,
-      "preprocess_estimate_ms_per_img": 0.2246699279921184,
+      "preprocess_estimate_ms_per_img": 0.2303129538826898,
       "scope": "eval screening val: normalize uint8 -> forward; không gồm đọc file/ppm"
     }
   ],

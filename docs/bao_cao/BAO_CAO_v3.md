@@ -67,9 +67,9 @@ trong phạm vi suy luận.
   lockbox 8.302 ảnh, official test 12.630 ảnh. Không so sánh trực tiếp các con số.
 - **Không có kiểm chứng camera thật, thời tiết thật, máy cấu hình thấp.** Mọi
   tuyên bố hiệu năng chỉ có giá trị trong phạm vi GTSRB và máy train.
-- **Demo Streamlit hiện vẫn dùng checkpoint legacy `final_s42` và ngưỡng cũ
-  0,9462**, chưa dùng D2/v2. Báo cáo tách rõ "mô hình đã kiểm chứng" và "demo
-  đã triển khai".
+- **Demo Streamlit đã dùng D2/v2:** checkpoint `v2_final_s42`, τ = 0,9590;
+  E2E Playwright 9/9 pass ngày 04/11/2026. Golden test 20 ảnh vẫn chạy trên
+  checkpoint legacy, chưa chạy lại cho v2.
 
 ### Mục lục
 
@@ -1124,8 +1124,8 @@ vì overhead launch/sync. GPU chỉ có lợi khi batch lớn. Vì vậy không 
 
 | Thiết bị | n | Batch | Thời gian | Ảnh/s |
 |---|---:|---:|---:|---:|
-| CPU | 6.180 | 256 | 4,93 s | 1.252 |
-| GPU | 6.180 | 256 | 1,48 s | 4.179 |
+| CPU | 6.180 | 256 | 4,81 s | 1.284 |
+| GPU | 6.180 | 256 | 1,42 s | 4.356 |
 
 Phạm vi: normalize uint8 → forward; không gồm đọc file PPM. Thời gian này **không
 phải** thời gian phản hồi UI.
@@ -1143,28 +1143,31 @@ hình, báo cáo. Đây là con số **thấp hơn** thời gian thực tế c�
 | Giao diện web (Streamlit) | đã có | app.py; outputs/figures/11_ui_*.png | không có |
 | Tải 1 ảnh lên và dự đoán top-3 | đã có | e2e_ui.json 9/9 check pass | chỉ 1 ảnh mỗi lần |
 | Hiển thị tên tiếng Việt + confidence | đã có | app.py render_prediction; e2e_ui.json | không có |
-| Cảnh báo 'không xác định' theo ngưỡng τ | đã có (ngưỡng cũ) | outputs/results/threshold.json τ=0.9462 chọn trên val split_random | chưa dùng τ v2 = 0.9590 chọn trên OOF; cần đổi khi cập nhật demo |
+| Cảnh báo 'không xác định' theo ngưỡng τ | đã có (τ v2) | outputs/results/v3/tables/threshold_v2_oof.json τ=0.9590 chọn trên OOF X2 | không có |
 | Xử lý file lỗi / quá 20 MB | đã có | e2e_ui.json check loi_file_hong, loi_qua_20mb | không có |
 | Chọn ảnh mẫu | đã có | e2e_ui.json check chon_anh_mau | không có |
 | Nhiều ảnh / batch trên giao diện | chưa có | app.py dùng st.file_uploader đơn | cần phát triển nếu muốn demo batch |
 | API cho hệ thống khác | chưa có | không có endpoint trong repo | ngoài phạm vi bài tập |
 | Lưu lịch sử dự đoán | chưa có | không có DB/session state lưu lịch sử | ngoài phạm vi bài tập |
-| Checkpoint v2 (D2/X2) | chưa tích hợp vào demo | app.py mặc định outputs/runs/final_s42 hoặc checkpoints/final_s42 (legacy) | demo đang dùng checkpoint cũ; báo cáo phải nói rõ |
-| Golden test 20 ảnh giữa 2 môi trường | đã có | golden_compare.json max_prob_diff=0.0, pass=True | chạy trên checkpoint legacy |
-| Kiểm thử trên máy cấu hình thấp | chưa có | chỉ đo CPU trên máy train (i9-14900KF) | cần máy khác hoặc giới hạn thread/ RAM |
+| Checkpoint D2/v2 (X2) | đã tích hợp | app.py mặc định outputs/runs/v2_final_s42; sidebar đọc app_summary_v2.json | không có |
+| Golden test 20 ảnh giữa 2 môi trường | đã có (legacy) | golden_compare.json max_prob_diff=0.0, pass=True | chưa chạy lại cho checkpoint v2 |
+| Kiểm thử E2E Playwright | đã có | e2e_ui.json 9/9 pass; outputs/figures/11_ui_*.png | không có |
+| Kiểm thử trên máy cấu hình thấp | chưa có | chỉ đo CPU trên máy train (i9-14900KF) | cần máy khác hoặc giới hạn thread/RAM |
 | Kiểm thử camera thật / video | chưa có | external_test chỉ có ảnh tĩnh đã ẩn danh | ngoài phạm vi và cần thu thập dữ liệu |
 | Tuyên bố an toàn cho giao thông thực tế | không | footer app.py và báo cáo đều ghi cảnh báo | không được tuyên bố |
 
 ### 10.6. Demo hiện tại dùng checkpoint nào?
 
 - `app.py` tìm checkpoint theo thứ tự: biến môi trường `GTSRB_RUN_DIR` →
-  `outputs/runs/final_s42/best.pt` → `checkpoints/final_s42/best.pt`.
-- Cả hai đều là **checkpoint legacy** (E3/CNN-B, 2.201.931 params), không phải D2.
-- Ngưỡng đang dùng là `outputs/results/threshold.json` với τ = 0,9462, chọn trên
-  val `split_random` cũ.
-- Đã chuẩn bị sẵn τ v2 = 0,9590 trong `outputs/results/v3/tables/threshold_v2_oof.json`
-  và checkpoint `outputs/runs/v2_final_s42/best.pt`, nhưng **chưa tích hợp**.
-- Vì vậy báo cáo tách rõ: **mô hình D2 đã kiểm chứng**, **demo chưa cập nhật**.
+  `outputs/runs/v2_final_s42/best.pt` → `checkpoints/final_s42/best.pt`.
+- Mặc định hiện tại là **D2/v2** (`v2_final_s42`, 1.448.779 params).
+- Ngưỡng đang dùng là `outputs/results/v3/tables/threshold_v2_oof.json` với
+  **τ = 0,9590**, chọn trên OOF X2.
+- Sidebar đọc `outputs/results/v3/tables/app_summary_v2.json` (lockbox 8.302 ảnh,
+  3 seed) thay cho số legacy.
+- E2E Playwright: **9/9 PASS** ngày 04/11/2026; ảnh chụp trong
+  `outputs/figures/11_ui_*.png`.
+- Golden test 20 ảnh vẫn là của checkpoint legacy; chưa chạy lại cho v2.
 
 ---
 
@@ -1255,7 +1258,7 @@ Chi tiết máy đọc: `outputs/results/v2/ACCEPTANCE.json` (**12/12**).
 
 ### 12.4. Triển khai
 
-1. Demo dùng checkpoint legacy và ngưỡng cũ.
+1. Demo đã dùng D2/v2; golden test 20 ảnh chưa chạy lại cho v2.
 2. Chưa đo trên máy cấu hình thấp.
 3. Chưa có API, batch upload, lịch sử dự đoán.
 4. Không tuyên bố mô hình đủ an toàn cho giao thông thực tế.
@@ -1317,7 +1320,7 @@ tuyệt đối cùng seed, 22 test pass, nghiệm thu 12/12.
 **4. Những vấn đề nào chưa giải quyết?**
 
 Occlusion (17,63%), lớp 19/29 yếu, chưa kiểm tra nhãn thủ công, chưa có camera
-thật/máy yếu, demo chưa cập nhật D2, depth/width/weight decay/augmentation chưa
+thật/máy yếu, golden test chưa chạy lại cho v2, depth/width/weight decay/augmentation chưa
 đủ bằng chứng.
 
 **5. Công việc tiếp theo là gì?**
@@ -1512,8 +1515,8 @@ Xem Bảng 3.3 và Bảng 3.4. Nguồn máy đọc:
 | Lockbox CI của macro-F1 | [95,0511; 97,9422] | mean 97,5981; sd 0,6246; range 3 seed [96,8770; 97,9706] | 06b_lockbox_uncertainty.csv |
 | Số lỗi screening val | 190 lỗi / 6.180 ảnh | F15: 190 lỗi; D2: 144 lỗi / 23 track | 17_manual_error_review_summary.json |
 | Latency | 0,93 ms/ảnh (không nêu batch/thiết bị) | GPU batch 1: 0,86 ms model-only; 1,24 ms end-to-end Python | 13_inference_benchmark.csv |
-| Ngưỡng unknown của demo | τ = 0,9462 trên val split_random | τ v2 = 0,9590 trên OOF X2 | threshold_v2_oof.json; outputs/results/threshold.json |
-| Checkpoint demo | final_s42 (legacy) | v2_final_s42 / X2 (D2, 1.448.779 params) | 15_deployment_status.csv |
+| Ngưỡng unknown của demo | τ = 0,9462 trên val split_random | τ v2 = 0,9590 trên OOF X2, đã dùng trong app.py | threshold_v2_oof.json; outputs/results/threshold.json |
+| Checkpoint demo | final_s42 (legacy) | v2_final_s42 / X2 (D2, 1.448.779 params), đã tích hợp | 15_deployment_status.csv |
 | Thời gian huấn luyện | 4,13 giờ | 3,99 giờ epoch-loop (111 run) + 8,2 phút baseline | training_cost_totals.json |
 | Depth: CI và Holm | +3,212 [+0,036; +4,440], p Holm 0,373 | giữ nguyên; báo 'có bằng chứng vừa, chưa đủ sau Holm' | main_comparisons.csv |
 

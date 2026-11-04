@@ -7,14 +7,14 @@
   "results": [
     {
       "path": "README.md",
-      "size_bytes": 5070,
-      "sha256": "27e8c6e69d3eef5f58a5dd3ab52f601bdab32dc91fb449f35fa9147adc2f87ef",
+      "size_bytes": 5140,
+      "sha256": "c178332b95e3a2d78306de1366916cf10fe31a462bd88666644c2807e62645d8",
       "purpose": ""
     },
     {
       "path": "tables/00_corrections.csv",
-      "size_bytes": 1613,
-      "sha256": "c0608efcd89c7479c15ecd5c2e322fe34efbba9284b03c5c0986aafb2646cd39",
+      "size_bytes": 1575,
+      "sha256": "c1c6eef3ba3485148711be6a7b5f6b9023a984f807b3800e0a58d439c38806f9",
       "purpose": ""
     },
     {
@@ -134,13 +134,13 @@
     {
       "path": "tables/14_hardware_software.json",
       "size_bytes": 1354,
-      "sha256": "a0f6a20b76f66b145cef875ca39128985d464fe8ca7391eb577132c96486688f",
+      "sha256": "ce53f7d36a357664364f391be9bfd98ecf22dd0bf2018201ab3e3ad3e4ad0de2",
       "purpose": ""
     },
     {
       "path": "tables/15_deployment_status.csv",
-      "size_bytes": 1828,
-      "sha256": "5f269e5424721edf243ed5a29c4eb53875acac5d159ed92235677d390634a5a1",
+      "size_bytes": 1813,
+      "sha256": "21b5c23ddadd2ac2663d5de9cd5b127b34da746d4b88dbc4e1ac1d644fbd3294",
       "purpose": ""
     },
     {
@@ -223,8 +223,8 @@
     },
     {
       "path": "tables/26_evaluation_time.json",
-      "size_bytes": 950,
-      "sha256": "8f041dbfe486de44374a4261ae7c89533b19705dd7ac9c8a65af55c42af001a0",
+      "size_bytes": 948,
+      "sha256": "71c906dd2255e103ed496cc661cc8f9216675eb072a8dc491f58e7b05420edd5",
       "purpose": ""
     },
     {
@@ -235,8 +235,14 @@
     },
     {
       "path": "tables/29_data_inventory.csv",
-      "size_bytes": 3340,
-      "sha256": "9a3d7d0c7ef75c512123cf9cdec9d0be3075d4fcdb2cc8308cd6f70900f8913d",
+      "size_bytes": 3390,
+      "sha256": "e1de5e68f0d2f665566a2869f6999f0123d015429892137ee120688cc154d47b",
+      "purpose": ""
+    },
+    {
+      "path": "tables/app_summary_v2.json",
+      "size_bytes": 881,
+      "sha256": "e4340830d802261019dece96670140e3b19c22edeadea64dc14c2c63b8e1ba83",
       "purpose": ""
     },
     {

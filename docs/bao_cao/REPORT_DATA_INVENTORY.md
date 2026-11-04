@@ -6,7 +6,7 @@
 | Ngày lập | 04/11/2026 |
 | Phạm vi | Báo cáo mới thay thế `BAO_CAO_v2.md`; không chạy lại 111 run, không mở lockbox |
 | Nguồn sự thật | `outputs/results/v2/`, `outputs/splits/v2/`, `outputs/runs/`, `outputs/results/v3/` |
-| Trạng thái | **Sẵn sàng 32/34 mục dữ liệu; 2 mục một phần (kiểm tra lỗi thủ công, cập nhật demo); 2 hạng mục ngoài cần thiết bị/dữ liệu thật. Báo cáo v3 đã tạo: docs/bao_cao/BAO_CAO_v3.md + .docx** |
+| Trạng thái | **Sẵn sàng 32/34 mục dữ liệu; 2 mục một phần (kiểm tra lỗi thủ công, tính năng triển khai nâng cao); 2 hạng mục ngoài cần thiết bị/dữ liệu thật. Báo cáo v3 đã tạo: docs/bao_cao/BAO_CAO_v3.md + .docx** |
 
 > Quy ước: **Đã có** = artifact đã tồn tại và dùng được; **Đã bổ sung** = pack v3
 > vừa sinh; **Một phần** = có tài nguyên nhưng cần người/thiết bị; **Chưa thể** =
@@ -21,7 +21,7 @@
 | Kết quả thực nghiệm đã có | 19 | Đã có, chỉ cần trình bày lại |
 | Trình bày lại / xuất bảng | 8 | Đã bổ sung bảng/hình |
 | Phép đo vận hành mới | 7 | Đã đo mới (trừ utilization lịch sử) |
-| **Tổng 34 mục** | **34** | **32 đủ tài nguyên; 2 mục một phần (lỗi thủ công, demo)** |
+| **Tổng 34 mục** | **34** | **32 đủ tài nguyên; 2 mục một phần (lỗi thủ công, triển khai nâng cao)** |
 
 Tài nguyên mới:
 
@@ -70,7 +70,7 @@ Tài nguyên mới:
 | 27 | Throughput | Cần bổ sung | **Đã bổ sung** | `tables/13_inference_benchmark.csv` | 79k ảnh/s GPU batch 64 |
 | 28 | Kích thước mô hình | Cần bổ sung | **Đã bổ sung** | `tables/13_inference_benchmark.json` | 5,55 MB, 1.448.779 params |
 | 29 | Bộ nhớ khi suy luận | Cần bổ sung | **Đã bổ sung** | `tables/13_inference_benchmark.csv` | VRAM 81,7 MB; RAM process ~1.060 MB |
-| 30 | Triển khai thực tế | Cần bổ sung | **Một phần** | `tables/15_deployment_status.csv` | Có bảng đã/chưa; demo chưa đổi checkpoint |
+| 30 | Triển khai thực tế | Cần bổ sung | **Một phần** | `tables/15_deployment_status.csv`; `app.py`; `e2e_ui.json` | Demo đã dùng D2/v2, e2e 9/9; còn API/batch/lịch sử/camera |
 | 31 | Tái lập | Đã có | Đã có | `outputs/results/v2/reproducibility.json`; `tests/` | Cùng seed lệch 0,0; 22 test pass |
 | 32 | Nghiệm thu | Đã có | Đã có | `outputs/results/v2/ACCEPTANCE.json`, `acceptance.md` | 12/12 |
 | 33 | Hạn chế | Đã có | Đã có | `tables/24_results_evidence.csv`, `15_deployment_status.csv` | Phân loại tốt/không đủ/kém |

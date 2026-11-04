@@ -5,9 +5,10 @@ Chạy::
     streamlit run app.py
 
 - Tiền xử lý dùng đúng ``src.data.preprocess`` (không viết lại).
-- Model: ``outputs/runs/final_s42/best.pt`` (có thể đổi bằng biến môi trường
-  ``GTSRB_RUN_DIR`` để test).
-- Ngưỡng τ: ``outputs/results/threshold.json`` (chọn trên val, không chỉnh theo demo).
+- Model: ``outputs/runs/v2_final_s42/best.pt`` (D2, winner OOF X2); có thể đổi
+  bằng biến môi trường ``GTSRB_RUN_DIR``.
+- Ngưỡng τ: ``outputs/results/v3/tables/threshold_v2_oof.json`` (chọn trên OOF,
+  không chỉnh theo demo).
 """
 
 from __future__ import annotations
@@ -24,7 +25,7 @@ from src.config import PROJECT_ROOT
 from src.predict import Predictor, load_tau, validate_image_bytes
 
 _DEFAULT_RUNS = (
-    PROJECT_ROOT / "outputs" / "runs" / "final_s42",
+    PROJECT_ROOT / "outputs" / "runs" / "v2_final_s42",
     PROJECT_ROOT / "checkpoints" / "final_s42",
 )
 RUN_DIR = (
@@ -32,9 +33,8 @@ RUN_DIR = (
     if os.environ.get("GTSRB_RUN_DIR")
     else next((path for path in _DEFAULT_RUNS if (path / "best.pt").is_file()), _DEFAULT_RUNS[0])
 )
-THRESHOLD_PATH = PROJECT_ROOT / "outputs" / "results" / "threshold.json"
-REPORT_PATH = PROJECT_ROOT / "outputs" / "results" / "test_report.json"
-MULTISEED_PATH = PROJECT_ROOT / "outputs" / "results" / "multiseed.json"
+THRESHOLD_PATH = PROJECT_ROOT / "outputs" / "results" / "v3" / "tables" / "threshold_v2_oof.json"
+SUMMARY_PATH = PROJECT_ROOT / "outputs" / "results" / "v3" / "tables" / "app_summary_v2.json"
 FOOTER = (
     "Demo học thuật trên GTSRB (biển báo Đức). **Không dùng cho quyết định giao thông thực tế** "
     "— mô hình có thể sai, đặc biệt với ảnh ngoài phân phối."
@@ -59,24 +59,21 @@ def get_predictor(run_dir: str, tau: float) -> Predictor:
 
 
 def sidebar(run_dir: Path, tau: float) -> None:
-    report = read_json(REPORT_PATH)
-    multiseed = read_json(MULTISEED_PATH)
+    summary = read_json(SUMMARY_PATH)
     with st.sidebar:
         st.header("Thông tin mô hình")
         st.caption(f"Checkpoint: `{run_dir.name}`")
-        if report:
-            st.metric("Test accuracy", f"{report['accuracy'] * 100:.2f} %")
-            st.metric("Test macro-F1", f"{report['macro_f1_43']:.4f}")
-            st.metric("Top-3 accuracy", f"{report['top3_accuracy'] * 100:.2f} %")
-            st.caption(f"sha256 `{report['checkpoint_sha256'][:16]}…`")
-        if multiseed:
+        if summary:
+            st.metric("Lockbox accuracy", f"{summary['accuracy'] * 100:.2f} %")
+            st.metric("Lockbox macro-F1", f"{summary['macro_f1_43']:.4f}")
+            st.metric("Top-3 accuracy", f"{summary['top3_accuracy'] * 100:.2f} %")
             st.caption(
-                f"Multi-seed val: {multiseed['val_acc']['mean'] * 100:.2f} % ± "
-                f"{multiseed['val_acc']['std'] * 100:.2f} điểm %"
+                f"3 seed: {', '.join(f'{v * 100:.2f}' for v in summary['seed_accuracy'])} % · "
+                f"sha256 `{summary['checkpoint_sha256'][:16]}…`"
             )
         st.divider()
         st.markdown(f"**Ngưỡng từ chối τ = {tau:.4f}**")
-        st.caption("Chọn trên val: giữ ~95 % ảnh trong phân phối. Đây là ngưỡng theo confidence, "
+        st.caption("Chọn trên OOF X2: giữ ~95 % ảnh trong phân phối. Đây là ngưỡng theo confidence, "
                    "không phải bộ phát hiện OOD.")
         st.divider()
         st.caption("Ảnh nên crop quanh biển. Ảnh cảnh rộng có biển nhỏ thường bị từ chối hoặc sai.")
@@ -147,46 +144,48 @@ def tab_predict(predictor: Predictor, tau: float) -> None:
 
 
 def tab_about(tau: float) -> None:
-    report = read_json(REPORT_PATH)
+    summary = read_json(SUMMARY_PATH)
     st.subheader("Mô hình và cách đánh giá")
     st.markdown(
-        "- **Kiến trúc:** CNN-B tự xây dựng (3 khối conv 32/64/128 + BN + dropout 0,3), "
-        "2.201.931 tham số, đầu vào 64×64 RGB.\n"
-        "- **Huấn luyện:** split `stratified_group` (track train/val rời nhau, đủ 43 lớp), "
-        "3 seed 42/123/2024, chọn checkpoint theo val macro-F1.\n"
-        "- **Test:** đánh giá **đúng một lần** sau khi đóng băng `configs/final.yaml`."
+        "- **Kiến trúc:** D2 — CNN tự xây dựng, 4 khối conv 32/64/128/256 + BN + "
+        "flatten + dropout 0,3, **1.448.779 tham số**, đầu vào 64×64 RGB.\n"
+        "- **Chọn mô hình:** OOF 3 fold × 3 seed; D2 (X2) đạt macro-F1 0,9704, "
+        "hơn control 1,981 điểm; chốt bằng freeze trước khi mở lockbox.\n"
+        "- **Đánh giá:** lockbox 8.302 ảnh mở **một lần**; official test chỉ là benchmark phụ."
     )
-    if report:
+    if summary:
         st.dataframe(
             {
-                "Chỉ số test": ["Accuracy", "Macro-F1 (43 lớp)", "Top-3 accuracy", "Số ảnh"],
+                "Chỉ số lockbox": ["Accuracy", "Macro-F1 (43 lớp)", "Top-3 accuracy", "Số ảnh"],
                 "Giá trị": [
-                    f"{report['accuracy'] * 100:.2f} %",
-                    f"{report['macro_f1_43']:.4f}",
-                    f"{report['top3_accuracy'] * 100:.2f} %",
-                    f"{report['n_samples']:,}".replace(",", "."),
+                    f"{summary['accuracy'] * 100:.2f} %",
+                    f"{summary['macro_f1_43']:.4f}",
+                    f"{summary['top3_accuracy'] * 100:.2f} %",
+                    f"{summary['n_samples']:,}".replace(",", "."),
                 ],
             },
             hide_index=True,
             width="stretch",
         )
     st.info(
-        f"Ngưỡng τ = **{tau:.4f}** là cơ chế từ chối theo confidence. Trong thử nghiệm OOD, "
-        "1/4 ảnh không có biển vẫn bị nhận nhầm với confidence cao — không nên xem τ là bộ lọc OOD."
+        f"Ngưỡng τ = **{tau:.4f}** là cơ chế từ chối theo confidence, chọn trên OOF X2. "
+        "Trong thử nghiệm OOD, một số ảnh không có biển vẫn bị nhận nhầm với confidence cao — "
+        "không nên xem τ là bộ lọc OOD."
     )
     with st.expander("Vì sao biển Việt Nam không phân loại được?"):
         st.markdown(
             "GTSRB chỉ có **43 lớp biển Đức** (giới hạn tốc độ, cấm vượt, ưu tiên, cảnh báo…). "
             "Biển Việt Nam như 'cấm dừng/đỗ', 'cấm rẽ trái' hay biển chữ không nằm trong 43 lớp này, "
             "nên không có nhãn đúng để dự đoán — kể cả khi nhìn giống biển Đức. "
-            "Khi đó app nên trả 'không xác định'; nếu vẫn đoán, đó là **domain shift** đã nêu ở Chương 5 "
-            "của báo cáo. Muốn nhận diện biển Việt Nam cần dữ liệu và mô hình riêng, không phải bài này."
+            "Khi đó app nên trả 'không xác định'; nếu vẫn đoán, đó là **domain shift**. "
+            "Muốn nhận diện biển Việt Nam cần dữ liệu và mô hình riêng, không phải bài này."
         )
     with st.expander("43 lớp và hạn chế"):
         st.markdown(
             "Mô hình chỉ biết 43 lớp biển Đức. Biển nước khác, ảnh quá mờ/tối, biển quá nhỏ hoặc "
-            "nhiều biển trong khung đều có thể cho kết quả sai. Xem Chương 5 của báo cáo "
-            "(`docs/bao_cao/BAO_CAO.docx`) để biết 12 mẫu sai và nguyên nhân định lượng."
+            "nhiều biển trong khung đều có thể cho kết quả sai. Trên screening val, D2 có 144 ảnh lỗi "
+            "nhưng chỉ thuộc 23 track; xem Chương 8 của báo cáo v3 "
+            "(`docs/bao_cao/BAO_CAO_v3.md`) để biết phân tích lỗi và confusion."
         )
 
 
@@ -203,13 +202,13 @@ def main() -> None:
     if not (RUN_DIR / "best.pt").is_file():
         st.error(
             f"Không tìm thấy checkpoint: `{RUN_DIR / 'best.pt'}`. "
-            "Chạy `python -m src.train --config configs/final.yaml` trước khi mở demo."
+            "Chạy `python scripts/run_matrix.py --configs final --seeds 42,123,2024` trước khi mở demo."
         )
         st.stop()
     if not THRESHOLD_PATH.is_file():
         st.error(
-            "Chưa có ngưỡng τ (`outputs/results/threshold.json`). "
-            "Chạy `python -m src.error_analysis --run outputs/runs/final_s42` trước."
+            "Chưa có ngưỡng τ v2 (`outputs/results/v3/tables/threshold_v2_oof.json`). "
+            "Chạy `python scripts/report_v3_data.py --only probs` trước."
         )
         st.stop()
 

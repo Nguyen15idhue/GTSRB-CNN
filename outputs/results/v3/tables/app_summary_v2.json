@@ -1,0 +1,25 @@
+{
+  "model": "D2 (X2) — 4 khối 32/64/128/256, flatten, BN, dropout 0,3",
+  "checkpoint": "outputs/runs/v2_final_s42/best.pt",
+  "checkpoint_sha256": "e92155e0e656bfb5ebee8b372fdec742002011b632bbe6f312545ae5f603449e",
+  "n_samples": 8302,
+  "accuracy": 0.9887577290612705,
+  "accuracy_sd": 0.001010177919008183,
+  "macro_f1_43": 0.9759814571503717,
+  "macro_f1_sd": 0.006246335638375003,
+  "top3_accuracy": 0.9984742632297438,
+  "ece_15bin": 0.005328235178073061,
+  "brier": 0.01786151962975661,
+  "seed_accuracy": [
+    0.9875933509997591,
+    0.9894001445434835,
+    0.9892796916405685
+  ],
+  "seed_macro_f1": [
+    0.9687701186650713,
+    0.9797061089339864,
+    0.979468143852057
+  ],
+  "eval_set": "lockbox 8.302 ảnh (277 track), mở một lần sau freeze",
+  "note": "Dùng cho sidebar demo v2; không dùng để chọn mô hình/ngưỡng."
+}

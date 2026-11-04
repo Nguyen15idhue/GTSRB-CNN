@@ -996,87 +996,148 @@ luận. Đây là lý do báo cáo v3 không cần chạy lại 111 run.
 
 ---
 
-## 10. Demo và triển khai
+## 10. Demo: frontend, backend và cách nối
 
-### 10.1. Demo gồm những file nào?
+### 10.1. Kiến trúc tổng thể
 
-| File | Việc làm |
-|---|---|
-| `app.py` | Giao diện Streamlit: upload, top-3, cảnh báo “không xác định” |
-| `src/predict.py` | Nạp checkpoint, `predict_topk`, kiểm tra file upload |
-| `checkpoints/final_s42/best.pt` | Checkpoint legacy để clone chạy ngay |
-| `outputs/results/threshold.json` | Ngưỡng τ cũ (0,9462) |
-
-### 10.2. `src/predict.py` có gì?
-
-| Hàm | Việc làm |
-|---|---|
-| `load_model` | Đọc `best.pt`, build model, load state_dict, eval |
-| `load_tau` | Đọc ngưỡng từ JSON |
-| `should_reject` | `max_prob < tau` → “không xác định” |
-| `validate_image_bytes` | Kiểm tra dung lượng, đuôi file, ảnh hỏng |
-| `predict_topk` | `preprocess` → forward → softmax → top-k |
-| `Predictor` | Gói model + config + class_names cho app |
-
-Điểm quan trọng: `predict_topk` dùng đúng `preprocess` của train. Không viết lại
-preprocessing trong app.
-
-### 10.3. `app.py` hoạt động thế nào?
+Demo không tách thành React + REST API. Nó dùng **Streamlit**: một framework vừa
+làm giao diện, vừa làm server, vừa giữ session.
 
 ```text
-Người dùng upload ảnh
-  → validate_image_bytes (chặn file lỗi/quá 20 MB)
-  → Predictor.predict(image, k=3, tau)
-  → preprocess 64×64
-  → forward
-  → softmax
-  → top-3 + confidence
-  → nếu max_prob < tau: hiện “Không xác định”
+Trình duyệt (HTML/JS do Streamlit sinh)
+        │  WebSocket (không phải REST)
+        ▼
+Streamlit server (app.py)
+        │  gọi hàm Python trực tiếp
+        ▼
+Backend dự án
+  src.predict.Predictor
+    → src.data.preprocess
+    → SmallCNN (best.pt)
+    → softmax + top-k
+        │  trả dict Python
+        ▼
+app.py render: st.success, st.progress, st.metric, st.dataframe
 ```
 
-Giao diện có:
+Điểm cần hiểu:
 
-- Sidebar hiển thị test accuracy, macro-F1, top-3, sha256 checkpoint.
-- Tab dự đoán: upload, ảnh mẫu, top-3.
-- Tab “Về mô hình”: bảng test, ngưỡng τ, cảnh báo phạm vi.
-- Footer: “Không dùng cho quyết định giao thông thực tế”.
+- **Không có API JSON riêng.** Streamlit tự đóng gói lời gọi hàm và kết quả qua
+  WebSocket. Vì vậy “frontend gọi backend” ở đây là **app.py gọi trực tiếp**
+  `Predictor.predict`.
+- **Không có hai process.** `app.py` chạy trong cùng process với model.
+- **Session state** do Streamlit giữ; mỗi tab trình duyệt là một session.
 
-### 10.4. Demo hiện tại có khớp báo cáo v3 không?
+### 10.2. Backend: `src/predict.py`
 
-**Không.** Demo đang dùng:
+| Hàm | Vai trò | Ghi chú |
+|---|---|---|
+| `load_model` | Đọc `best.pt`, build model, load state_dict, eval | Không pickle object |
+| `load_tau` | Đọc ngưỡng τ từ JSON | τ v2 = 0,9590 |
+| `should_reject` | `max_prob < tau` → “không xác định” | Theo confidence, không phải OOD |
+| `validate_image_bytes` | Chặn file lỗi, sai đuôi, quá 20 MB | Trả PIL Image |
+| `predict_topk` | `preprocess` → forward → softmax → top-k | Dùng đúng preprocess của train |
+| `Predictor` | Gói model + config + class_names | `@st.cache_resource` nạp một lần |
 
-- Checkpoint legacy `final_s42` (E3/CNN-B, 2.201.931 params).
-- Ngưỡng τ = 0,9462 chọn trên val `split_random` cũ.
-- Số sidebar lấy từ `outputs/results/test_report.json` (legacy).
+Một điểm vừa được sửa: `predict_topk` đọc mean/std từ `cfg["data"]` (v1) **hoặc**
+`cfg["_resolved"]` (v2). Nếu không, checkpoint v2 sẽ báo `KeyError: 'mean'`.
 
-Trong khi báo cáo v3 kết luận bằng:
+### 10.3. Frontend: `app.py`
 
-- D2 (1.448.779 params), checkpoint `v2_final_s42`.
-- τ v2 = 0,9590 chọn trên OOF X2.
-- Lockbox/test v2.
+| Thành phần | Streamlit | Vai trò |
+|---|---|---|
+| Tiêu đề, cảnh báo | `st.title`, `st.info` | Nói rõ phạm vi 43 lớp Đức |
+| Sidebar | `st.sidebar`, `st.metric` | Lockbox accuracy/F1/top-3, τ |
+| Upload | `st.file_uploader` | Nhận JPG/PNG ≤ 20 MB |
+| Ảnh mẫu | `st.selectbox` | Chọn ảnh GTSRB/Hàn Quốc |
+| Kết quả | `st.success`, `st.warning`, `st.progress` | Top-3 + confidence |
+| Tab | `st.tabs` | “Dự đoán” và “Về mô hình” |
+| Bảng số | `st.dataframe` | Lockbox metrics |
 
-Vì vậy báo cáo tách rõ: **mô hình đã kiểm chứng** và **demo đã triển khai**.
+**Cách nối cụ thể:**
 
-### 10.5. Muốn cập nhật demo sang v2 thì làm gì?
+```python
+# app.py
+from src.predict import Predictor, load_tau, validate_image_bytes
 
-Đây là thay đổi code, không nằm trong phạm vi “chuẩn bị tài nguyên”:
+predictor = get_predictor(str(RUN_DIR), tau)   # @st.cache_resource
+image = validate_image_bytes(uploaded.name, uploaded.getvalue())
+prediction = predictor.predict(image, k=3, tau=tau)
+render_prediction(prediction, tau)
+```
+
+`Predictor.predict` trả dict:
+
+```python
+{
+  "topk": [{"class_id": 16, "name_vi": "...", "prob": 0.99}, ...],
+  "max_prob": 0.99,
+  "margin": 0.98,
+  "unknown": False,
+  "tau": 0.9590,
+}
+```
+
+`render_prediction` chỉ đọc dict này và vẽ. **Không có logic model trong app.py**;
+app.py không biết convolution, BN hay softmax.
+
+### 10.4. Một lần upload đi qua những bước nào?
 
 ```text
-1. app.py: thêm outputs/runs/v2_final_s42 vào _DEFAULT_RUNS (ưu tiên đầu).
-2. app.py: đổi THRESHOLD_PATH sang outputs/results/v3/tables/threshold_v2_oof.json.
-3. app.py: đổi REPORT_PATH sang một file tóm tắt lockbox v2
-   (cần viết hàm đọc lockbox_result.json -> accuracy/macro_f1/top3).
-4. Chạy lại e2e: python tests/e2e_app.py.
-5. Cập nhật chương 10 báo cáo + 15_deployment_status.csv.
+1. Người dùng chọn file
+2. Streamlit gửi bytes qua WebSocket
+3. app.py: validate_image_bytes
+     - > 20 MB? báo lỗi
+     - sai đuôi? báo lỗi
+     - ảnh hỏng? báo lỗi
+4. app.py: predictor.predict(image, k=3, tau)
+5. src.predict: preprocess 64×64 + normalize
+6. SmallCNN: forward → logits 43
+7. softmax → top-3
+8. nếu max_prob < τ: unknown = True
+9. app.py: render top-3, progress bar, margin
 ```
 
-Chưa làm vì có thể ảnh hưởng demo đang chạy được; cần chủ dự án đồng ý.
+### 10.5. Mô hình demo đang dùng
 
-### 10.6. Bạn cần nhớ gì ở chương này?
+Đã cập nhật sang **D2/v2**:
 
-1. Demo dùng đúng `preprocess` của train.
-2. Demo hiện tại **chưa** dùng D2/v2.
-3. Ngưỡng τ là cơ chế từ chối theo confidence, không phải bộ phát hiện OOD.
+| Thành phần | Giá trị |
+|---|---|
+| Checkpoint | `outputs/runs/v2_final_s42/best.pt` |
+| Kiến trúc | D2, 4 khối 32/64/128/256, 1.448.779 params |
+| Ngưỡng τ | 0,9590 (OOF X2) |
+| Sidebar | `app_summary_v2.json` (lockbox 8.302 ảnh, 3 seed) |
+| Accuracy/F1 | 98,88% / 0,9760 (lockbox) |
+
+`app.py` tìm theo thứ tự: `GTSRB_RUN_DIR` → `outputs/runs/v2_final_s42` →
+`checkpoints/final_s42` (legacy fallback).
+
+### 10.6. Đã kiểm thử gì?
+
+- **Playwright + Chromium**, chạy thật Streamlit ở cổng 8765.
+- **9/9 PASS**: trang chủ, upload ảnh GTSRB, biển Hàn Quốc, ảnh không biển,
+  file hỏng, file > 20 MB, tab “Về mô hình”, chọn ảnh mẫu, thiếu checkpoint.
+- Ảnh chụp: `outputs/figures/11_ui_*.png`.
+- Kết quả máy đọc: `outputs/results/e2e_ui.json`.
+- UI latency (từ `set_input_files` đến khi hiện kết quả): ~0,39 s.
+
+### 10.7. Hạn chế của demo
+
+- Chỉ 1 ảnh mỗi lần; không batch.
+- Không có API cho hệ thống khác.
+- Không lưu lịch sử dự đoán.
+- Golden test 20 ảnh vẫn là checkpoint legacy; chưa chạy lại cho v2.
+- Chưa đo trên máy cấu hình thấp, chưa camera thật.
+- τ là ngưỡng confidence, **không phải bộ phát hiện OOD**.
+
+### 10.8. Bạn cần nhớ gì ở chương này?
+
+1. Streamlit vừa là FE vừa là server; giao tiếp qua WebSocket, không REST.
+2. `app.py` gọi trực tiếp `Predictor.predict`; không có logic model trong FE.
+3. `preprocess` dùng chung với train.
+4. Demo đã dùng D2/v2 + τ 0,9590; e2e 9/9 PASS.
+5. Hạn chế: 1 ảnh, không API, không lịch sử, chưa camera/máy yếu.
 
 ---
 
@@ -1273,8 +1334,8 @@ python docs/bao_cao/md_to_docx_v3.py
 | Lockbox CI | [95,0511; 97,9422] | mean 97,5981; sd 0,6246; range 3 seed |
 | Số lỗi | 190 (F15) | **144 (D2) / 23 track** |
 | Latency | 0,93 ms không ngữ cảnh | GPU 0,86 ms model-only; 1,24 ms end-to-end |
-| Ngưỡng demo | 0,9462 | τ v2 = 0,9590 |
-| Checkpoint demo | legacy | v2_final_s42 (chưa tích hợp) |
+| Ngưỡng demo | 0,9462 | τ v2 = 0,9590, đã dùng |
+| Checkpoint demo | legacy | v2_final_s42 (đã tích hợp) |
 | Thời gian | 4,13 h | 3,99 h epoch-loop + 8,2 phút |
 | Depth | CI vs Holm | “có bằng chứng vừa, chưa đủ sau Holm” |
 
@@ -1285,7 +1346,7 @@ python docs/bao_cao/md_to_docx_v3.py
 3. **Vì sao tin?** Split sạch, audit 15/15, OOF, lockbox one-shot, CI, Holm,
    tái lập, 22 test, 12/12 nghiệm thu.
 4. **Còn hạn chế gì?** Occlusion, lớp 19/29, chưa kiểm tra nhãn thủ công, chưa
-   camera thật/máy yếu, demo chưa cập nhật.
+   camera thật/máy yếu, golden test chưa chạy lại cho v2.
 5. **Tiếp theo làm gì?** Cập nhật demo, kiểm tra thủ công, augmentation chọn lọc,
    xử lý occlusion, đo máy yếu.
 
@@ -1298,7 +1359,7 @@ python docs/bao_cao/md_to_docx_v3.py
 | “Aug all giúp D2 thắng” | Aug all không đủ bằng chứng; D2 thắng nhờ cấu hình tổng thể |
 | “144 lỗi = 144 ca” | 144 ảnh lỗi thuộc 23 track |
 | “0,86 ms là phản hồi app” | Đó là model-only; end-to-end 1,24 ms; UI còn upload/render |
-| “Demo đã dùng D2” | Demo vẫn dùng checkpoint legacy |
+| “Demo đã dùng D2” | Đúng: app.py mặc định v2_final_s42 |
 
 ---
 

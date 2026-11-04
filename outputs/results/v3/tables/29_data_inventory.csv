@@ -28,7 +28,7 @@
 27,Throughput,Cần bổ sung,Đã bổ sung,13_inference_benchmark.csv,
 28,Kích thước mô hình,Cần bổ sung,Đã bổ sung,13_inference_benchmark.json,
 29,Bộ nhớ khi suy luận,Cần bổ sung,Đã bổ sung,13_inference_benchmark.csv,
-30,Triển khai thực tế,Cần bổ sung,Một phần,15_deployment_status.csv,demo chưa đổi checkpoint/ngưỡng
+30,Triển khai thực tế,Cần bổ sung,Một phần,15_deployment_status.csv; app.py; e2e_ui.json,"demo đã dùng D2/v2, e2e 9/9; còn API/batch/lịch sử/camera"
 31,Tái lập,Đã có,Đã có,reproducibility.json; tests/,
 32,Nghiệm thu,Đã có,Đã có,ACCEPTANCE.json; acceptance.md,
 33,Hạn chế,Đã có,Đã có,24_results_evidence.csv; 15_deployment_status.csv,

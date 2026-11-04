@@ -86,14 +86,13 @@ và đo benchmark/Grad-CAM), không train lại.
 4. **Không** so sánh lockbox 8.302 ảnh với official test 12.630 ảnh như cùng một phép thử.
 5. **Không** gọi latency model-only là thời gian phản hồi của app.
 6. **Không** đếm 144 ảnh lỗi như 144 ca độc lập: chúng chỉ thuộc 23 track.
-7. Demo Streamlit vẫn dùng checkpoint legacy `final_s42` và ngưỡng cũ 0,9462.
+7. Demo đã dùng D2/v2 (`v2_final_s42`, τ = 0,9590); golden test 20 ảnh vẫn là checkpoint legacy, chưa chạy lại cho v2.
 
 ## 6. Việc còn cần con người
 
 - Điền `verdict`, `cause`, `note` trong `tables/17b_manual_error_review_diverse.csv`
   sau khi xem 2 contact sheet (41 ảnh, 23 track). Đây là bước kiểm tra thủ công
   duy nhất chưa làm được bằng máy.
-- Nếu muốn demo khớp báo cáo: đổi checkpoint sang `outputs/runs/v2_final_s42`
-  và ngưỡng sang `tables/threshold_v2_oof.json` (τ = 0,9590), rồi chạy lại e2e.
+- Demo đã cập nhật; chạy lại e2e bằng `python tests/e2e_app.py` (9/9 pass ngày 04/11/2026).
 - Nếu muốn tuyên bố hiệu năng trên máy yếu: đo lại trên laptop cấu hình thấp,
   không suy từ i9-14900KF.

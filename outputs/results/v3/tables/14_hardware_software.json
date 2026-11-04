@@ -28,7 +28,7 @@
     "model": "Lexar SSD NM710 2TB",
     "type": "SSD NVMe",
     "capacity_gb": 1862.0,
-    "free_gb": 295.3,
+    "free_gb": 295.2,
     "note": "ổ chứa data/cache/checkpoint; không phải yếu tố được đo trong benchmark"
   },
   "software": {

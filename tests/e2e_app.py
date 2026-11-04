@@ -154,10 +154,10 @@ def main() -> int:
             banner = page.get_by_text("43 lớp biển ĐỨC", exact=False).count() > 0
             check(
                 "home_footer_sidebar",
-                page.get_by_text("Test accuracy", exact=False).count() > 0
+                page.get_by_text("Lockbox accuracy", exact=False).count() > 0
                 and page.get_by_text("không dùng cho quyết định giao thông thực tế", exact=False).count() > 0
                 and banner,
-                "tiêu đề, sidebar (test accuracy), footer và cảnh báo phạm vi 43 lớp Đức",
+                "tiêu đề, sidebar (lockbox accuracy), footer và cảnh báo phạm vi 43 lớp Đức",
             )
 
             # 2) Ảnh test GTSRB → lớp 16
@@ -210,8 +210,8 @@ def main() -> int:
             body = page.inner_text("body")
             check(
                 "tab_ve_mo_hinh",
-                "98.56 %" in body and "0.9799" in body,
-                "bảng test hiển thị 98.56 % / 0.9799",
+                "98.88 %" in body and "0.9760" in body,
+                "bảng lockbox hiển thị 98.88 % / 0.9760",
             )
             screenshot(page, "07_about")
 

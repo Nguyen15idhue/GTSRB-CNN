@@ -88,6 +88,17 @@ def validate_image_bytes(filename: str, data: bytes, max_mb: float = 20.0) -> Im
         ) from exc
 
 
+def _mean_std(cfg: Mapping[str, Any]) -> tuple[list[float], list[float]]:
+    """mean/std của checkpoint; v2 lưu ở ``_resolved``, v1 lưu ở ``data``."""
+    data = cfg.get("data", {})
+    resolved = cfg.get("_resolved", {})
+    mean = data.get("mean", resolved.get("mean"))
+    std = data.get("std", resolved.get("std"))
+    if mean is None or std is None:
+        raise KeyError("Checkpoint thiếu mean/std (data.mean hoặc _resolved.mean)")
+    return list(mean), list(std)
+
+
 @torch.no_grad()
 def predict_topk(
     image: Any,
@@ -100,11 +111,12 @@ def predict_topk(
 ) -> dict[str, Any]:
     """Dự đoán top-k cho một ảnh (PIL/ndarray/đường dẫn) bằng đúng ``preprocess`` của train."""
     device = device or next(model.parameters()).device
+    mean, std = _mean_std(cfg)
     tensor = preprocess(
         image,
         size=int(cfg["data"]["image_size"]),
-        mean=list(cfg["data"]["mean"]),
-        std=list(cfg["data"]["std"]),
+        mean=mean,
+        std=std,
     ).unsqueeze(0).to(device)
     model.eval()
     probabilities = torch.softmax(model(tensor).float(), dim=1)[0].cpu().numpy()

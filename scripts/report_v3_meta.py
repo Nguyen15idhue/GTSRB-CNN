@@ -95,7 +95,6 @@ def hardware_software() -> None:
 def deployment_status() -> None:
     e2e = json.loads((ROOT / "outputs/results/e2e_ui.json").read_text(encoding="utf-8"))
     golden = json.loads((ROOT / "outputs/results/golden_compare.json").read_text(encoding="utf-8"))
-    threshold = json.loads((ROOT / "outputs/results/threshold.json").read_text(encoding="utf-8"))
     rows = [
         {
             "feature": "Giao diện web (Streamlit)",
@@ -117,9 +116,9 @@ def deployment_status() -> None:
         },
         {
             "feature": "Cảnh báo 'không xác định' theo ngưỡng τ",
-            "status": "đã có (ngưỡng cũ)",
-            "evidence": f"outputs/results/threshold.json τ={threshold['tau']:.4f} chọn trên val split_random",
-            "gap": "chưa dùng τ v2 = 0.9590 chọn trên OOF; cần đổi khi cập nhật demo",
+            "status": "đã có (τ v2)",
+            "evidence": "outputs/results/v3/tables/threshold_v2_oof.json τ=0.9590 chọn trên OOF X2",
+            "gap": "không có",
         },
         {
             "feature": "Xử lý file lỗi / quá 20 MB",
@@ -152,22 +151,28 @@ def deployment_status() -> None:
             "gap": "ngoài phạm vi bài tập",
         },
         {
-            "feature": "Checkpoint v2 (D2/X2)",
-            "status": "chưa tích hợp vào demo",
-            "evidence": "app.py mặc định outputs/runs/final_s42 hoặc checkpoints/final_s42 (legacy)",
-            "gap": "demo đang dùng checkpoint cũ; báo cáo phải nói rõ",
+            "feature": "Checkpoint D2/v2 (X2)",
+            "status": "đã tích hợp",
+            "evidence": "app.py mặc định outputs/runs/v2_final_s42; sidebar đọc app_summary_v2.json",
+            "gap": "không có",
         },
         {
             "feature": "Golden test 20 ảnh giữa 2 môi trường",
-            "status": "đã có",
+            "status": "đã có (legacy)",
             "evidence": f"golden_compare.json max_prob_diff={golden['max_probability_difference']}, pass={golden['passed']}",
-            "gap": "chạy trên checkpoint legacy",
+            "gap": "chưa chạy lại cho checkpoint v2",
+        },
+        {
+            "feature": "Kiểm thử E2E Playwright",
+            "status": "đã có",
+            "evidence": f"e2e_ui.json {e2e['passed']}/{e2e['total']} pass; outputs/figures/11_ui_*.png",
+            "gap": "không có",
         },
         {
             "feature": "Kiểm thử trên máy cấu hình thấp",
             "status": "chưa có",
             "evidence": "chỉ đo CPU trên máy train (i9-14900KF)",
-            "gap": "cần máy khác hoặc giới hạn thread/ RAM",
+            "gap": "cần máy khác hoặc giới hạn thread/RAM",
         },
         {
             "feature": "Kiểm thử camera thật / video",
@@ -306,16 +311,16 @@ def corrections() -> None:
         {
             "item": "Ngưỡng unknown của demo",
             "old_value": "τ = 0,9462 trên val split_random",
-            "new_value": "τ v2 = 0,9590 trên OOF X2",
-            "evidence": "threshold_v2_oof.json; outputs/results/threshold.json",
-            "note": "Demo hiện vẫn dùng τ cũ; cần cập nhật nếu muốn demo khớp báo cáo.",
+            "new_value": "τ v2 = 0,9590 trên OOF X2, đã dùng trong app.py",
+            "evidence": "threshold_v2_oof.json",
+            "note": "Demo đã cập nhật; không còn dùng τ 0,9462.",
         },
         {
             "item": "Checkpoint demo",
             "old_value": "final_s42 (legacy)",
-            "new_value": "v2_final_s42 / X2 (D2, 1.448.779 params)",
-            "evidence": "15_deployment_status.csv",
-            "note": "Chưa tích hợp; báo cáo phải tách 'đã kiểm chứng' và 'sẵn sàng triển khai'.",
+            "new_value": "v2_final_s42 / X2 (D2, 1.448.779 params), đã tích hợp",
+            "evidence": "15_deployment_status.csv; app.py",
+            "note": "app.py mặc định v2_final_s42; sidebar đọc app_summary_v2.json.",
         },
         {
             "item": "Thời gian huấn luyện",
@@ -523,7 +528,7 @@ def data_inventory() -> None:
         (27, "Throughput", "Cần bổ sung", "Đã bổ sung", "13_inference_benchmark.csv", ""),
         (28, "Kích thước mô hình", "Cần bổ sung", "Đã bổ sung", "13_inference_benchmark.json", ""),
         (29, "Bộ nhớ khi suy luận", "Cần bổ sung", "Đã bổ sung", "13_inference_benchmark.csv", ""),
-        (30, "Triển khai thực tế", "Cần bổ sung", "Một phần", "15_deployment_status.csv", "demo chưa đổi checkpoint/ngưỡng"),
+        (30, "Triển khai thực tế", "Cần bổ sung", "Một phần", "15_deployment_status.csv; app.py; e2e_ui.json", "demo đã dùng D2/v2, e2e 9/9; còn API/batch/lịch sử/camera"),
         (31, "Tái lập", "Đã có", "Đã có", "reproducibility.json; tests/", ""),
         (32, "Nghiệm thu", "Đã có", "Đã có", "ACCEPTANCE.json; acceptance.md", ""),
         (33, "Hạn chế", "Đã có", "Đã có", "24_results_evidence.csv; 15_deployment_status.csv", ""),
@@ -621,6 +626,30 @@ def class_extremes() -> None:
     write_json("07b_class_extremes.json", payload)
 
 
+def app_summary() -> None:
+    lock = json.loads((V2 / "lockbox_result.json").read_text(encoding="utf-8"))
+    report = lock["reports"][0]
+    summary = lock["summary"]
+    payload = {
+        "model": "D2 (X2) — 4 khối 32/64/128/256, flatten, BN, dropout 0,3",
+        "checkpoint": "outputs/runs/v2_final_s42/best.pt",
+        "checkpoint_sha256": report.get("checkpoint_sha256", ""),
+        "n_samples": int(lock["n_images"]),
+        "accuracy": float(summary["accuracy"]["mean"]),
+        "accuracy_sd": float(summary["accuracy"]["sd"]),
+        "macro_f1_43": float(summary["macro_f1_43"]["mean"]),
+        "macro_f1_sd": float(summary["macro_f1_43"]["sd"]),
+        "top3_accuracy": float(summary["top3_accuracy"]["mean"]),
+        "ece_15bin": float(summary["ece_15bin"]["mean"]),
+        "brier": float(summary["brier"]["mean"]),
+        "seed_accuracy": summary["accuracy"]["values"],
+        "seed_macro_f1": summary["macro_f1_43"]["values"],
+        "eval_set": "lockbox 8.302 ảnh (277 track), mở một lần sau freeze",
+        "note": "Dùng cho sidebar demo v2; không dùng để chọn mô hình/ngưỡng.",
+    }
+    write_json("app_summary_v2.json", payload)
+
+
 def main() -> int:
     hardware_software()
     deployment_status()
@@ -635,6 +664,7 @@ def main() -> int:
     data_inventory()
     dataset_summary()
     class_extremes()
+    app_summary()
     return 0
 
 
