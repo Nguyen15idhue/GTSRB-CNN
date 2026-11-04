@@ -393,6 +393,33 @@ Nguồn: `outputs/results/v2/decision_cards.csv`.
 | Class weight | none / inv_sqrt | −1,00 [−2,11; +0,26] | Bỏ | exploratory, chưa hiệu chỉnh |
 | Input size | 64 / 96 | −3,45 [−5,52; −0,93] | **Giữ 64** | 96 tăng 2,2× params, chậm hơn |
 
+### 4.4. Chi phí huấn luyện
+
+Nguồn: `outputs/results/v2/training_cost.csv`, `training_cost_summary.json`,
+`tables/training_cost.md`, `log_training_cost.txt`.
+
+**Phạm vi:** `train_time_s` = vòng epoch (epoch 1 → cuối), RTX 5070 12 GB,
+AMP, `num_workers` 4–8; không gồm nạp cache, dự đoán cuối, vẽ hình, latency,
+phân tích.
+
+| Nhóm | Run | Tổng epoch | Tổng thời gian (phút) | TB/run (s) | TB/epoch (s) | GPU max (MB) |
+|---|---:|---:|---:|---:|---:|---:|
+| F_factorial | 48 | 1.387 | 86,4 | 108,0 | 3,74 | 319 |
+| D_architecture | 15 | 496 | 45,0 | 179,9 | 5,44 | 465 |
+| H_hyperparam | 9 | 298 | 31,8 | 212,3 | 6,41 | 694 |
+| G_augmentation | 9 | 260 | 13,7 | 91,7 | 3,17 | 319 |
+| X_confirmation | 27 | 892 | 54,6 | 121,3 | 3,67 | 319 |
+| Final | 3 | 78 | 7,9 | 158,2 | 6,08 | 248 |
+| **Tổng CNN** | **111** | **3.411** | **239,5** | 129,5 | **4,21** | 694 |
+| B1 HOG+SVC | 1 | – | 8,2 | 493,5 | – | – |
+
+- **Tổng thời gian epoch loop: 3,99 giờ**; cộng B1 8,2 phút → **≈ 4,13 giờ**.
+- D2 screening: 132,8 s/run, 23,3 epoch, 5,69 s/epoch; final 26 epoch:
+  157,83 / 158,00 / 158,70 s (3 seed), latency 0,93 ms/ảnh.
+- Aug làm tăng thời gian: F00 52,6 s → F08 126,4 s; F15 151,6 s so với F07 69,8 s.
+- I2 (input 96) đắt nhất: 293,1 s/run, 7,99 s/epoch, GPU 694 MB.
+- Chi tiết từng run: `training_cost.csv` (111 dòng).
+
 ## Phase 5 — Nghiệm thu cuối
 
 Nguồn: `outputs/results/v2/ACCEPTANCE.json`, `acceptance.md`, `reproducibility.json`.

@@ -436,6 +436,17 @@ có đúng config/split đã đăng ký hay không.
 Sau train, `_latency_ms` đo model-only batch 1, 100 lần, lấy median. Đây là
 latency **model-only**, không phải thời gian UI/end-to-end. Báo cáo ghi rõ.
 
+### 10.6. Chi phí huấn luyện được ghi ở đâu
+
+- `metrics.csv`: mỗi epoch có `epoch_time_s` và `gpu_mem_mb`.
+- `meta.json`: `train_time_s` = tổng vòng epoch; `infer_ms_per_img`.
+- `scripts/training_cost_v2.py` đọc 111 run + B1, sinh
+  `training_cost.csv`, `training_cost_summary.json`, `tables/training_cost.md`.
+- Số thực tế: 111 run CNN = 3.411 epoch = **3,99 giờ** epoch loop; B1 = 8,2 phút;
+  tổng ≈ **4,13 giờ** (chưa gồm phân tích). D2 screening 132,8 s/run; final
+  26 epoch = 157,83–158,70 s/seed.
+- Phạm vi: không gồm nạp cache/khởi động, dự đoán cuối, vẽ curve, đo latency.
+
 ---
 
 ## 11. Đánh giá

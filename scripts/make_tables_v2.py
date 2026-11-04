@@ -35,7 +35,7 @@ def _percent(value: float | None, digits: int = 3) -> str:
 
 def factorial_tables() -> None:
     rows = factorial_table()
-    effects = factorial_effects(B=500)
+    effects = factorial_effects(B=1000)
     lines = [
         "| ID | BN | DO | WD | Aug | Acc (%) | Macro-F1 (%) | Δ vs F00 (điểm %) [CI] | Gap | Best epoch | Params | Time (s) |",
         "|---|---|---|---|---|---:|---:|---|---:|---:|---:|---:|",
@@ -71,8 +71,8 @@ def factorial_tables() -> None:
 
 def block_table(name: str, config_ids: list[str], reference: str | None, out: str) -> None:
     rows = aggregate(config_ids, reference=reference, B=500)
-    head = "| ID | Acc (%) | Macro-F1 (%) | Δ vs ref (điểm %) [CI] | Params | Latency (ms) | Best epoch |"
-    lines = [head, "|---|---:|---:|---|---:|---:|---:|"]
+    head = "| ID | Acc (%) | Macro-F1 (%) | Δ vs ref (điểm %) [CI] | Params | Latency (ms) | Best epoch | Time (s) | Epochs |"
+    lines = [head, "|---|---:|---:|---|---:|---:|---:|---:|---:|"]
     for r in rows:
         delta = (
             f"{r['delta_vs_reference']*100:+.3f} [{r['delta_ci_low']*100:+.3f}, {r['delta_ci_high']*100:+.3f}]"
@@ -81,7 +81,8 @@ def block_table(name: str, config_ids: list[str], reference: str | None, out: st
         lines.append(
             f"| {r['config_id']} | {_percent(r['val_acc_mean'])} ± {_percent(r['val_acc_sd'])} | "
             f"{_percent(r['macro_f1_mean'])} ± {_percent(r['macro_f1_sd'])} | {delta} | "
-            f"{r['params']} | {r['infer_ms_per_img']:.3f} | {r['best_epoch_mean']:.1f} |"
+            f"{r['params']} | {r['infer_ms_per_img']:.3f} | {r['best_epoch_mean']:.1f} | "
+            f"{r['train_time_s_mean']:.1f} | {r['epochs_run_mean']:.1f} |"
         )
     _write(out, lines)
 

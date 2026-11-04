@@ -221,6 +221,7 @@ def aggregate(config_ids: Sequence[str], reference: str | None = None, B: int = 
             "macro_f1_mean": float(f1.mean()),
             "macro_f1_sd": float(f1.std(ddof=1)) if len(f1) > 1 else 0.0,
             "best_epoch_mean": float(np.mean([int(r["best_epoch"]) for r in runs])),
+            "epochs_run_mean": float(np.mean([int(r["epochs_run"]) for r in runs])),
             "params": int(runs[0]["params"]),
             "train_time_s_mean": float(np.mean([float(r["train_time_s"]) for r in runs])),
             "infer_ms_per_img": float(np.mean([float(r["infer_ms_per_img"]) for r in runs])),
