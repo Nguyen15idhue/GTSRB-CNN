@@ -1,0 +1,10 @@
+﻿tier,n_images,n_tracks,n_groups,seed,rule,role,used_for_conclusion
+Pool,39201,1307,1183,,39.209 ảnh train trừ 8 ảnh trùng MD5 với test,Nguồn để chia 3 tầng,không
+Lockbox,8302,277,238,2024,20% sign-group mỗi lớp,"Test nội bộ độc lập, mở một lần sau freeze",có
+Dev,30899,1030,945,,Pool trừ lockbox,Screening + OOF + train final,có (qua OOF)
+Screening train,24719,824,,42,80% sign-group của dev,Train cho factorial/kiến trúc/hyperparam/augmentation,không (chỉ chọn)
+Screening val,6180,206,,42,20% sign-group của dev,"Chọn cấu hình, early stopping, phân tích cơ chế",không (chỉ chọn)
+OOF (3 fold),30899,1030,,42/123/2024,Chia sign-group của dev thành 3 fold cân bằng frame,Chọn winner bằng OOF 3 fold × 3 seed,có
+Final train,30899,1030,945,42/123/2024,Toàn bộ dev,"Train 3 seed cuối, epoch cố định 26",có
+Official test raw,12630,,,,GTSRB Final_Test,"Benchmark phụ, không track-disjoint",không (chỉ tham khảo)
+Official test clean,11879,,,,Loại 751 ảnh test có ảnh train gần trùng (MAD < 5),Benchmark phụ sau khi lọc gần trùng,không (chỉ tham khảo)

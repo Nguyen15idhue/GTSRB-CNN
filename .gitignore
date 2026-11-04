@@ -15,6 +15,7 @@ outputs/demo_images/
 *.pt
 *.pth
 *.npy
+*.npz
 
 # Môi trường / bí mật
 .env

@@ -1,0 +1,13 @@
+{
+  "old_report_value_pct": 98.004,
+  "old_report_claim": "OOF accuracy 98,004%",
+  "recomputed_oof_accuracy_pct": 97.92442042353042,
+  "per_seed_pct": {
+    "42": 97.8089905822195,
+    "123": 98.02906242920483,
+    "2024": 97.93520825916696
+  },
+  "screening_d2_accuracy_pct": 98.0043,
+  "conclusion": "98,004% là accuracy screening val của D2, không phải OOF. OOF accuracy đúng là 97,924% (pooled 30.899 ảnh, trung bình 3 seed).",
+  "evidence": "outputs/results/v2/oof_predictions.csv; outputs/results/v2/summary.csv"
+}

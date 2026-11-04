@@ -1,0 +1,12 @@
+{
+  "tau": 0.9589982,
+  "percentile": 5.0,
+  "source": "OOF x2 seed 42 (30.899 ảnh dev, mỗi ảnh được dự đoán ngoài fold)",
+  "acceptance_oof": 0.9499983818246546,
+  "accuracy_all": 0.9780899058221949,
+  "accuracy_accepted": 0.9955031682223888,
+  "coverage": 0.9499983818246546,
+  "error_rejection_rate": 0.8050221565731167,
+  "n_oof": 30899,
+  "note": "Dùng cho demo/report v3; KHÔNG dùng lockbox để chọn ngưỡng."
+}

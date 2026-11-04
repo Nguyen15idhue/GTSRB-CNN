@@ -1,0 +1,21 @@
+{
+  "model": "D2 seed 42 trên screening val",
+  "n_images": 220,
+  "roi_area_ratio_mean": 0.5434748090909091,
+  "by_outcome": {
+    "correct": {
+      "n": 178,
+      "mass_in_roi_mean": 0.8528586966292135,
+      "mass_in_roi_sd": 0.14452847609298505,
+      "mass_in_roi_median": 0.8852675000000001
+    },
+    "wrong": {
+      "n": 42,
+      "mass_in_roi_mean": 0.733224619047619,
+      "mass_in_roi_sd": 0.24561565547157083,
+      "mass_in_roi_median": 0.872536
+    }
+  },
+  "chance_level_note": "Nếu CAM phân bố đều, mass trong ROI xấp xỉ diện tích ROI (~0,56).",
+  "interpretation": "CAM tập trung trong ROI nhiều hơn mức ngẫu nhiên ở cả ca đúng và sai; ca sai vẫn nhìn vào biển nên lỗi chủ yếu là phân biệt lớp, không phải nhìn nền."
+}

@@ -1,0 +1,44 @@
+﻿class_id,name_vi,name_en,shape,color,n_pool,pct_pool,n_test,pct_test,n_lockbox,pct_lockbox
+0,Giới hạn tốc độ 20 km/h,Speed limit 20,circle,red,210,0.535701,60,0.475059,30,0.361359
+1,Giới hạn tốc độ 30 km/h,Speed limit 30,circle,red,2220,5.663121,720,5.700713,450,5.420381
+2,Giới hạn tốc độ 50 km/h,Speed limit 50,circle,red,2250,5.739649,750,5.938242,450,5.420381
+3,Giới hạn tốc độ 60 km/h,Speed limit 60,circle,red,1410,3.596847,450,3.562945,240,2.890870
+4,Giới hạn tốc độ 70 km/h,Speed limit 70,circle,red,1980,5.050892,660,5.225653,750,9.033968
+5,Giới hạn tốc độ 80 km/h,Speed limit 80,circle,red,1860,4.744777,630,4.988124,300,3.613587
+6,Hết giới hạn tốc độ 80 km/h,End of speed limit 80,circle,white,420,1.071401,150,1.187648,90,1.084076
+7,Giới hạn tốc độ 100 km/h,Speed limit 100,circle,red,1440,3.673376,450,3.562945,240,2.890870
+8,Giới hạn tốc độ 120 km/h,Speed limit 120,circle,red,1410,3.596847,450,3.562945,660,7.949892
+9,Cấm vượt,No passing,circle,red,1470,3.749904,480,3.800475,300,3.613587
+10,"Cấm vượt cho xe trên 3,5 tấn",No passing > 3.5 t,circle,red,2010,5.127420,660,5.225653,240,2.890870
+11,Đường ưu tiên tại giao lộ tới,Right-of-way at next intersection,triangle,red,1320,3.367261,420,3.325416,270,3.252228
+12,Đường ưu tiên,Priority road,diamond,yellow,2100,5.357006,690,5.463183,390,4.697663
+13,Nhường đường,Yield,triangle,red,2160,5.510064,720,5.700713,510,6.143098
+14,Dừng lại,Stop,octagon,red,772,1.969338,270,2.137767,142,1.710431
+15,Cấm xe cộ,No vehicles,circle,red,630,1.607102,210,1.662708,120,1.445435
+16,"Cấm xe trên 3,5 tấn",Vehicles > 3.5 t prohibited,circle,red,420,1.071401,150,1.187648,90,1.084076
+17,Cấm đi vào,No entry,circle,red,1110,2.831560,360,2.850356,210,2.529511
+18,Nguy hiểm chung,General caution,triangle,red,1200,3.061146,390,3.087886,240,2.890870
+19,Đường cong nguy hiểm bên trái,Dangerous curve left,triangle,red,210,0.535701,60,0.475059,30,0.361359
+20,Đường cong nguy hiểm bên phải,Dangerous curve right,triangle,red,360,0.918344,90,0.712589,60,0.722717
+21,Đường cong liên tiếp,Double curve,triangle,red,330,0.841815,90,0.712589,60,0.722717
+22,Đường gồ ghề,Bumpy road,triangle,red,390,0.994873,120,0.950119,90,1.084076
+23,Đường trơn,Slippery road,triangle,red,510,1.300987,150,1.187648,120,1.445435
+24,Đường hẹp bên phải,Road narrows on right,triangle,red,270,0.688758,90,0.712589,60,0.722717
+25,Công trường thi công,Road work,triangle,red,1500,3.826433,480,3.800475,330,3.974946
+26,Đèn tín hiệu giao thông,Traffic signals,triangle,red,600,1.530573,180,1.425178,90,1.084076
+27,Người đi bộ,Pedestrians,triangle,red,240,0.612229,60,0.475059,60,0.722717
+28,Trẻ em qua đường,Children crossing,triangle,red,540,1.377516,150,1.187648,120,1.445435
+29,Xe đạp qua đường,Bicycles crossing,triangle,red,270,0.688758,90,0.712589,60,0.722717
+30,Cảnh báo băng tuyết,Beware of ice/snow,triangle,red,450,1.147930,150,1.187648,90,1.084076
+31,Động vật hoang dã qua đường,Wild animals crossing,triangle,red,780,1.989745,270,2.137767,150,1.806794
+32,Hết mọi giới hạn tốc độ và cấm vượt,End speed/passing limits,circle,white,240,0.612229,60,0.475059,60,0.722717
+33,Rẽ phải phía trước,Turn right ahead,circle,blue,689,1.757608,210,1.662708,150,1.806794
+34,Rẽ trái phía trước,Turn left ahead,circle,blue,420,1.071401,120,0.950119,90,1.084076
+35,Chỉ đi thẳng,Ahead only,circle,blue,1200,3.061146,390,3.087886,240,2.890870
+36,Đi thẳng hoặc rẽ phải,Go straight or right,circle,blue,390,0.994873,120,0.950119,90,1.084076
+37,Đi thẳng hoặc rẽ trái,Go straight or left,circle,blue,210,0.535701,60,0.475059,30,0.361359
+38,Đi bên phải,Keep right,circle,blue,2070,5.280478,690,5.463183,360,4.336305
+39,Đi bên trái,Keep left,circle,blue,300,0.765287,90,0.712589,60,0.722717
+40,Vòng xuyến bắt buộc,Roundabout mandatory,circle,blue,360,0.918344,90,0.712589,60,0.722717
+41,Hết cấm vượt,End of no passing,circle,white,240,0.612229,60,0.475059,60,0.722717
+42,"Hết cấm vượt cho xe trên 3,5 tấn",End of no passing > 3.5 t,circle,white,240,0.612229,90,0.712589,60,0.722717

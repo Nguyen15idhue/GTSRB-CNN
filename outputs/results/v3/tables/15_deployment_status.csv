@@ -1,0 +1,15 @@
+﻿feature,status,evidence,gap
+Giao diện web (Streamlit),đã có,app.py; outputs/figures/11_ui_*.png,không có
+Tải 1 ảnh lên và dự đoán top-3,đã có,e2e_ui.json 9/9 check pass,chỉ 1 ảnh mỗi lần
+Hiển thị tên tiếng Việt + confidence,đã có,app.py render_prediction; e2e_ui.json,không có
+Cảnh báo 'không xác định' theo ngưỡng τ,đã có (ngưỡng cũ),outputs/results/threshold.json τ=0.9462 chọn trên val split_random,chưa dùng τ v2 = 0.9590 chọn trên OOF; cần đổi khi cập nhật demo
+Xử lý file lỗi / quá 20 MB,đã có,"e2e_ui.json check loi_file_hong, loi_qua_20mb",không có
+Chọn ảnh mẫu,đã có,e2e_ui.json check chon_anh_mau,không có
+Nhiều ảnh / batch trên giao diện,chưa có,app.py dùng st.file_uploader đơn,cần phát triển nếu muốn demo batch
+API cho hệ thống khác,chưa có,không có endpoint trong repo,ngoài phạm vi bài tập
+Lưu lịch sử dự đoán,chưa có,không có DB/session state lưu lịch sử,ngoài phạm vi bài tập
+Checkpoint v2 (D2/X2),chưa tích hợp vào demo,app.py mặc định outputs/runs/final_s42 hoặc checkpoints/final_s42 (legacy),demo đang dùng checkpoint cũ; báo cáo phải nói rõ
+Golden test 20 ảnh giữa 2 môi trường,đã có,"golden_compare.json max_prob_diff=0.0, pass=True",chạy trên checkpoint legacy
+Kiểm thử trên máy cấu hình thấp,chưa có,chỉ đo CPU trên máy train (i9-14900KF),cần máy khác hoặc giới hạn thread/ RAM
+Kiểm thử camera thật / video,chưa có,external_test chỉ có ảnh tĩnh đã ẩn danh,ngoài phạm vi và cần thu thập dữ liệu
+Tuyên bố an toàn cho giao thông thực tế,không,footer app.py và báo cáo đều ghi cảnh báo,không được tuyên bố

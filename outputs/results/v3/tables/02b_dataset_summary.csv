@@ -1,0 +1,20 @@
+﻿metric,value,note
+Tổng ảnh train ban đầu,39209,GTSRB Final_Training_Images
+Ảnh train trùng MD5 với test,8,"đều lớp 14, track 00023"
+Pool dùng chia split,39201,39.209 − 8
+Số lớp,43,0–42
+Ảnh/lớp nhỏ nhất (pool),210,lớp 0
+Ảnh/lớp trung vị (pool),600,
+Ảnh/lớp lớn nhất (pool),2250,lớp 2
+Tỷ lệ mất cân bằng max/min,10.714,"10,714 lần"
+Số lớp dưới 300 ảnh,9,"0, 19, 24, 27, 29, 32, 37, 41, 42"
+Ảnh test chính thức,12630,12.630
+Ảnh test gần trùng train,751,"MAD < 5, cùng lớp"
+Ảnh test clean,11879,12.630 − 751
+Ảnh lockbox,8302,277 track / 238 sign-group
+Ảnh dev,30899,1.030 track / 945 sign-group
+Ảnh screening train,24719,824 track
+Ảnh screening val,6180,206 track
+Track toàn pool,1307,29–30 frame/track
+Sign-group toàn pool,1183,gộp 39.603 cặp gần trùng
+Ảnh trùng MD5 trong pool,0,SHA-256/MD5

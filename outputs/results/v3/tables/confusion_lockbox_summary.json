@@ -1,0 +1,117 @@
+{
+  "n_images": 8302,
+  "n_errors_mean": 93.33333333333333,
+  "accuracy_mean": 0.9887577290612705,
+  "top_offdiag": [
+    {
+      "true_id": 32,
+      "true_name": "Hết mọi giới hạn tốc độ và cấm vượt",
+      "pred_id": 41,
+      "pred_name": "Hết cấm vượt",
+      "count_mean_3seed": 14.0,
+      "rate_of_true_class_pct": 23.333333333333332,
+      "share_of_errors_pct": 15.0,
+      "same_shape": true,
+      "same_color": true
+    },
+    {
+      "true_id": 29,
+      "true_name": "Xe đạp qua đường",
+      "pred_id": 28,
+      "pred_name": "Trẻ em qua đường",
+      "count_mean_3seed": 13.666666666666666,
+      "rate_of_true_class_pct": 22.77777777777778,
+      "share_of_errors_pct": 14.642857142857144,
+      "same_shape": true,
+      "same_color": true
+    },
+    {
+      "true_id": 19,
+      "true_name": "Đường cong nguy hiểm bên trái",
+      "pred_id": 23,
+      "pred_name": "Đường trơn",
+      "count_mean_3seed": 13.5,
+      "rate_of_true_class_pct": 45.0,
+      "share_of_errors_pct": 14.464285714285715,
+      "same_shape": true,
+      "same_color": true
+    },
+    {
+      "true_id": 8,
+      "true_name": "Giới hạn tốc độ 120 km/h",
+      "pred_id": 5,
+      "pred_name": "Giới hạn tốc độ 80 km/h",
+      "count_mean_3seed": 11.5,
+      "rate_of_true_class_pct": 1.7424242424242427,
+      "share_of_errors_pct": 12.321428571428573,
+      "same_shape": true,
+      "same_color": true
+    },
+    {
+      "true_id": 13,
+      "true_name": "Nhường đường",
+      "pred_id": 10,
+      "pred_name": "Cấm vượt cho xe trên 3,5 tấn",
+      "count_mean_3seed": 9.0,
+      "rate_of_true_class_pct": 1.7647058823529411,
+      "share_of_errors_pct": 9.642857142857144,
+      "same_shape": false,
+      "same_color": true
+    },
+    {
+      "true_id": 29,
+      "true_name": "Xe đạp qua đường",
+      "pred_id": 25,
+      "pred_name": "Công trường thi công",
+      "count_mean_3seed": 6.333333333333333,
+      "rate_of_true_class_pct": 10.555555555555555,
+      "share_of_errors_pct": 6.785714285714286,
+      "same_shape": true,
+      "same_color": true
+    },
+    {
+      "true_id": 30,
+      "true_name": "Cảnh báo băng tuyết",
+      "pred_id": 11,
+      "pred_name": "Đường ưu tiên tại giao lộ tới",
+      "count_mean_3seed": 5.666666666666667,
+      "rate_of_true_class_pct": 6.296296296296297,
+      "share_of_errors_pct": 6.071428571428572,
+      "same_shape": true,
+      "same_color": true
+    },
+    {
+      "true_id": 20,
+      "true_name": "Đường cong nguy hiểm bên phải",
+      "pred_id": 25,
+      "pred_name": "Công trường thi công",
+      "count_mean_3seed": 5.0,
+      "rate_of_true_class_pct": 8.333333333333332,
+      "share_of_errors_pct": 5.357142857142858,
+      "same_shape": true,
+      "same_color": true
+    },
+    {
+      "true_id": 8,
+      "true_name": "Giới hạn tốc độ 120 km/h",
+      "pred_id": 2,
+      "pred_name": "Giới hạn tốc độ 50 km/h",
+      "count_mean_3seed": 5.0,
+      "rate_of_true_class_pct": 0.7575757575757576,
+      "share_of_errors_pct": 5.357142857142858,
+      "same_shape": true,
+      "same_color": true
+    },
+    {
+      "true_id": 21,
+      "true_name": "Đường cong liên tiếp",
+      "pred_id": 23,
+      "pred_name": "Đường trơn",
+      "count_mean_3seed": 4.5,
+      "rate_of_true_class_pct": 7.5,
+      "share_of_errors_pct": 4.821428571428572,
+      "same_shape": true,
+      "same_color": true
+    }
+  ]
+}

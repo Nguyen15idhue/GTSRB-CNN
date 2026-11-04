@@ -1,0 +1,476 @@
+{
+  "pack": "report_v3",
+  "created_at": "2026-11-04",
+  "description": "Tài nguyên cho bản báo cáo làm lại; không chạy lại train, không mở lockbox.",
+  "results_root": "outputs/results/v3",
+  "figures_root": "outputs/figures/v3",
+  "results": [
+    {
+      "path": "README.md",
+      "size_bytes": 5070,
+      "sha256": "27e8c6e69d3eef5f58a5dd3ab52f601bdab32dc91fb449f35fa9147adc2f87ef",
+      "purpose": ""
+    },
+    {
+      "path": "tables/00_corrections.csv",
+      "size_bytes": 1613,
+      "sha256": "c0608efcd89c7479c15ecd5c2e322fe34efbba9284b03c5c0986aafb2646cd39",
+      "purpose": ""
+    },
+    {
+      "path": "tables/01_class_catalog.csv",
+      "size_bytes": 4348,
+      "sha256": "35380a2065cde800a68fa796cd5bf444bbd32df1e6347e4920b1eb5da751641b",
+      "purpose": ""
+    },
+    {
+      "path": "tables/02_split_summary.csv",
+      "size_bytes": 1176,
+      "sha256": "647b4f40c3cc648e58061caf10ae077e0715f30f82c2a4526d32530fb3ea143b",
+      "purpose": ""
+    },
+    {
+      "path": "tables/02b_dataset_summary.csv",
+      "size_bytes": 923,
+      "sha256": "697e91cb36b0bd9acbe547db074832d167d77457a09f0a44d31c9fb32768333c",
+      "purpose": ""
+    },
+    {
+      "path": "tables/03_data_quality_per_class.csv",
+      "size_bytes": 5170,
+      "sha256": "5bfc6390fce1f7b433225044ac752203103ef1372e17a8d494a8cbd8f43d97ee",
+      "purpose": ""
+    },
+    {
+      "path": "tables/04_data_quality_summary.json",
+      "size_bytes": 3366,
+      "sha256": "8f0fccaff8e589cc532626c7267cfaee24617912da6c8053255b7871c8746bff",
+      "purpose": ""
+    },
+    {
+      "path": "tables/05_model_comparison.csv",
+      "size_bytes": 4985,
+      "sha256": "08f66e4abe41b11a4b980fa36a23a90bb0b97a9d636215b1e049e65d0e0e19c7",
+      "purpose": ""
+    },
+    {
+      "path": "tables/06_eval_sets_summary.csv",
+      "size_bytes": 856,
+      "sha256": "2847cabe6e288a3b6a42326a587b324dab07001ce6f55b15f707360b527d6c55",
+      "purpose": ""
+    },
+    {
+      "path": "tables/06b_lockbox_uncertainty.csv",
+      "size_bytes": 529,
+      "sha256": "798d83968083fea9a7084961fe99a2f1fa48e05f6b7bf714fd000c7996a6c34f",
+      "purpose": ""
+    },
+    {
+      "path": "tables/06c_oof_accuracy_check.json",
+      "size_bytes": 545,
+      "sha256": "06ddd4fa661b3dfbd18580eb6342427ea6429a0559a5a18ff22067cb8b9de766",
+      "purpose": ""
+    },
+    {
+      "path": "tables/07_per_class_lockbox.csv",
+      "size_bytes": 4846,
+      "sha256": "b7419fa1591d114459aa11a3a699b44756fc8d889386e0ffbf0ee7c4f38ba1e6",
+      "purpose": ""
+    },
+    {
+      "path": "tables/07b_class_extremes.json",
+      "size_bytes": 3056,
+      "sha256": "0a29674920031b67e2b4b64d99fd421ea425b339486b09b0d0aa62d769971012",
+      "purpose": ""
+    },
+    {
+      "path": "tables/08_per_class_oof.csv",
+      "size_bytes": 4091,
+      "sha256": "cee80c48b53b46cc31c01067e72f2bc6c9e22b17635ca93fa7273f03147f3517",
+      "purpose": ""
+    },
+    {
+      "path": "tables/09_top_confusions_lockbox.csv",
+      "size_bytes": 2077,
+      "sha256": "ea8fb6b92c5311de01ecaf60e98431c2e7e6ecc5b4f17229eaa660b827d2d1cb",
+      "purpose": ""
+    },
+    {
+      "path": "tables/10_confusion_lockbox_counts.csv",
+      "size_bytes": 9607,
+      "sha256": "9e16772db501f1a332b911579e47b6657d4d2e949fe488543ebaa1549955856e",
+      "purpose": ""
+    },
+    {
+      "path": "tables/10_confusion_lockbox_normalized.csv",
+      "size_bytes": 13238,
+      "sha256": "3aaf7e11f599f031e56bb3dde0d517401b9bcd39028a24e37471ef0ad421de56",
+      "purpose": ""
+    },
+    {
+      "path": "tables/11_oof_by_fold_seed.csv",
+      "size_bytes": 1503,
+      "sha256": "aa9c977c46849e6cdfb856b92e9703e4e33a73b1dd9b4c05c1d88078f308d3f9",
+      "purpose": ""
+    },
+    {
+      "path": "tables/12_calibration_confidence.csv",
+      "size_bytes": 252,
+      "sha256": "583e64e6971f2f00bf3cbb1a1593927dc9e84ca3ec9d8673315e2c8ee47af130",
+      "purpose": ""
+    },
+    {
+      "path": "tables/13_inference_benchmark.csv",
+      "size_bytes": 2261,
+      "sha256": "52e8ba89a6953c5bfd4bd9b8ca532d281f4a2a8e8e7b17aa13c2c9d7ec30223c",
+      "purpose": ""
+    },
+    {
+      "path": "tables/13_inference_benchmark.json",
+      "size_bytes": 6602,
+      "sha256": "4050b7a4da3018440442a3a76a089d9bf495d490e31fc5d934f727c0e57864e6",
+      "purpose": ""
+    },
+    {
+      "path": "tables/14_hardware_software.json",
+      "size_bytes": 1354,
+      "sha256": "a0f6a20b76f66b145cef875ca39128985d464fe8ca7391eb577132c96486688f",
+      "purpose": ""
+    },
+    {
+      "path": "tables/15_deployment_status.csv",
+      "size_bytes": 1828,
+      "sha256": "5f269e5424721edf243ed5a29c4eb53875acac5d159ed92235677d390634a5a1",
+      "purpose": ""
+    },
+    {
+      "path": "tables/16_gradcam_roi_mass.csv",
+      "size_bytes": 12723,
+      "sha256": "b2145dec99ce790ef1879801fb430e1df002c29bb4f86d2aed5eefbd3b57fc4f",
+      "purpose": ""
+    },
+    {
+      "path": "tables/16_gradcam_summary.json",
+      "size_bytes": 817,
+      "sha256": "f1ad4b952a715c8423d93bc6b6ec0f5909864cd0de799baff951b4e69127b729",
+      "purpose": ""
+    },
+    {
+      "path": "tables/17_manual_error_review.csv",
+      "size_bytes": 26467,
+      "sha256": "c0da449ef52d28504a1280b1784a5246bc2634f1bc28b69e37242a72ec31c4f5",
+      "purpose": ""
+    },
+    {
+      "path": "tables/17_manual_error_review_summary.json",
+      "size_bytes": 558,
+      "sha256": "cb74c4a9bd543c079b62cf60b87a66da2c1580be9e7a69bfd26423adb039d5d0",
+      "purpose": ""
+    },
+    {
+      "path": "tables/17b_manual_error_review_diverse.csv",
+      "size_bytes": 7708,
+      "sha256": "7a832080af4f845b745ec1c43d3ae67817a948dccf28767197c0e42895304af6",
+      "purpose": ""
+    },
+    {
+      "path": "tables/18_metric_worked_example.csv",
+      "size_bytes": 3128,
+      "sha256": "b39a5fd7b8fe632b47df942966ac04bafe4d38391fa10fd214ee669ac4c3a503",
+      "purpose": ""
+    },
+    {
+      "path": "tables/19_training_cost_by_group.csv",
+      "size_bytes": 680,
+      "sha256": "e0a89663978fed27a15c35bddf542aae613c7f0f50ec55d32d55c2de17ad7b86",
+      "purpose": ""
+    },
+    {
+      "path": "tables/20_experiment_index.csv",
+      "size_bytes": 22465,
+      "sha256": "63f3a6923a969ba244a98f7c0acf341f187cc973d4186e9c5725d547354cc06c",
+      "purpose": ""
+    },
+    {
+      "path": "tables/21_lockbox_by_seed.csv",
+      "size_bytes": 256,
+      "sha256": "10bc1a5ae7242c23ab32885997d8515d7d275aeb0305eb9ba44881b5b561a8a4",
+      "purpose": ""
+    },
+    {
+      "path": "tables/22_test_per_class_raw_clean.csv",
+      "size_bytes": 4110,
+      "sha256": "b94667ba3d7237bbfdfb9b1029755efa1c5f6897b5de28fd38c81a89a9b5be61",
+      "purpose": ""
+    },
+    {
+      "path": "tables/23_architecture_spec.csv",
+      "size_bytes": 5869,
+      "sha256": "67ea335b81a507f42055bd4fd28fec55a1b1c171bbb90c4714e6c60339bce43c",
+      "purpose": ""
+    },
+    {
+      "path": "tables/24_results_evidence.csv",
+      "size_bytes": 2080,
+      "sha256": "e425547a83e6140327da35eba9598e73f220290f06e7d713b3d47f71155f1c38",
+      "purpose": ""
+    },
+    {
+      "path": "tables/25_corruption_summary.csv",
+      "size_bytes": 2746,
+      "sha256": "7ea4b80bbf3f2144448feadf2b1edd0dd7cca3ac07b7a54d5951d6ef9fb5d2ae",
+      "purpose": ""
+    },
+    {
+      "path": "tables/26_evaluation_time.json",
+      "size_bytes": 950,
+      "sha256": "8f041dbfe486de44374a4261ae7c89533b19705dd7ac9c8a65af55c42af001a0",
+      "purpose": ""
+    },
+    {
+      "path": "tables/28_glossary.csv",
+      "size_bytes": 2431,
+      "sha256": "91d8e93cb82f973971e953e32ce912073e0c9c5a2630786cbdca90140f485d89",
+      "purpose": ""
+    },
+    {
+      "path": "tables/29_data_inventory.csv",
+      "size_bytes": 3340,
+      "sha256": "9a3d7d0c7ef75c512123cf9cdec9d0be3075d4fcdb2cc8308cd6f70900f8913d",
+      "purpose": ""
+    },
+    {
+      "path": "tables/class_catalog_summary.json",
+      "size_bytes": 329,
+      "sha256": "072f1837aad6c0b63c184bb83c9e64597c7304aabab926f2f91e968b3ef936c3",
+      "purpose": ""
+    },
+    {
+      "path": "tables/confusion_lockbox_summary.json",
+      "size_bytes": 3643,
+      "sha256": "6b7e6df410daa376734af050813ce854b5fac8fabe04f91a7be00a498f4fedbf",
+      "purpose": ""
+    },
+    {
+      "path": "tables/metric_worked_example.json",
+      "size_bytes": 568,
+      "sha256": "bf67c0fcf613f93bcc65c2c7576cc8cd3ed4dde83295e75807158f03c0f66abb",
+      "purpose": ""
+    },
+    {
+      "path": "tables/threshold_v2_oof.json",
+      "size_bytes": 452,
+      "sha256": "fbdc8607b6c3bec42d467f539a5e7685eeec3816740893b77cde19134161f3e4",
+      "purpose": ""
+    },
+    {
+      "path": "tables/training_cost_totals.json",
+      "size_bytes": 344,
+      "sha256": "381024cfc9bc41e66b74124e3d006a2240e4295c776b5a0d00b5e5aa49425149",
+      "purpose": ""
+    }
+  ],
+  "figures": [
+    {
+      "path": "01_class_distribution.png",
+      "size_bytes": 296834,
+      "sha256": "e3811e0d56df7a5481d5e1bb2fe550dcf526bb529830bc488c5a9576ac01d2f6",
+      "purpose": "Phân bố 43 lớp + mức mất cân bằng"
+    },
+    {
+      "path": "02_split_diagram.png",
+      "size_bytes": 128988,
+      "sha256": "8e26fa5fbe8f290077efe485f8baf7d32b9ab3cc2c28142718db99f13327e3d3",
+      "purpose": "Sơ đồ chia tập 3 tầng"
+    },
+    {
+      "path": "03_architecture_d2.png",
+      "size_bytes": 130260,
+      "sha256": "640310de4996b6fb97dc480ff92cee83a113e17fbb9450ff0b7b5c1336713399",
+      "purpose": "Kiến trúc D2, params từng khối"
+    },
+    {
+      "path": "04_learning_curves.png",
+      "size_bytes": 183197,
+      "sha256": "096cbcef74553034014ef837efc4f7b611d89dbb4dd9d5afb1b431bd429b2ff0",
+      "purpose": "Learning curve train vs validation (D2, F07)"
+    },
+    {
+      "path": "05_model_comparison.png",
+      "size_bytes": 134451,
+      "sha256": "117c4303eff2d68753d7fb143f7998d7b79a1473eb5c4c79bbcb29771dcadd12",
+      "purpose": "So sánh Accuracy và Macro-F1 các cấu hình"
+    },
+    {
+      "path": "06_confusion_matrix.png",
+      "size_bytes": 127179,
+      "sha256": "972fb7fd4860236372612a4391c20d389be8a88cb0239724858b4dcf85a243ba",
+      "purpose": "Confusion matrix lockbox + top cặp nhầm"
+    },
+    {
+      "path": "07_per_class_f1.png",
+      "size_bytes": 250937,
+      "sha256": "7a36d5787701e9416339d6e4525256461e93d10958c9ade155360650461a37cf",
+      "purpose": "F1 từng lớp trên lockbox"
+    },
+    {
+      "path": "08_factor_effects.png",
+      "size_bytes": 114720,
+      "sha256": "6dd1dcf33661e89b29aa62d08fd45ca97b46aaad7ef46c4a01f9ebd764c16139",
+      "purpose": "Hiệu ứng factorial + tương tác BN×Aug"
+    },
+    {
+      "path": "09_oof_fold_seed.png",
+      "size_bytes": 195366,
+      "sha256": "07006919be7ec4a5fd817cf0277f36f968aac2a74e1af7ca70e52283ddac9426",
+      "purpose": "OOF theo fold × seed + phân rã phương sai"
+    },
+    {
+      "path": "10_robustness.png",
+      "size_bytes": 148228,
+      "sha256": "cd05775c6b295658fdfdb5355ef6cf2d823a78e6ba11fe53868624d3363a0c03",
+      "purpose": "Robustness 6 corruption × 3 mức"
+    },
+    {
+      "path": "11_gradcam.png",
+      "size_bytes": 1231644,
+      "sha256": "e4019ed82c6dc5edfb41abced007c72a09b3129bff61de88f205655d78af0a08",
+      "purpose": "Grad-CAM đúng/sai/thấp confidence"
+    },
+    {
+      "path": "12_calibration.png",
+      "size_bytes": 149566,
+      "sha256": "9a193e2a9075962f7092d714d05af7ef1c9f905a1274f97412d8a9e96d22098e",
+      "purpose": "Reliability, confidence histogram, selective risk"
+    },
+    {
+      "path": "13_precision_recall.png",
+      "size_bytes": 257161,
+      "sha256": "831700b3f2efaaee69ff07a29a106a2ff7b35e3aaf160616ac5755373e822e90",
+      "purpose": "Precision–Recall và AP từng lớp"
+    },
+    {
+      "path": "14_inference_perf.png",
+      "size_bytes": 112788,
+      "sha256": "d32dfad77aab066ca8a106a94f04860215b93d03146a74b16af5689284ac116d",
+      "purpose": "Latency/throughput CPU vs GPU"
+    },
+    {
+      "path": "15_prediction_examples.png",
+      "size_bytes": 1085495,
+      "sha256": "fec235410b7a649666be39b652c3302a010015724fb282410c5a4a1840cb6523",
+      "purpose": "Ví dụ dự đoán đúng/sai theo confidence"
+    },
+    {
+      "path": "16_data_quality.png",
+      "size_bytes": 107609,
+      "sha256": "1cf24014d074c7c40e50be4b61c512a93e1511b50ef2ed6733a75087836778e9",
+      "purpose": "Phân bố độ nét/sáng/tương phản"
+    },
+    {
+      "path": "16b_data_quality_examples.png",
+      "size_bytes": 331697,
+      "sha256": "ee4fcfc247b1886096b9a1cd2311ecddd5c66f87bcf007cd37dbad1279f71c87",
+      "purpose": "Ảnh cực trị chất lượng"
+    },
+    {
+      "path": "17_class_samples.png",
+      "size_bytes": 2616779,
+      "sha256": "c254524c8168176dbe21b21aa46e33057a2242cd51361837bf9edb6b47a8cd13",
+      "purpose": "Mỗi lớp một ảnh mẫu rõ"
+    },
+    {
+      "path": "contact_sheets/error_sheet_01.png",
+      "size_bytes": 2125827,
+      "sha256": "8831e59ba2c66e07d31d5e5cec69d20a9f200449d4e357ed89ef9b97b145af6d",
+      "purpose": "Phiếu rà soát lỗi (trang 1)"
+    },
+    {
+      "path": "contact_sheets/error_sheet_02.png",
+      "size_bytes": 588726,
+      "sha256": "4cdd3792bebd936ce83df9fc818c211e9b1b0f578caea4a63fd6113b27a9d734",
+      "purpose": "Phiếu rà soát lỗi (trang 2)"
+    }
+  ],
+  "data_local_only": [
+    {
+      "path": "calibration_screening.npz",
+      "size_bytes": 10624,
+      "sha256": "725d96a66528b7a0b075e8ea0c9dca4c8c3248a1ef1904217863f96b8f3ffcfb",
+      "purpose": ""
+    },
+    {
+      "path": "confusion_lockbox_mean.npy",
+      "size_bytes": 14920,
+      "sha256": "bfe3bdd83e50044767964cf99894b448c961e171906d7163727b75c0f528f3c5",
+      "purpose": ""
+    },
+    {
+      "path": "gradcam_cams.npz",
+      "size_bytes": 1684173,
+      "sha256": "b27804990346caa775d6d0eed948647f1383edcb8fe2f2b1ebe72159b795ae63",
+      "purpose": ""
+    },
+    {
+      "path": "screening_val_probs_d2_s42.npz",
+      "size_bytes": 1044019,
+      "sha256": "a02720f4b8e8f020cb1f0f0261f7fb8ee41bdae1ebce84751d9dc99e0b52f3bd",
+      "purpose": ""
+    },
+    {
+      "path": "selective_risk_oof.npz",
+      "size_bytes": 318578,
+      "sha256": "8ada8f9250a8b5df3740951454a0e655908b1b9ee41ee44aa18fc34879dbede2",
+      "purpose": ""
+    },
+    {
+      "path": "test_blur.npy",
+      "size_bytes": 50648,
+      "sha256": "1c618ba0c53817453dc24e40f554af8707270c4fdf57ca70e5707e470d5805a0",
+      "purpose": ""
+    },
+    {
+      "path": "test_brightness.npy",
+      "size_bytes": 50648,
+      "sha256": "f3b2f0fd4934d012f3ac91c44fb81dba192784e1c75859751a0457ae34ee5dce",
+      "purpose": ""
+    },
+    {
+      "path": "test_contrast.npy",
+      "size_bytes": 50648,
+      "sha256": "74dd14119b9583b7d0f3759b00f2389a004283883d425f3e0c89256238ebd665",
+      "purpose": ""
+    },
+    {
+      "path": "train_blur.npy",
+      "size_bytes": 156932,
+      "sha256": "d74e5c55e56bc83fbbe9a45e2f876252218e225b446538a7e7294cc30e5e489e",
+      "purpose": ""
+    },
+    {
+      "path": "train_brightness.npy",
+      "size_bytes": 156932,
+      "sha256": "16e4e93c6f3ec47852927f72bce384efeefe37564299eefac8b09e2e435ac507",
+      "purpose": ""
+    },
+    {
+      "path": "train_contrast.npy",
+      "size_bytes": 156932,
+      "sha256": "673213364ca60c00d9abcfa1e057c632893d75c3bc5228ff28ac547e8c65453b",
+      "purpose": ""
+    }
+  ],
+  "data_note": "data/ chỉ dùng cục bộ, không commit (theo .gitignore *.npy/*.npz); sinh lại bằng scripts/report_v3_data.py.",
+  "source_artifacts": [
+    "outputs/results/v2/",
+    "outputs/splits/v2/",
+    "outputs/runs/v2_*",
+    "outputs/figures/v2/"
+  ],
+  "scripts": [
+    "scripts/report_v3_data.py",
+    "scripts/report_v3_figures.py",
+    "scripts/report_v3_meta.py",
+    "scripts/report_v3_manifest.py"
+  ]
+}

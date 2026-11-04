@@ -1,0 +1,13 @@
+﻿device,batch_size,reps,latency_mean_ms,latency_median_ms,latency_p95_ms,latency_min_ms,throughput_img_s,peak_vram_mb,reserved_vram_mb,peak_ram_mb,scope
+cpu,1,100,0.770207,0.775400,1.119530,0.560700,1289.657200,0.000000,0.000000,546.093750,"model-only: forward trên tensor đã chuẩn hóa, FP32, không gồm đọc/resize ảnh"
+cpu,16,100,6.956035,7.110550,8.781530,4.945900,2250.177568,0.000000,0.000000,570.210938,"model-only: forward trên tensor đã chuẩn hóa, FP32, không gồm đọc/resize ảnh"
+cpu,32,50,16.358840,15.658950,20.439910,10.814200,2043.559742,0.000000,0.000000,601.910156,"model-only: forward trên tensor đã chuẩn hóa, FP32, không gồm đọc/resize ảnh"
+cpu,64,50,40.684220,40.163250,42.870580,38.859800,1593.496545,0.000000,0.000000,655.371094,"model-only: forward trên tensor đã chuẩn hóa, FP32, không gồm đọc/resize ảnh"
+cpu,1,60,1.364768,1.329550,1.577260,1.297600,752.134216,0.000000,0.000000,655.718750,end-to-end Python: uint8 -> normalize -> forward -> softmax -> top-3; chưa gồm upload/render UI
+cpu,0,1,9.823500,9.823500,9.823500,9.823500,,,,655.718750,model load: torch.load + build + load_state_dict + to(device)
+cuda,1,100,0.987047,0.862688,1.392061,0.735520,1159.167658,16.020020,24.000000,1034.175781,"model-only: forward trên tensor đã chuẩn hóa, FP32, không gồm đọc/resize ảnh"
+cuda,16,100,0.974904,0.854400,1.435197,0.357984,18726.591565,31.410156,46.000000,1040.671875,"model-only: forward trên tensor đã chuẩn hóa, FP32, không gồm đọc/resize ảnh"
+cuda,32,50,0.888905,0.853536,1.204459,0.766304,37491.096744,48.160156,62.000000,1056.433594,"model-only: forward trên tensor đã chuẩn hóa, FP32, không gồm đọc/resize ảnh"
+cuda,64,50,0.867932,0.809936,1.166662,0.767456,79018.590392,81.660156,126.000000,1059.828125,"model-only: forward trên tensor đã chuẩn hóa, FP32, không gồm đọc/resize ảnh"
+cuda,1,60,2.261516,1.243296,2.273699,1.219008,804.313716,81.660156,126.000000,1181.753906,end-to-end Python: uint8 -> normalize -> forward -> softmax -> top-3; chưa gồm upload/render UI
+cuda,0,1,116.004100,116.004100,116.004100,116.004100,,,,1181.753906,model load: torch.load + build + load_state_dict + to(device)

@@ -1,0 +1,48 @@
+{
+  "do_do_tren": "máy train của dự án (không phải máy demo cấu hình thấp)",
+  "os": {
+    "caption": "Microsoft Windows 11 Pro",
+    "version": "10.0.26200",
+    "build": "26200",
+    "arch": "64-bit",
+    "python_platform": "Windows-11-10.0.26200-SP0"
+  },
+  "cpu": {
+    "name": "Intel Core i9-14900KF",
+    "cores": 24,
+    "logical_processors": 32,
+    "ram_gb": 63.84
+  },
+  "gpu": {
+    "name": "NVIDIA GeForce RTX 5070",
+    "vram_gb": 11.94,
+    "compute_capability": [
+      12,
+      0
+    ],
+    "driver": "610.88",
+    "cuda_build": "12.8",
+    "cudnn": "91900"
+  },
+  "disk": {
+    "model": "Lexar SSD NM710 2TB",
+    "type": "SSD NVMe",
+    "capacity_gb": 1862.0,
+    "free_gb": 295.3,
+    "note": "ổ chứa data/cache/checkpoint; không phải yếu tố được đo trong benchmark"
+  },
+  "software": {
+    "python": "3.12.10",
+    "torch": "2.11.0+cu128",
+    "torchvision": "0.26.0+cu128",
+    "numpy": "2.5.2",
+    "pandas": "3.1.0",
+    "scikit_learn": "1.9.1",
+    "matplotlib": "3.11.2",
+    "pillow": "12.3.0",
+    "cuda_available": true
+  },
+  "repo_commit_at_env_capture": "62c7dbd75b649da2fa34d63614b4bf7393f2ab3e",
+  "env_json": "outputs/results/env.json",
+  "note": "Số liệu phần cứng lấy từ env.json + truy vấn hệ thống ngày 04/11/2026."
+}

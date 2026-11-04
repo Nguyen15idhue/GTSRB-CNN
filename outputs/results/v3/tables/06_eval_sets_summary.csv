@@ -1,0 +1,5 @@
+﻿eval_set,n,accuracy_pct,accuracy_sd_pct,macro_f1_pct,macro_f1_sd_pct,ci_low_pct,ci_high_pct,top3_pct,ece,brier,role,comparable_to_lockbox
+"OOF (dev, X2)",30899,97.924420,0.110432,97.039964,0.186885,95.051066,97.942165,,,,Chọn winner; mỗi ảnh dev được dự đoán đúng 1 lần mỗi seed,không (khác đơn vị nhóm/CI)
+Lockbox,8302,98.875773,0.101018,97.598146,0.624634,,,99.847426,0.005328,0.017862,"Test nội bộ độc lập, mở một lần sau freeze",có (đây là chuẩn chính)
+Official test raw,12630,98.698865,0.162521,98.039793,0.451630,,,99.767749,0.005932,0.020196,Benchmark phụ; không track-disjoint,không (khác phân phối/nhóm)
+Official test clean,11879,98.869153,0.235910,98.249929,0.531365,,,99.767096,0.005268,0.017925,Benchmark phụ sau lọc 751 ảnh gần trùng,không (khác phân phối/nhóm)

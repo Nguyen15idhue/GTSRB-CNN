@@ -1,0 +1,112 @@
+﻿run_id,block,config_id,seed,fold,split,params,aug_profile,epochs_run,best_epoch,val_acc_pct,val_macro_f1_pct,train_time_s,infer_ms_per_img,git_commit,notes
+v2_d1_s42,D_architecture,d1,42,,screening,99019,all,40,33,74.757300,59.689500,214.330000,0.674000,22369d8a6fbed064ba33d97fc35b5c6bc18f466a,3 khối + GAP; tách GAP khỏi depth
+v2_d1_s123,D_architecture,d1,123,,screening,99019,all,40,34,73.592200,58.308600,212.690000,0.677900,22369d8a6fbed064ba33d97fc35b5c6bc18f466a,3 khối + GAP; tách GAP khỏi depth
+v2_d1_s2024,D_architecture,d1,2024,,screening,99019,all,40,36,74.352800,59.566700,212.600000,0.672800,22369d8a6fbed064ba33d97fc35b5c6bc18f466a,3 khối + GAP; tách GAP khỏi depth
+v2_d2_s42,D_architecture,d2,42,,screening,1448779,all,20,13,97.669900,96.454600,116.690000,0.927100,22369d8a6fbed064ba33d97fc35b5c6bc18f466a,4 khối + flatten; tách depth khỏi GAP
+v2_d2_s123,D_architecture,d2,123,,screening,1448779,all,31,24,98.236200,97.498200,170.190000,0.949900,22369d8a6fbed064ba33d97fc35b5c6bc18f466a,4 khối + flatten; tách depth khỏi GAP
+v2_d2_s2024,D_architecture,d2,2024,,screening,1448779,all,19,12,98.106800,97.522400,111.650000,0.938900,22369d8a6fbed064ba33d97fc35b5c6bc18f466a,4 khối + flatten; tách depth khỏi GAP
+v2_d3_s42,D_architecture,d3,42,,screening,399947,all,40,34,96.666700,93.429800,214.580000,0.873600,22369d8a6fbed064ba33d97fc35b5c6bc18f466a,4 khối + GAP + DO 0.4 = E4 cũ; chỉ legacy
+v2_d3_s123,D_architecture,d3,123,,screening,399947,all,28,21,95.954700,92.081500,155.700000,0.872800,22369d8a6fbed064ba33d97fc35b5c6bc18f466a,4 khối + GAP + DO 0.4 = E4 cũ; chỉ legacy
+v2_d3_s2024,D_architecture,d3,2024,,screening,399947,all,34,27,97.103600,93.804200,184.300000,0.869900,22369d8a6fbed064ba33d97fc35b5c6bc18f466a,4 khối + GAP + DO 0.4 = E4 cũ; chỉ legacy
+v2_final_s42,D_architecture,final,42,,dev_all,1448779,all,26,26,,,158.700000,0.922400,05d2a6a252167f11aaaff501a69375d0585db03a,final từ d2 (winner OOF x2); epoch cố định 26 (median 9 run OOF); OOF cao nhat 97.040; x1 vs x2 CI chua 0; tie-break it params hon (1.45M vs 2.20M)
+v2_final_s123,D_architecture,final,123,,dev_all,1448779,all,26,26,,,157.830000,0.929100,05d2a6a252167f11aaaff501a69375d0585db03a,final từ d2 (winner OOF x2); epoch cố định 26 (median 9 run OOF); OOF cao nhat 97.040; x1 vs x2 CI chua 0; tie-break it params hon (1.45M vs 2.20M)
+v2_final_s2024,D_architecture,final,2024,,dev_all,1448779,all,26,26,,,158.000000,0.926200,05d2a6a252167f11aaaff501a69375d0585db03a,final từ d2 (winner OOF x2); epoch cố định 26 (median 9 run OOF); OOF cao nhat 97.040; x1 vs x2 CI chua 0; tie-break it params hon (1.45M vs 2.20M)
+v2_w1_s42,D_architecture,w1,42,,screening,1083579,all,38,31,95.372200,90.902100,202.050000,0.698800,22369d8a6fbed064ba33d97fc35b5c6bc18f466a,Width nhỏ 16/32/64
+v2_w1_s123,D_architecture,w1,123,,screening,1083579,all,23,16,93.818800,89.165400,130.930000,0.695900,22369d8a6fbed064ba33d97fc35b5c6bc18f466a,Width nhỏ 16/32/64
+v2_w1_s2024,D_architecture,w1,2024,,screening,1083579,all,40,38,95.436900,91.991000,212.640000,0.701600,22369d8a6fbed064ba33d97fc35b5c6bc18f466a,Width nhỏ 16/32/64
+v2_w2_s42,D_architecture,w2,42,,screening,3366363,all,33,26,97.362500,96.588800,180.100000,0.728600,22369d8a6fbed064ba33d97fc35b5c6bc18f466a,Width lớn 48/96/192
+v2_w2_s123,D_architecture,w2,123,,screening,3366363,all,30,23,96.682800,94.837200,166.190000,0.729700,22369d8a6fbed064ba33d97fc35b5c6bc18f466a,Width lớn 48/96/192
+v2_w2_s2024,D_architecture,w2,2024,,screening,3366363,all,40,34,97.265400,94.218200,214.290000,0.730000,22369d8a6fbed064ba33d97fc35b5c6bc18f466a,Width lớn 48/96/192
+v2_f00_s42,F_factorial,f00,42,,screening,2201707,none,13,6,87.896400,79.913200,40.720000,0.560900,f41b0c450ade5ecedbb129fe3a7c6d9e95c7cff2,"Factorial 2^4: BN=off, DO=0, WD=0, Aug=off"
+v2_f00_s123,F_factorial,f00,123,,screening,2201707,none,26,19,91.246000,85.459200,64.110000,0.574500,f41b0c450ade5ecedbb129fe3a7c6d9e95c7cff2,"Factorial 2^4: BN=off, DO=0, WD=0, Aug=off"
+v2_f00_s2024,F_factorial,f00,2024,,screening,2201707,none,20,13,91.132700,86.956100,52.850000,0.570900,f41b0c450ade5ecedbb129fe3a7c6d9e95c7cff2,"Factorial 2^4: BN=off, DO=0, WD=0, Aug=off"
+v2_f01_s42,F_factorial,f01,42,,screening,2201931,none,23,16,93.171500,88.146100,60.240000,0.741600,f41b0c450ade5ecedbb129fe3a7c6d9e95c7cff2,"Factorial 2^4: BN=on, DO=0, WD=0, Aug=off"
+v2_f01_s123,F_factorial,f01,123,,screening,2201931,none,15,8,92.605200,86.193500,44.150000,0.742100,f41b0c450ade5ecedbb129fe3a7c6d9e95c7cff2,"Factorial 2^4: BN=on, DO=0, WD=0, Aug=off"
+v2_f01_s2024,F_factorial,f01,2024,,screening,2201931,none,32,25,94.012900,89.196900,78.240000,0.751400,f41b0c450ade5ecedbb129fe3a7c6d9e95c7cff2,"Factorial 2^4: BN=on, DO=0, WD=0, Aug=off"
+v2_f02_s42,F_factorial,f02,42,,screening,2201707,none,31,24,94.061500,92.030700,74.740000,0.566400,f41b0c450ade5ecedbb129fe3a7c6d9e95c7cff2,"Factorial 2^4: BN=off, DO=0.3, WD=0, Aug=off"
+v2_f02_s123,F_factorial,f02,123,,screening,2201707,none,20,13,94.012900,91.052300,53.210000,0.565600,f41b0c450ade5ecedbb129fe3a7c6d9e95c7cff2,"Factorial 2^4: BN=off, DO=0.3, WD=0, Aug=off"
+v2_f02_s2024,F_factorial,f02,2024,,screening,2201707,none,32,25,94.288000,91.756800,77.020000,0.560600,f41b0c450ade5ecedbb129fe3a7c6d9e95c7cff2,"Factorial 2^4: BN=off, DO=0.3, WD=0, Aug=off"
+v2_f03_s42,F_factorial,f03,42,,screening,2201931,none,19,12,96.666700,96.036400,52.980000,0.730700,f41b0c450ade5ecedbb129fe3a7c6d9e95c7cff2,"Factorial 2^4: BN=on, DO=0.3, WD=0, Aug=off"
+v2_f03_s123,F_factorial,f03,123,,screening,2201931,none,34,27,97.621400,97.027500,84.550000,0.726700,f41b0c450ade5ecedbb129fe3a7c6d9e95c7cff2,"Factorial 2^4: BN=on, DO=0.3, WD=0, Aug=off"
+v2_f03_s2024,F_factorial,f03,2024,,screening,2201931,none,23,16,96.618100,95.076600,59.470000,0.726600,f41b0c450ade5ecedbb129fe3a7c6d9e95c7cff2,"Factorial 2^4: BN=on, DO=0.3, WD=0, Aug=off"
+v2_f04_s42,F_factorial,f04,42,,screening,2201707,none,17,10,90.323600,84.369200,48.830000,0.566000,f41b0c450ade5ecedbb129fe3a7c6d9e95c7cff2,"Factorial 2^4: BN=off, DO=0, WD=1e-4, Aug=off"
+v2_f04_s123,F_factorial,f04,123,,screening,2201707,none,15,8,91.035600,84.145000,41.910000,0.559100,f41b0c450ade5ecedbb129fe3a7c6d9e95c7cff2,"Factorial 2^4: BN=off, DO=0, WD=1e-4, Aug=off"
+v2_f04_s2024,F_factorial,f04,2024,,screening,2201707,none,16,9,89.385100,84.004700,44.520000,0.575500,f41b0c450ade5ecedbb129fe3a7c6d9e95c7cff2,"Factorial 2^4: BN=off, DO=0, WD=1e-4, Aug=off"
+v2_f05_s42,F_factorial,f05,42,,screening,2201931,none,28,21,92.880300,88.247100,71.810000,0.728700,f41b0c450ade5ecedbb129fe3a7c6d9e95c7cff2,"Factorial 2^4: BN=on, DO=0, WD=1e-4, Aug=off"
+v2_f05_s123,F_factorial,f05,123,,screening,2201931,none,11,4,91.974100,86.203800,34.890000,0.730900,f41b0c450ade5ecedbb129fe3a7c6d9e95c7cff2,"Factorial 2^4: BN=on, DO=0, WD=1e-4, Aug=off"
+v2_f05_s2024,F_factorial,f05,2024,,screening,2201931,none,14,7,93.074400,87.959100,40.980000,0.730800,f41b0c450ade5ecedbb129fe3a7c6d9e95c7cff2,"Factorial 2^4: BN=on, DO=0, WD=1e-4, Aug=off"
+v2_f06_s42,F_factorial,f06,42,,screening,2201707,none,24,17,92.847900,89.406300,59.220000,0.576100,f41b0c450ade5ecedbb129fe3a7c6d9e95c7cff2,"Factorial 2^4: BN=off, DO=0.3, WD=1e-4, Aug=off"
+v2_f06_s123,F_factorial,f06,123,,screening,2201707,none,40,36,95.161800,93.465000,90.200000,0.556400,f41b0c450ade5ecedbb129fe3a7c6d9e95c7cff2,"Factorial 2^4: BN=off, DO=0.3, WD=1e-4, Aug=off"
+v2_f06_s2024,F_factorial,f06,2024,,screening,2201707,none,25,18,94.271800,93.002700,61.250000,0.554100,f41b0c450ade5ecedbb129fe3a7c6d9e95c7cff2,"Factorial 2^4: BN=off, DO=0.3, WD=1e-4, Aug=off"
+v2_f07_s42,F_factorial,f07,42,,screening,2201931,none,34,27,97.427200,97.413500,80.900000,0.724200,f41b0c450ade5ecedbb129fe3a7c6d9e95c7cff2,"Factorial 2^4: BN=on, DO=0.3, WD=1e-4, Aug=off"
+v2_f07_s123,F_factorial,f07,123,,screening,2201931,none,15,8,96.391600,95.367100,44.560000,0.740700,f41b0c450ade5ecedbb129fe3a7c6d9e95c7cff2,"Factorial 2^4: BN=on, DO=0.3, WD=1e-4, Aug=off"
+v2_f07_s2024,F_factorial,f07,2024,,screening,2201931,none,34,27,97.119700,96.721500,84.060000,0.731900,f41b0c450ade5ecedbb129fe3a7c6d9e95c7cff2,"Factorial 2^4: BN=on, DO=0.3, WD=1e-4, Aug=off"
+v2_f08_s42,F_factorial,f08,42,,screening,2201707,all,23,16,91.068000,85.540800,115.860000,0.574600,f41b0c450ade5ecedbb129fe3a7c6d9e95c7cff2,"Factorial 2^4: BN=off, DO=0, WD=0, Aug=on"
+v2_f08_s123,F_factorial,f08,123,,screening,2201707,all,28,21,92.653700,87.475400,131.850000,0.559500,f41b0c450ade5ecedbb129fe3a7c6d9e95c7cff2,"Factorial 2^4: BN=off, DO=0, WD=0, Aug=on"
+v2_f08_s2024,F_factorial,f08,2024,,screening,2201707,all,28,21,92.394800,87.000800,131.510000,0.553500,f41b0c450ade5ecedbb129fe3a7c6d9e95c7cff2,"Factorial 2^4: BN=off, DO=0, WD=0, Aug=on"
+v2_f09_s42,F_factorial,f09,42,,screening,2201931,all,39,32,95.760500,91.472300,172.010000,0.729500,f41b0c450ade5ecedbb129fe3a7c6d9e95c7cff2,"Factorial 2^4: BN=on, DO=0, WD=0, Aug=on"
+v2_f09_s123,F_factorial,f09,123,,screening,2201931,all,26,19,92.686100,88.086500,124.270000,0.723700,f41b0c450ade5ecedbb129fe3a7c6d9e95c7cff2,"Factorial 2^4: BN=on, DO=0, WD=0, Aug=on"
+v2_f09_s2024,F_factorial,f09,2024,,screening,2201931,all,38,31,94.935300,90.459400,169.050000,0.728400,f41b0c450ade5ecedbb129fe3a7c6d9e95c7cff2,"Factorial 2^4: BN=on, DO=0, WD=0, Aug=on"
+v2_f10_s42,F_factorial,f10,42,,screening,2201707,all,40,34,94.951500,90.153500,176.660000,0.554900,f41b0c450ade5ecedbb129fe3a7c6d9e95c7cff2,"Factorial 2^4: BN=off, DO=0.3, WD=0, Aug=on"
+v2_f10_s123,F_factorial,f10,123,,screening,2201707,all,38,31,95.760500,92.977100,168.790000,0.556500,f41b0c450ade5ecedbb129fe3a7c6d9e95c7cff2,"Factorial 2^4: BN=off, DO=0.3, WD=0, Aug=on"
+v2_f10_s2024,F_factorial,f10,2024,,screening,2201707,all,40,37,94.546900,90.161800,176.280000,0.554300,f41b0c450ade5ecedbb129fe3a7c6d9e95c7cff2,"Factorial 2^4: BN=off, DO=0.3, WD=0, Aug=on"
+v2_f11_s42,F_factorial,f11,42,,screening,2201931,all,33,26,96.391600,93.990800,150.720000,0.755100,f41b0c450ade5ecedbb129fe3a7c6d9e95c7cff2,"Factorial 2^4: BN=on, DO=0.3, WD=0, Aug=on"
+v2_f11_s123,F_factorial,f11,123,,screening,2201931,all,40,33,96.747600,94.376500,176.930000,0.727600,f41b0c450ade5ecedbb129fe3a7c6d9e95c7cff2,"Factorial 2^4: BN=on, DO=0.3, WD=0, Aug=on"
+v2_f11_s2024,F_factorial,f11,2024,,screening,2201931,all,40,36,96.925600,94.261100,176.250000,0.726300,f41b0c450ade5ecedbb129fe3a7c6d9e95c7cff2,"Factorial 2^4: BN=on, DO=0.3, WD=0, Aug=on"
+v2_f12_s42,F_factorial,f12,42,,screening,2201707,all,34,27,92.864100,88.094800,154.130000,0.555600,f41b0c450ade5ecedbb129fe3a7c6d9e95c7cff2,"Factorial 2^4: BN=off, DO=0, WD=1e-4, Aug=on"
+v2_f12_s123,F_factorial,f12,123,,screening,2201707,all,38,31,93.042100,86.931800,169.290000,0.565500,f41b0c450ade5ecedbb129fe3a7c6d9e95c7cff2,"Factorial 2^4: BN=off, DO=0, WD=1e-4, Aug=on"
+v2_f12_s2024,F_factorial,f12,2024,,screening,2201707,all,34,27,92.686100,85.981600,154.350000,0.264700,f41b0c450ade5ecedbb129fe3a7c6d9e95c7cff2,"Factorial 2^4: BN=off, DO=0, WD=1e-4, Aug=on"
+v2_f13_s42,F_factorial,f13,42,,screening,2201931,all,39,32,96.181200,92.538900,172.900000,0.756400,f41b0c450ade5ecedbb129fe3a7c6d9e95c7cff2,"Factorial 2^4: BN=on, DO=0, WD=1e-4, Aug=on"
+v2_f13_s123,F_factorial,f13,123,,screening,2201931,all,28,21,92.831700,88.817100,132.340000,0.727300,f41b0c450ade5ecedbb129fe3a7c6d9e95c7cff2,"Factorial 2^4: BN=on, DO=0, WD=1e-4, Aug=on"
+v2_f13_s2024,F_factorial,f13,2024,,screening,2201931,all,38,31,95.258900,90.745300,169.260000,0.734700,f41b0c450ade5ecedbb129fe3a7c6d9e95c7cff2,"Factorial 2^4: BN=on, DO=0, WD=1e-4, Aug=on"
+v2_f14_s42,F_factorial,f14,42,,screening,2201707,all,37,30,94.514600,89.974600,166.220000,0.560300,f41b0c450ade5ecedbb129fe3a7c6d9e95c7cff2,"Factorial 2^4: BN=off, DO=0.3, WD=1e-4, Aug=on"
+v2_f14_s123,F_factorial,f14,123,,screening,2201707,all,25,18,95.064700,90.359500,120.830000,0.559200,f41b0c450ade5ecedbb129fe3a7c6d9e95c7cff2,"Factorial 2^4: BN=off, DO=0.3, WD=1e-4, Aug=on"
+v2_f14_s2024,F_factorial,f14,2024,,screening,2201707,all,40,37,94.611700,90.597200,176.340000,0.555400,f41b0c450ade5ecedbb129fe3a7c6d9e95c7cff2,"Factorial 2^4: BN=off, DO=0.3, WD=1e-4, Aug=on"
+v2_f15_s42,F_factorial,f15,42,,screening,2201931,all,36,29,96.925600,95.085400,161.370000,0.735500,f41b0c450ade5ecedbb129fe3a7c6d9e95c7cff2,"Factorial 2^4: BN=on, DO=0.3, WD=1e-4, Aug=on"
+v2_f15_s123,F_factorial,f15,123,,screening,2201931,all,32,25,96.488700,93.881000,146.700000,0.741000,f41b0c450ade5ecedbb129fe3a7c6d9e95c7cff2,"Factorial 2^4: BN=on, DO=0.3, WD=1e-4, Aug=on"
+v2_f15_s2024,F_factorial,f15,2024,,screening,2201931,all,32,25,96.278300,92.872400,146.840000,0.726800,f41b0c450ade5ecedbb129fe3a7c6d9e95c7cff2,"Factorial 2^4: BN=on, DO=0.3, WD=1e-4, Aug=on"
+v2_g1_s42,G_augmentation,g1,42,,screening,2201931,affine,38,31,95.647200,92.667800,96.850000,0.724700,a9f2a8a1124020e2a5f12f372dbde9a16cdb6bd0,Chỉ affine
+v2_g1_s123,G_augmentation,g1,123,,screening,2201931,affine,38,31,95.356000,91.569100,95.430000,0.735600,a9f2a8a1124020e2a5f12f372dbde9a16cdb6bd0,Chỉ affine
+v2_g1_s2024,G_augmentation,g1,2024,,screening,2201931,affine,32,25,95.712000,92.516300,84.100000,0.730900,a9f2a8a1124020e2a5f12f372dbde9a16cdb6bd0,Chỉ affine
+v2_g2_s42,G_augmentation,g2,42,,screening,2201931,color,35,28,98.042100,97.796700,141.710000,0.728600,a9f2a8a1124020e2a5f12f372dbde9a16cdb6bd0,Chỉ color
+v2_g2_s123,G_augmentation,g2,123,,screening,2201931,color,27,20,97.669900,97.315600,113.790000,0.728000,a9f2a8a1124020e2a5f12f372dbde9a16cdb6bd0,Chỉ color
+v2_g2_s2024,G_augmentation,g2,2024,,screening,2201931,color,23,16,97.589000,97.139600,100.570000,0.732700,a9f2a8a1124020e2a5f12f372dbde9a16cdb6bd0,Chỉ color
+v2_g3_s42,G_augmentation,g3,42,,screening,2201931,perspective,29,22,97.411000,97.068200,77.400000,0.732000,a9f2a8a1124020e2a5f12f372dbde9a16cdb6bd0,Chỉ perspective
+v2_g3_s123,G_augmentation,g3,123,,screening,2201931,perspective,16,9,95.194200,93.131900,51.760000,0.732800,a9f2a8a1124020e2a5f12f372dbde9a16cdb6bd0,Chỉ perspective
+v2_g3_s2024,G_augmentation,g3,2024,,screening,2201931,perspective,22,15,96.521000,95.590800,63.330000,0.726700,a9f2a8a1124020e2a5f12f372dbde9a16cdb6bd0,Chỉ perspective
+v2_cw1_s42,H_hyperparam,cw1,42,,screening,2201931,all,36,29,96.068000,93.364700,196.580000,0.727500,568cda0cfd8e0ef65fb2764ab87df382d0172ab1,Class weight 1/sqrt(freq)
+v2_cw1_s123,H_hyperparam,cw1,123,,screening,2201931,all,25,18,95.307400,92.428700,140.810000,0.733000,568cda0cfd8e0ef65fb2764ab87df382d0172ab1,Class weight 1/sqrt(freq)
+v2_cw1_s2024,H_hyperparam,cw1,2024,,screening,2201931,all,40,37,96.504900,93.034700,212.480000,0.740100,568cda0cfd8e0ef65fb2764ab87df382d0172ab1,Class weight 1/sqrt(freq)
+v2_i2_s42,H_hyperparam,i2,42,,screening,4823371,all,40,36,94.902900,91.626300,318.440000,0.746200,568cda0cfd8e0ef65fb2764ab87df382d0172ab1,Input 96x96
+v2_i2_s123,H_hyperparam,i2,123,,screening,4823371,all,30,23,93.689300,90.978400,245.240000,0.866900,568cda0cfd8e0ef65fb2764ab87df382d0172ab1,Input 96x96
+v2_i2_s2024,H_hyperparam,i2,2024,,screening,4823371,all,40,34,94.045300,88.891000,315.540000,0.739500,568cda0cfd8e0ef65fb2764ab87df382d0172ab1,Input 96x96
+v2_l1_s42,H_hyperparam,l1,42,,screening,2201931,all,25,18,91.779900,87.261000,140.570000,0.729300,568cda0cfd8e0ef65fb2764ab87df382d0172ab1,LR 1e-4; 40 epoch; cách 10 lần so với 1e-3
+v2_l1_s123,H_hyperparam,l1,123,,screening,2201931,all,26,19,90.663400,85.014500,145.930000,0.734500,568cda0cfd8e0ef65fb2764ab87df382d0172ab1,LR 1e-4; 40 epoch; cách 10 lần so với 1e-3
+v2_l1_s2024,H_hyperparam,l1,2024,,screening,2201931,all,36,29,93.220100,88.146800,195.100000,0.731300,568cda0cfd8e0ef65fb2764ab87df382d0172ab1,LR 1e-4; 40 epoch; cách 10 lần so với 1e-3
+v2_x1_s42_f0,X_confirmation,x1,42,0,fold_0,2201931,color,40,36,96.246600,94.766300,146.410000,0.743700,c7edd9952d038e9a98eea2ffa6a89753f46da2c7,"OOF cho g2: f1=0.974173 (sd 0.003402), params=2201931, latency=0.7280 ms, aug=color, best_epoch=21.3"
+v2_x1_s42_f1,X_confirmation,x1,42,1,fold_1,2201931,color,39,32,97.443500,96.977000,143.080000,0.729600,c7edd9952d038e9a98eea2ffa6a89753f46da2c7,"OOF cho g2: f1=0.974173 (sd 0.003402), params=2201931, latency=0.7280 ms, aug=color, best_epoch=21.3"
+v2_x1_s42_f2,X_confirmation,x1,42,2,fold_2,2201931,color,40,37,98.271800,97.869800,146.640000,0.725700,c7edd9952d038e9a98eea2ffa6a89753f46da2c7,"OOF cho g2: f1=0.974173 (sd 0.003402), params=2201931, latency=0.7280 ms, aug=color, best_epoch=21.3"
+v2_x1_s123_f0,X_confirmation,x1,123,0,fold_0,2201931,color,23,16,95.105000,93.261700,91.520000,0.743700,c7edd9952d038e9a98eea2ffa6a89753f46da2c7,"OOF cho g2: f1=0.974173 (sd 0.003402), params=2201931, latency=0.7280 ms, aug=color, best_epoch=21.3"
+v2_x1_s123_f1,X_confirmation,x1,123,1,fold_1,2201931,color,35,28,97.659800,96.790500,129.270000,0.330400,c7edd9952d038e9a98eea2ffa6a89753f46da2c7,"OOF cho g2: f1=0.974173 (sd 0.003402), params=2201931, latency=0.7280 ms, aug=color, best_epoch=21.3"
+v2_x1_s123_f2,X_confirmation,x1,123,2,fold_2,2201931,color,40,37,98.435400,97.886400,148.550000,0.776000,c7edd9952d038e9a98eea2ffa6a89753f46da2c7,"OOF cho g2: f1=0.974173 (sd 0.003402), params=2201931, latency=0.7280 ms, aug=color, best_epoch=21.3"
+v2_x1_s2024_f0,X_confirmation,x1,2024,0,fold_0,2201931,color,40,34,96.164400,94.175200,141.720000,0.732500,c7edd9952d038e9a98eea2ffa6a89753f46da2c7,"OOF cho g2: f1=0.974173 (sd 0.003402), params=2201931, latency=0.7280 ms, aug=color, best_epoch=21.3"
+v2_x1_s2024_f1,X_confirmation,x1,2024,1,fold_1,2201931,color,40,36,97.866300,97.465700,145.050000,0.729300,c7edd9952d038e9a98eea2ffa6a89753f46da2c7,"OOF cho g2: f1=0.974173 (sd 0.003402), params=2201931, latency=0.7280 ms, aug=color, best_epoch=21.3"
+v2_x1_s2024_f2,X_confirmation,x1,2024,2,fold_2,2201931,color,29,22,97.985500,97.322700,111.990000,0.727700,c7edd9952d038e9a98eea2ffa6a89753f46da2c7,"OOF cho g2: f1=0.974173 (sd 0.003402), params=2201931, latency=0.7280 ms, aug=color, best_epoch=21.3"
+v2_x2_s42_f0,X_confirmation,x2,42,0,fold_0,1448779,all,38,31,96.940600,94.727600,176.640000,0.923200,c7edd9952d038e9a98eea2ffa6a89753f46da2c7,"OOF cho d2: f1=0.971584 (sd 0.006096), params=1448779, latency=0.9499 ms, aug=all, best_epoch=16.3"
+v2_x2_s42_f1,X_confirmation,x2,42,1,fold_1,1448779,all,39,32,98.249800,97.673300,185.490000,0.928300,c7edd9952d038e9a98eea2ffa6a89753f46da2c7,"OOF cho d2: f1=0.971584 (sd 0.006096), params=1448779, latency=0.9499 ms, aug=all, best_epoch=16.3"
+v2_x2_s42_f2,X_confirmation,x2,42,2,fold_2,1448779,all,22,15,98.322900,98.282700,114.780000,0.930300,c7edd9952d038e9a98eea2ffa6a89753f46da2c7,"OOF cho d2: f1=0.971584 (sd 0.006096), params=1448779, latency=0.9499 ms, aug=all, best_epoch=16.3"
+v2_x2_s123_f0,X_confirmation,x2,123,0,fold_0,1448779,all,38,31,97.068500,95.193200,177.040000,0.929100,c7edd9952d038e9a98eea2ffa6a89753f46da2c7,"OOF cho d2: f1=0.971584 (sd 0.006096), params=1448779, latency=0.9499 ms, aug=all, best_epoch=16.3"
+v2_x2_s123_f1,X_confirmation,x2,123,1,fold_1,1448779,all,29,22,98.023600,97.355600,142.930000,0.924700,c7edd9952d038e9a98eea2ffa6a89753f46da2c7,"OOF cho d2: f1=0.971584 (sd 0.006096), params=1448779, latency=0.9499 ms, aug=all, best_epoch=16.3"
+v2_x2_s123_f2,X_confirmation,x2,123,2,fold_2,1448779,all,33,26,99.110300,99.142800,162.790000,0.924600,c7edd9952d038e9a98eea2ffa6a89753f46da2c7,"OOF cho d2: f1=0.971584 (sd 0.006096), params=1448779, latency=0.9499 ms, aug=all, best_epoch=16.3"
+v2_x2_s2024_f0,X_confirmation,x2,2024,0,fold_0,1448779,all,28,21,96.831100,93.984000,135.480000,0.923300,c7edd9952d038e9a98eea2ffa6a89753f46da2c7,"OOF cho d2: f1=0.971584 (sd 0.006096), params=1448779, latency=0.9499 ms, aug=all, best_epoch=16.3"
+v2_x2_s2024_f1,X_confirmation,x2,2024,1,fold_1,1448779,all,26,19,97.964600,97.616800,130.210000,0.921200,c7edd9952d038e9a98eea2ffa6a89753f46da2c7,"OOF cho d2: f1=0.971584 (sd 0.006096), params=1448779, latency=0.9499 ms, aug=all, best_epoch=16.3"
+v2_x2_s2024_f2,X_confirmation,x2,2024,2,fold_2,1448779,all,40,40,99.141000,99.039200,193.140000,0.935500,c7edd9952d038e9a98eea2ffa6a89753f46da2c7,"OOF cho d2: f1=0.971584 (sd 0.006096), params=1448779, latency=0.9499 ms, aug=all, best_epoch=16.3"
+v2_x3_s42_f0,X_confirmation,x3,42,0,fold_0,2201931,none,21,14,93.415500,90.985200,55.940000,0.730000,c7edd9952d038e9a98eea2ffa6a89753f46da2c7,"OOF cho f07: f1=0.965007 (sd 0.010409), params=2201931, latency=0.7407 ms, aug=none, best_epoch=20.7"
+v2_x3_s42_f1,X_confirmation,x3,42,1,fold_1,2201931,none,40,33,96.371700,95.523000,88.400000,0.728400,c7edd9952d038e9a98eea2ffa6a89753f46da2c7,"OOF cho f07: f1=0.965007 (sd 0.010409), params=2201931, latency=0.7407 ms, aug=none, best_epoch=20.7"
+v2_x3_s42_f2,X_confirmation,x3,42,2,fold_2,2201931,none,39,32,97.228800,96.652600,88.080000,0.728800,c7edd9952d038e9a98eea2ffa6a89753f46da2c7,"OOF cho f07: f1=0.965007 (sd 0.010409), params=2201931, latency=0.7407 ms, aug=none, best_epoch=20.7"
+v2_x3_s123_f0,X_confirmation,x3,123,0,fold_0,2201931,none,22,15,95.178100,93.498500,57.960000,0.727600,c7edd9952d038e9a98eea2ffa6a89753f46da2c7,"OOF cho f07: f1=0.965007 (sd 0.010409), params=2201931, latency=0.7407 ms, aug=none, best_epoch=20.7"
+v2_x3_s123_f1,X_confirmation,x3,123,1,fold_1,2201931,none,38,31,97.178000,96.188600,86.400000,0.726200,c7edd9952d038e9a98eea2ffa6a89753f46da2c7,"OOF cho f07: f1=0.965007 (sd 0.010409), params=2201931, latency=0.7407 ms, aug=none, best_epoch=20.7"
+v2_x3_s123_f2,X_confirmation,x3,123,2,fold_2,2201931,none,29,22,97.504900,96.952300,71.090000,0.730600,c7edd9952d038e9a98eea2ffa6a89753f46da2c7,"OOF cho f07: f1=0.965007 (sd 0.010409), params=2201931, latency=0.7407 ms, aug=none, best_epoch=20.7"
+v2_x3_s2024_f0,X_confirmation,x3,2024,0,fold_0,2201931,none,40,37,95.497700,93.269800,87.920000,0.732100,c7edd9952d038e9a98eea2ffa6a89753f46da2c7,"OOF cho f07: f1=0.965007 (sd 0.010409), params=2201931, latency=0.7407 ms, aug=none, best_epoch=20.7"
+v2_x3_s2024_f1,X_confirmation,x3,2024,1,fold_1,2201931,none,22,15,96.234000,95.179000,57.860000,0.726500,c7edd9952d038e9a98eea2ffa6a89753f46da2c7,"OOF cho f07: f1=0.965007 (sd 0.010409), params=2201931, latency=0.7407 ms, aug=none, best_epoch=20.7"
+v2_x3_s2024_f2,X_confirmation,x3,2024,2,fold_2,2201931,none,22,15,96.840200,96.571300,57.900000,0.726900,c7edd9952d038e9a98eea2ffa6a89753f46da2c7,"OOF cho f07: f1=0.965007 (sd 0.010409), params=2201931, latency=0.7407 ms, aug=none, best_epoch=20.7"

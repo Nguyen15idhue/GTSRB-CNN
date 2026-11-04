@@ -1,0 +1,134 @@
+{
+  "top5_f1": [
+    {
+      "class_id": 34,
+      "name_vi": "Rẽ trái phía trước",
+      "f1": 1.0,
+      "support": 90
+    },
+    {
+      "class_id": 37,
+      "name_vi": "Đi thẳng hoặc rẽ trái",
+      "f1": 1.0,
+      "support": 30
+    },
+    {
+      "class_id": 38,
+      "name_vi": "Đi bên phải",
+      "f1": 1.0,
+      "support": 360
+    },
+    {
+      "class_id": 39,
+      "name_vi": "Đi bên trái",
+      "f1": 1.0,
+      "support": 60
+    },
+    {
+      "class_id": 42,
+      "name_vi": "Hết cấm vượt cho xe trên 3,5 tấn",
+      "f1": 1.0,
+      "support": 60
+    }
+  ],
+  "bottom5_f1": [
+    {
+      "class_id": 19,
+      "name_vi": "Đường cong nguy hiểm bên trái",
+      "f1": 0.760141,
+      "support": 30
+    },
+    {
+      "class_id": 29,
+      "name_vi": "Xe đạp qua đường",
+      "f1": 0.776241,
+      "support": 60
+    },
+    {
+      "class_id": 30,
+      "name_vi": "Cảnh báo băng tuyết",
+      "f1": 0.925226,
+      "support": 90
+    },
+    {
+      "class_id": 28,
+      "name_vi": "Trẻ em qua đường",
+      "f1": 0.927561,
+      "support": 120
+    },
+    {
+      "class_id": 23,
+      "name_vi": "Đường trơn",
+      "f1": 0.938104,
+      "support": 120
+    }
+  ],
+  "most_errors_est": [
+    {
+      "class_id": 29,
+      "name_vi": "Xe đạp qua đường",
+      "errors_est": 21.666659999999997,
+      "support": 60
+    },
+    {
+      "class_id": 8,
+      "name_vi": "Giới hạn tốc độ 120 km/h",
+      "errors_est": 16.66697999999998,
+      "support": 660
+    },
+    {
+      "class_id": 19,
+      "name_vi": "Đường cong nguy hiểm bên trái",
+      "errors_est": 10.333319999999999,
+      "support": 30
+    },
+    {
+      "class_id": 30,
+      "name_vi": "Cảnh báo băng tuyết",
+      "errors_est": 9.666630000000003,
+      "support": 90
+    },
+    {
+      "class_id": 21,
+      "name_vi": "Đường cong liên tiếp",
+      "errors_est": 6.333299999999998,
+      "support": 60
+    }
+  ],
+  "least_support": [
+    {
+      "class_id": 19,
+      "name_vi": "Đường cong nguy hiểm bên trái",
+      "support": 30
+    },
+    {
+      "class_id": 0,
+      "name_vi": "Giới hạn tốc độ 20 km/h",
+      "support": 30
+    },
+    {
+      "class_id": 37,
+      "name_vi": "Đi thẳng hoặc rẽ trái",
+      "support": 30
+    },
+    {
+      "class_id": 32,
+      "name_vi": "Hết mọi giới hạn tốc độ và cấm vượt",
+      "support": 60
+    },
+    {
+      "class_id": 20,
+      "name_vi": "Đường cong nguy hiểm bên phải",
+      "support": 60
+    }
+  ],
+  "support_vs_f1": {
+    "spearman_rho": 0.12635275835086,
+    "spearman_p": 0.41944821758848927,
+    "pearson_r": 0.2767419617443518,
+    "pearson_p": 0.0724129950700876,
+    "n_classes": 43,
+    "note": "Tương quan yếu/không rõ; lớp hiếm không phải lúc nào cũng kém."
+  },
+  "source": "07_per_class_lockbox.csv"
+}

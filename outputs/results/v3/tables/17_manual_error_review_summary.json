@@ -1,0 +1,15 @@
+{
+  "n_errors": 144,
+  "n_tracks_with_error": 23,
+  "n_diverse_rows": 41,
+  "n_high_conf_errors": 28,
+  "by_category": {
+    "goc_nhin_la": 36,
+    "confidence_thap": 32,
+    "tu_tin_cao_nhung_sai": 27,
+    "mo": 16,
+    "toi": 21,
+    "choi": 12
+  },
+  "instruction": "Mở contact sheet tương ứng, xem từng ảnh, điền verdict (model/du_lieu/nhan_sai/khong_ro), cause và note. Không sửa auto_category; đó là gợi ý heuristic. Lỗi tập trung vào ít track, nên đếm ảnh lỗi không phải đếm ca độc lập."
+}

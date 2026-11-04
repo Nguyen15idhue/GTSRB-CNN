@@ -1,0 +1,10 @@
+{
+  "n_runs": 111,
+  "total_epochs": 3411,
+  "total_time_s": 14369.53,
+  "total_time_min": 239.4921666666667,
+  "total_time_h": 3.9915361111111114,
+  "baseline_time_s": 493.46,
+  "grand_total_h": 4.128608333333334,
+  "scope": "train_time_s = vòng epoch; không gồm nạp cache, dự đoán val cuối, phân tích/hình/báo cáo"
+}

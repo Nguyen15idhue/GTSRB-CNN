@@ -1,0 +1,18 @@
+{
+  "seed": 42,
+  "n": 8302,
+  "accuracy": 0.9875933509997591,
+  "macro_f1_43": 0.9687701186650713,
+  "weighted_f1": 0.9868048060708262,
+  "explanation": "Accuracy = số ảnh đúng / tổng ảnh. Macro-F1 = trung bình F1 của 43 lớp, mỗi lớp trọng số 1/43 bất kể support. Vì vậy lớp 19 (30 ảnh, F1 thấp) ảnh hưởng tới macro-F1 gần bằng lớp 4 (750 ảnh).",
+  "worst_class": {
+    "class_id": 19,
+    "f1": 0.5,
+    "support": 30
+  },
+  "best_class": {
+    "class_id": 0,
+    "f1": 1.0,
+    "support": 30
+  }
+}

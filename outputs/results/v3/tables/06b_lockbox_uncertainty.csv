@@ -1,0 +1,3 @@
+﻿metric,mean,sd_across_seeds,seed_min,seed_max,ci95_low,ci95_high,ci_method,note
+accuracy,0.9887577290612705,0.001010177919008183,0.9875933509997591,0.9894001445434835,0.9864897623472545,0.9910256957752864,"binomial normal approx, n=8302 ảnh",CI này chỉ cho accuracy; không dùng cho macro-F1.
+macro_f1_43,0.9759814571503717,0.006246335638375003,0.9687701186650713,0.9797061089339864,,,không có CI track-bootstrap trong artifact one-shot,Chỉ báo mean ± sd và range 3 seed; không tái sử dụng CI của OOF.

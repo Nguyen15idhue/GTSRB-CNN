@@ -1,0 +1,2 @@
+﻿eval_set,n,accuracy_pct,mean_confidence,mean_confidence_correct,mean_confidence_wrong,n_wrong,n_wrong_conf_ge_0.90,n_correct_conf_lt_0.50,ece_15bin,brier
+screening_val (D2 s42),6180,97.669903,0.980927,0.988119,0.679457,144,28,35,0.008354,0.035747

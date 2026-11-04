@@ -1,0 +1,21 @@
+﻿item,status,effect_pct,ci,evidence,note
+BN,tot_hon,3.724,[+1.767; +5.005],factorial_effects.json; main_comparisons.csv,p Holm 0.000
+"Dropout 0,3",tot_hon,5.963,[+2.873; +7.147],factorial_effects.json,p Holm 0.000
+Weight decay 1e-4,khong_du_bang_chung,0.058,[-0.506; +0.551],factorial_effects.json,CI chứa 0
+Augmentation all,khong_du_bang_chung,0.529,[-1.204; +2.303],factorial_effects.json,F15-F07 = -2.555; không được nói aug giúp
+GAP 3 khối (D1),kem_hon,-34.758,[-36.181; -22.916],tables/architecture.md,underfit nặng
+Depth 4 vs 3 khối,chua_ket_luan_sau_holm,3.212,[+0.036; +4.440],main_comparisons.csv,CI không chứa 0 nhưng p Holm 0.373
+Width lớn (W2),khong_du_bang_chung,1.268,[-0.585; +2.499],tables/architecture.md,"CI chứa 0, params 3,37M"
+LR 1e-4 (L1),kem_hon,-7.139,[-9.372; -3.353],tables/hyperparam.md,không hội tụ trong 40 epoch
+Class weight inv_sqrt,khong_du_bang_chung,-1.004,[-2.195; +0.261],tables/hyperparam.md,CI chứa 0
+Input 96 (I2),kem_hon,-3.448,[-5.463; -0.984],tables/hyperparam.md,"params 2,2x"
+Aug affine (G1),kem_hon,-4.25,[-6.972; -0.084],tables/augmentation.md,thành phần hại
+Aug color (G2),khong_du_bang_chung,0.917,[-0.141; +1.842],tables/augmentation.md,"CI chứa 0; corruption +0,46 dưới ngưỡng +0,5"
+Aug perspective (G3),khong_du_bang_chung,-1.237,[-2.706; +0.530],tables/augmentation.md,CI chứa 0
+X2 vs X3 (OOF),tot_hon,1.981,[+1.053; +2.961],oof_comparisons.csv,chọn X2 làm winner
+X1 vs X2 (OOF),chua_ket_luan,-0.743,[-1.590; +0.274],oof_comparisons.csv,"tie-break ít params: 1,45M < 2,20M"
+Lockbox X2,xac_nhan,,,lockbox_result.json,"accuracy 98,876; macro-F1 97,598"
+Occlusion robustness,kem_hon,,,corruption.csv,"accuracy trung bình 17,6%"
+Calibration lockbox,tot,,,lockbox_result.json,"ECE 0,0053; Brier 0,0179"
+Grad-CAM trong ROI,tot,,,16_gradcam_summary.json,"0,853 khi đúng vs 0,543 nếu phân bố đều"
+Lỗi tập trung theo track,canh_bao,,,17_manual_error_review_summary.json,144 lỗi nhưng chỉ 23 track; không đếm ảnh lỗi như ca độc lập

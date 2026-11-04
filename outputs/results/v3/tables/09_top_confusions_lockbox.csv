@@ -1,0 +1,20 @@
+﻿true_id,true_name,pred_id,pred_name,count_mean_3seed,rate_of_true_class_pct,share_of_errors_pct,same_shape,same_color
+32,Hết mọi giới hạn tốc độ và cấm vượt,41,Hết cấm vượt,14.000000,23.333333,15.000000,True,True
+29,Xe đạp qua đường,28,Trẻ em qua đường,13.666667,22.777778,14.642857,True,True
+19,Đường cong nguy hiểm bên trái,23,Đường trơn,13.500000,45.000000,14.464286,True,True
+8,Giới hạn tốc độ 120 km/h,5,Giới hạn tốc độ 80 km/h,11.500000,1.742424,12.321429,True,True
+13,Nhường đường,10,"Cấm vượt cho xe trên 3,5 tấn",9.000000,1.764706,9.642857,False,True
+29,Xe đạp qua đường,25,Công trường thi công,6.333333,10.555556,6.785714,True,True
+30,Cảnh báo băng tuyết,11,Đường ưu tiên tại giao lộ tới,5.666667,6.296296,6.071429,True,True
+20,Đường cong nguy hiểm bên phải,25,Công trường thi công,5.000000,8.333333,5.357143,True,True
+8,Giới hạn tốc độ 120 km/h,2,Giới hạn tốc độ 50 km/h,5.000000,0.757576,5.357143,True,True
+21,Đường cong liên tiếp,23,Đường trơn,4.500000,7.500000,4.821429,True,True
+8,Giới hạn tốc độ 120 km/h,7,Giới hạn tốc độ 100 km/h,4.500000,0.681818,4.821429,True,True
+36,Đi thẳng hoặc rẽ phải,35,Chỉ đi thẳng,4.000000,4.444444,4.285714,True,True
+19,Đường cong nguy hiểm bên trái,31,Động vật hoang dã qua đường,4.000000,13.333333,4.285714,True,True
+4,Giới hạn tốc độ 70 km/h,8,Giới hạn tốc độ 120 km/h,3.000000,0.400000,3.214286,True,True
+23,Đường trơn,30,Cảnh báo băng tuyết,3.000000,2.500000,3.214286,True,True
+30,Cảnh báo băng tuyết,23,Đường trơn,2.000000,2.222222,2.142857,True,True
+30,Cảnh báo băng tuyết,5,Giới hạn tốc độ 80 km/h,2.000000,2.222222,2.142857,False,True
+20,Đường cong nguy hiểm bên phải,30,Cảnh báo băng tuyết,2.000000,3.333333,2.142857,True,True
+28,Trẻ em qua đường,30,Cảnh báo băng tuyết,2.000000,1.666667,2.142857,True,True

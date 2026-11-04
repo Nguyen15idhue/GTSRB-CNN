@@ -1,0 +1,9 @@
+﻿item,old_value,new_value,evidence,note
+OOF accuracy,"98,004%","97,924%",06c_oof_accuracy_check.json,"98,004% là accuracy screening của D2; OOF pooled là 97,924%."
+Lockbox CI của macro-F1,"[95,0511; 97,9422]","mean 97,5981; sd 0,6246; range 3 seed [96,8770; 97,9706]",06b_lockbox_uncertainty.csv,"CI cũ là CI của OOF, không phải lockbox."
+Số lỗi screening val,190 lỗi / 6.180 ảnh,F15: 190 lỗi; D2: 144 lỗi / 23 track,17_manual_error_review_summary.json,"190 là của F15 (control), không phải D2 (winner)."
+Latency,"0,93 ms/ảnh (không nêu batch/thiết bị)","GPU batch 1: 0,86 ms model-only; 1,24 ms end-to-end Python",13_inference_benchmark.csv,"Phải nêu thiết bị, batch, FP32 và phạm vi đo."
+Ngưỡng unknown của demo,"τ = 0,9462 trên val split_random","τ v2 = 0,9590 trên OOF X2",threshold_v2_oof.json; outputs/results/threshold.json,Demo hiện vẫn dùng τ cũ; cần cập nhật nếu muốn demo khớp báo cáo.
+Checkpoint demo,final_s42 (legacy),"v2_final_s42 / X2 (D2, 1.448.779 params)",15_deployment_status.csv,Chưa tích hợp; báo cáo phải tách 'đã kiểm chứng' và 'sẵn sàng triển khai'.
+Thời gian huấn luyện,"4,13 giờ","3,99 giờ epoch-loop (111 run) + 8,2 phút baseline",training_cost_totals.json,"Không gồm nạp cache, dự đoán cuối, phân tích, hình, báo cáo."
+Depth: CI và Holm,"+3,212 [+0,036; +4,440], p Holm 0,373","giữ nguyên; báo 'có bằng chứng vừa, chưa đủ sau Holm'",main_comparisons.csv,Không được viết 'depth tốt hơn' như kết luận chắc chắn.
